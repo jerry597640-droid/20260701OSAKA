@@ -1686,6 +1686,26 @@ const travelData = {
       catch(e){ return []; }
     }
     function saveExpenseRecords(records){ localStorage.setItem(expenseStorageKey, JSON.stringify(records)); }
+    function getLocalDateString(date=new Date()){
+      const y = date.getFullYear();
+      const m = String(date.getMonth()+1).padStart(2,'0');
+      const d = String(date.getDate()).padStart(2,'0');
+      return `${y}-${m}-${d}`;
+    }
+    function getTripDayByDate(dateString=getLocalDateString()){
+      const found = Object.keys(tripDates).find(day => tripDates[day] === dateString);
+      return found ? String(found) : '';
+    }
+    function getExpenseDefaultDay(){
+      // 旅遊期間 2026/7/1–7/6 會自動帶入當天 D1–D6；
+      // 旅遊前預設 D1，旅遊後預設 D6；其他情況跟著目前頁面 currentDay。
+      const today = getLocalDateString();
+      const exact = getTripDayByDate(today);
+      if(exact) return exact;
+      if(today < tripDates[1]) return '1';
+      if(today > tripDates[6]) return '6';
+      return String(currentDay || 1);
+    }
     function getExpenseDraft(){
       try{ return JSON.parse(localStorage.getItem(expenseDraftKey) || '{}'); }
       catch(e){ return {}; }
@@ -1711,8 +1731,15 @@ const travelData = {
       });
     }
     function renderExpensePanel(){
-      const draft = Object.assign({day:String(currentDay),category:'餐飲',item:'',amount:'',currency:'JPY',payer:'',note:''}, getExpenseDraft());
+      const savedDraft = getExpenseDraft();
+      const autoDay = getExpenseDefaultDay();
+      const todayTripDay = getTripDayByDate();
+      const draft = Object.assign({day:autoDay,category:'餐飲',item:'',amount:'',currency:'JPY',payer:'',note:''}, savedDraft);
+      // 進入實際旅遊日期時，自動把記帳行程日切到當天；
+      // 其他欄位仍保留上次輸入，避免每次開啟都重填。
+      if(todayTripDay) draft.day = todayTripDay;
       const dayOptions = Object.keys(travelData).map(day => `<option value="${day}" ${String(draft.day)===String(day)?'selected':''}>D${day}｜${tripDateLabels[day]}</option>`).join('');
+      const autoDayText = todayTripDay ? `已依今天日期自動帶入：D${todayTripDay}｜${tripDateLabels[todayTripDay]}` : `目前非旅遊日期，預設帶入：D${draft.day}｜${tripDateLabels[draft.day]}`;
       document.getElementById('expense-view').innerHTML = `
         <div class="expense-hero card-shadow">
           <p class="text-[10px] font-black tracking-[.16em] text-emerald-200">TRAVEL EXPENSE</p>
@@ -1725,6 +1752,7 @@ const travelData = {
             <div class="expense-field">
               <label>日期 / 行程日</label>
               <select id="expense-day">${dayOptions}</select>
+              <p class="mt-1 text-[10px] leading-relaxed text-emerald-700">📅 ${autoDayText}</p>
             </div>
             <div class="expense-field">
               <label>分類</label>

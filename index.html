@@ -51,6 +51,198 @@
     .float-btn{ width:46px; height:46px; border-radius:999px; display:flex; align-items:center; justify-content:center; background:#0f172a; color:white; box-shadow:0 14px 34px rgba(15,23,42,.22); font-size:18px; }
     @media(max-width:520px){ .floating-top{ right:14px; } .quick-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; } .quick-btn{ min-height:54px; border-radius:18px; } }
 
+
+    /* 高對比修正：避免 Tailwind 載入順序或快取造成 Day Hero 白字消失 */
+    #day-hero{
+      background:linear-gradient(135deg,#0f172a 0%,#075985 52%,#0c4a6e 100%) !important;
+      color:#ffffff !important;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 42px rgba(15,23,42,.28) !important;
+    }
+    #day-hero h2{ color:#ffffff !important; text-shadow:0 1px 2px rgba(0,0,0,.25); }
+    #day-hero .hero-kicker{ color:#7dd3fc !important; }
+    #day-hero .hero-pill{ background:rgba(255,255,255,.16)!important; color:#ffffff!important; border-color:rgba(255,255,255,.22)!important; }
+    #day-hero .hero-clothing{ background:rgba(255,255,255,.13)!important; color:#f8fafc!important; border:1px solid rgba(255,255,255,.12); }
+    #day-hero .mini-stat{ background:rgba(15,23,42,.36)!important; border:1px solid rgba(255,255,255,.14); }
+    #day-hero .mini-stat .label{ color:#bae6fd!important; }
+    #day-hero .mini-stat .value{ color:#ffffff!important; text-shadow:0 1px 1px rgba(0,0,0,.18); }
+    @media(max-width:390px){ #day-hero .hero-stats{ grid-template-columns:1fr!important; } }
+
+    /* D1～D6 固定同一行：避免日期文字造成 D6 換到下一列 */
+    #day-tabs{
+      display:grid!important;
+      grid-template-columns:repeat(6,minmax(0,1fr))!important;
+      gap:6px!important;
+      overflow:visible!important;
+      width:100%;
+    }
+    #day-tabs button{
+      min-width:0!important;
+      width:100%!important;
+      padding:8px 2px!important;
+      border-radius:16px!important;
+      text-align:center!important;
+      line-height:1.15!important;
+    }
+    #day-tabs button span:first-child{ font-size:12px!important; }
+    #day-tabs button span:last-child{ font-size:9.5px!important; white-space:nowrap!important; }
+
+    /* Google Maps 當日動線啟動版：不再內嵌地圖，避免手機地圖瓦片缺塊 */
+    .route-launch-hero{
+      border-radius:24px;
+      padding:14px;
+      background:linear-gradient(135deg,#0f172a 0%,#075985 55%,#0c4a6e 100%);
+      color:#fff;
+      box-shadow:0 14px 34px rgba(15,23,42,.24);
+    }
+    .route-order-strip{
+      display:flex; align-items:center; gap:6px; overflow-x:auto;
+      padding:10px; border-radius:20px; background:#f8fafc; border:1px solid #e2e8f0;
+    }
+    .route-order-dot{
+      flex:0 0 auto; width:30px; height:30px; border-radius:999px;
+      display:flex; align-items:center; justify-content:center;
+      background:#0284c7; color:#fff; font-size:12px; font-weight:950;
+      box-shadow:0 8px 18px rgba(2,132,199,.24);
+    }
+    .route-order-arrow{ flex:0 0 auto; color:#94a3b8; font-size:15px; font-weight:950; }
+    .route-step{
+      position:relative; display:flex; gap:10px; padding:11px 10px;
+      border:1px solid #e2e8f0; border-radius:20px; background:#fff;
+      box-shadow:0 8px 22px rgba(15,23,42,.06);
+    }
+    .route-step-num{
+      flex:0 0 auto; width:30px; height:30px; border-radius:999px;
+      display:flex; align-items:center; justify-content:center;
+      background:#0f172a; color:#fff; font-size:12px; font-weight:950;
+    }
+    .route-step:first-child .route-step-num{ background:#0284c7; }
+    .route-step:last-child .route-step-num{ background:#dc2626; }
+    .route-step-main{ min-width:0; flex:1; }
+    .route-step-title{ margin:0; font-size:12px; line-height:1.45; color:#0f172a; font-weight:950; }
+    .route-step-addr{ margin:3px 0 0; font-size:10.5px; line-height:1.45; color:#64748b; }
+    .route-step-arrow{ text-align:center; color:#0284c7; font-size:17px; font-weight:950; margin:2px 0; }
+    .route-action-card{ border-radius:22px; border:1px solid #bae6fd; background:#f0f9ff; padding:12px; }
+
+
+
+    /* 直式／橫式自適應：直式維持單欄，橫式改為左右分欄，減少長頁滑動 */
+    @media (orientation: landscape) and (min-width: 700px) and (max-height: 680px){
+      body{ background:#eaf3fb; overflow:hidden; }
+      .app-shell{
+        max-width:100vw!important;
+        width:100vw!important;
+        height:100vh!important;
+        min-height:100vh!important;
+        margin:0!important;
+        display:grid!important;
+        grid-template-columns:360px minmax(0,1fr)!important;
+        grid-template-rows:1fr!important;
+        overflow:hidden!important;
+        box-shadow:none!important;
+      }
+      header.soft-glass{
+        position:relative!important;
+        top:auto!important;
+        height:100vh!important;
+        overflow-y:auto!important;
+        border-right:1px solid #e2e8f0!important;
+        border-bottom:0!important;
+        grid-column:1!important;
+        grid-row:1!important;
+        -webkit-overflow-scrolling:touch;
+      }
+      main{
+        grid-column:2!important;
+        grid-row:1!important;
+        height:100vh!important;
+        overflow-y:auto!important;
+        padding:14px 16px 88px!important;
+        -webkit-overflow-scrolling:touch;
+      }
+      #bottom-nav{
+        left:360px!important;
+        right:0!important;
+        bottom:0!important;
+        transform:none!important;
+        width:calc(100vw - 360px)!important;
+        max-width:none!important;
+        grid-template-columns:repeat(5,minmax(0,1fr))!important;
+        padding-top:6px!important;
+      }
+      #bottom-nav button{ padding:6px 2px!important; font-size:10px!important; }
+      #bottom-nav span{ font-size:18px!important; }
+      .floating-top{ right:16px!important; bottom:76px!important; }
+      #day-tabs{ gap:5px!important; }
+      #day-tabs button{ padding:7px 1px!important; border-radius:14px!important; }
+      #day-tabs button span:first-child{ font-size:11px!important; }
+      #day-tabs button span:last-child{ font-size:9px!important; }
+      .quick-grid{ grid-template-columns:repeat(4,minmax(0,1fr))!important; gap:8px!important; }
+      .quick-btn{ min-height:52px!important; border-radius:17px!important; }
+      #day-hero{ margin-top:12px!important; }
+      #day-hero .hero-stats{ grid-template-columns:repeat(3,minmax(0,1fr))!important; }
+      #timeline{
+        display:grid!important;
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+        gap:12px!important;
+        margin-left:0!important;
+        border-left:0!important;
+        padding-bottom:20px!important;
+      }
+      #timeline article{ padding-left:0!important; }
+      #timeline .timeline-index{ left:12px!important; top:12px!important; z-index:2!important; }
+      #timeline article > div{ padding-top:48px!important; }
+      #timeline .card-actions{ grid-template-columns:1fr 1fr!important; }
+      #packing-view .space-y-3,
+      #ticket-view .space-y-3{ display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important; }
+      #packing-view .space-y-3 > *,
+      #ticket-view .space-y-3 > *{ margin-top:0!important; }
+      #hotel-view > .mt-4{ max-width:720px; }
+    }
+
+    @media (orientation: landscape) and (min-width: 700px) and (max-height: 680px){
+      .modal-backdrop{ align-items:center!important; padding:10px!important; }
+      .modal-backdrop > div{ max-width:min(900px,96vw)!important; max-height:92vh!important; }
+      #route-map-modal > div{
+        max-width:min(920px,96vw)!important;
+        display:grid!important;
+        grid-template-columns:1fr 1.15fr!important;
+        grid-template-areas:
+          "head head"
+          "hero order"
+          "action list"
+          "buttons buttons"!important;
+        gap:10px!important;
+        overflow:auto!important;
+      }
+      #route-map-modal > div > div:first-child{ grid-area:head!important; }
+      #route-map-modal .route-launch-hero{ grid-area:hero!important; margin-top:0!important; align-self:start!important; }
+      #route-order-strip{ grid-area:order!important; margin-top:0!important; align-self:start!important; }
+      #route-list{
+        grid-area:list!important;
+        max-height:46vh!important;
+        margin-top:0!important;
+        display:grid!important;
+        grid-template-columns:1fr!important;
+        gap:8px!important;
+      }
+      #route-map-modal .route-action-card{ grid-area:action!important; margin-top:0!important; align-self:start!important; }
+      #route-map-modal > div > .mt-3.grid.grid-cols-2{ grid-area:buttons!important; margin-top:0!important; }
+      #route-map-modal > div > button.mt-2{ grid-column:1 / -1!important; margin-top:0!important; }
+      .route-step{ padding:9px!important; }
+      .route-step-title{ font-size:12px!important; }
+      .route-step-addr{ font-size:10px!important; }
+      #weather-detail-modal > div{ max-width:min(760px,96vw)!important; }
+      #weather-detail-body{ display:grid!important; grid-template-columns:1fr 1fr!important; gap:12px!important; }
+      #weather-detail-body > div:first-child{ grid-column:1 / -1!important; }
+      #pdf-preview-panel > div{ max-width:920px!important; }
+    }
+
+    @media (orientation: portrait), (max-width:699px){
+      #timeline{ grid-template-columns:1fr!important; }
+      #route-list{ max-height:42vh; }
+    }
+
     #print-area{ display:none; }
     @media print{
       @page{ size:A4; margin:12mm; }
@@ -66,62 +258,6 @@
       .print-note{ margin-top:6px; font-size:12px; line-height:1.6; color:#334155; }
       .print-addr{ margin-top:4px; font-size:11px; color:#64748b; }
     }
-
-    /* === Contrast hotfix: Day hero / summary cards === */
-    #day-hero{
-      background:linear-gradient(135deg,#0f172a 0%,#123a63 52%,#075985 100%) !important;
-      color:#ffffff !important;
-      border:1px solid rgba(255,255,255,.16) !important;
-      box-shadow:0 18px 42px rgba(2,8,23,.28), inset 0 1px 0 rgba(255,255,255,.12) !important;
-    }
-    #day-hero h2,
-    #day-hero .font-black,
-    #day-hero .value{
-      color:#ffffff !important;
-    }
-    #day-hero p,
-    #day-hero .leading-relaxed{
-      color:#e0f2fe !important;
-    }
-    #day-hero .text-sky-300{
-      color:#7dd3fc !important;
-    }
-    #day-hero .pill{
-      background:rgba(255,255,255,.16) !important;
-      color:#ffffff !important;
-      border:1px solid rgba(255,255,255,.24) !important;
-    }
-    #day-hero .mini-stat{
-      background:rgba(15,23,42,.48) !important;
-      border:1px solid rgba(255,255,255,.18) !important;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 18px rgba(2,8,23,.14) !important;
-    }
-    #day-hero .mini-stat .label{
-      color:#bae6fd !important;
-      letter-spacing:.02em;
-    }
-    #day-hero .mini-stat .value{
-      color:#ffffff !important;
-      text-shadow:0 1px 1px rgba(0,0,0,.28);
-    }
-    #day-hero > div:nth-child(2),
-    #day-hero .rounded-2xl.bg-white\/10{
-      background:rgba(255,255,255,.13) !important;
-      color:#f8fafc !important;
-      border:1px solid rgba(255,255,255,.16) !important;
-    }
-    #day-hero .grid{
-      color:#ffffff !important;
-    }
-    @media(max-width:390px){
-      #day-hero .grid.grid-cols-3{
-        grid-template-columns:1fr !important;
-      }
-      #day-hero .mini-stat{
-        padding:12px !important;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -151,7 +287,12 @@
             <button onclick="openWeatherDetail('kyoto')" class="tap rounded-2xl border border-sky-100 bg-white px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">Open‑Meteo<br>京都詳情</button>
             <button onclick="openWeatherDetail('nara')" class="tap rounded-2xl border border-sky-100 bg-white px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">Open‑Meteo<br>奈良詳情</button>
           </div>
-          <p class="mt-2 text-[10px] leading-relaxed text-slate-400">資料來源：Open-Meteo。上方按鈕會直接顯示該城市的可讀式天氣詳情，不會跳出原始 JSON；出門前再刷新一次，夏天午後雷雨像老闆臨時交辦，早知道早閃。</p>
+          <p class="mt-2 text-[10px] leading-relaxed text-slate-500">資料來源：Open-Meteo。上方按鈕會直接顯示該城市的可讀式天氣詳情，不會跳出原始 JSON；出門前再刷新一次，夏天午後雷雨像老闆臨時交辦，早知道早閃。</p>
+          <div class="mt-2 no-print">
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="tap flex w-full items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-white px-3 py-2.5 text-center text-[11px] font-black text-sky-700 shadow-sm">
+              🌐 氣象資料來源：Open‑Meteo 官方網站
+            </a>
+          </div>
         </section>
       </div>
 
@@ -186,11 +327,12 @@
       <section id="hotel-view" class="hidden"></section>
     </main>
 
-    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-4 border-t border-slate-100 px-2 pt-2 tab-safe shadow-[0_-18px_40px_rgba(15,23,42,.08)]">
+    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-5 border-t border-slate-100 px-2 pt-2 tab-safe shadow-[0_-18px_40px_rgba(15,23,42,.08)]">
       <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-2xl py-2 text-[10px] font-black text-sky-600"><span class="block text-xl">🗓️</span>行程</button>
       <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🎒</span>打包</button>
       <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🎫</span>周遊券</button>
       <button onclick="switchMainTab('hotel')" id="nav-hotel" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🏡</span>民宿</button>
+      <button onclick="openRouteMap()" id="nav-route" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🧭</span>動線</button>
     </nav>
   </div>
 
@@ -236,6 +378,47 @@
       </div>
     </div>
   </div>
+
+
+
+  <div id="route-map-modal" class="modal-backdrop hidden fixed inset-0 z-[70] items-end justify-center bg-slate-950/60 p-3 backdrop-blur-sm sm:items-center">
+    <div class="flex max-h-[92vh] w-full max-w-md flex-col rounded-[28px] bg-white p-4 shadow-2xl">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+        <div>
+          <p class="text-[10px] font-black tracking-[.14em] text-sky-600">TODAY ROUTE LAUNCHER</p>
+          <h3 id="route-map-title" class="mt-1 text-base font-black text-slate-900">Google Maps 當日動線</h3>
+          <p id="route-map-subtitle" class="mt-1 text-[11px] text-slate-500">手冊顯示順序，導航交給 Google Maps</p>
+        </div>
+        <button onclick="closeRouteMap()" class="tap rounded-full bg-slate-100 px-3 py-2 text-xs font-black text-slate-500">✕</button>
+      </div>
+
+      <div class="route-launch-hero mt-3">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p id="route-date" class="text-[11px] font-black tracking-[.14em] text-sky-200">-</p>
+            <h4 class="mt-1 text-base font-black leading-snug">今日行程順序</h4>
+          </div>
+          <span id="route-stop-count" class="rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[11px] font-black text-white">-</span>
+        </div>
+        <p class="mt-2 text-[12px] leading-relaxed text-slate-100">先確認 1 → 2 → 3 的順序；實際步行、電車與交通時間，按下方按鈕交給 Google Maps 即時規劃。</p>
+      </div>
+
+      <div id="route-order-strip" class="route-order-strip mt-3"></div>
+      <div id="route-list" class="mt-3 max-h-[42vh] space-y-2 overflow-y-auto pr-1 text-xs"></div>
+
+      <div class="route-action-card mt-3">
+        <p class="text-[11px] font-black text-sky-900">現場使用建議</p>
+        <p class="mt-1 text-[11px] leading-relaxed text-slate-600">手冊負責看懂今天去哪裡；Google Maps 負責實際怎麼走。這樣最穩，不會再遇到內嵌地圖缺塊或路線不清楚。</p>
+      </div>
+
+      <div class="mt-3 grid grid-cols-2 gap-3">
+        <a id="route-google-link" target="_blank" rel="noopener noreferrer" class="tap rounded-2xl bg-sky-600 py-3 text-center text-xs font-black text-white">🗺️ 開啟 Google Maps</a>
+        <button onclick="copyRouteAddresses()" class="tap rounded-2xl bg-slate-100 py-3 text-xs font-black text-slate-700">📋 複製地址清單</button>
+      </div>
+      <button onclick="closeRouteMap()" class="tap mt-2 rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">返回手冊</button>
+    </div>
+  </div>
+
 
   <div id="toast" class="pointer-events-none fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-slate-950/90 px-4 py-2.5 text-[11px] font-black text-white opacity-0 shadow-xl transition-opacity">完成</div>
 
@@ -415,6 +598,8 @@ const travelData = {
       0:'晴',1:'多雲',2:'多雲',3:'陰',45:'霧',48:'霧',51:'毛雨',53:'毛雨',55:'毛雨',61:'小雨',63:'雨',65:'大雨',66:'凍雨',67:'凍雨',71:'雪',73:'雪',75:'大雪',80:'陣雨',81:'陣雨',82:'強陣雨',95:'雷雨',96:'雷雨',99:'雷雨'
     };
     const weatherIcon = code => code === 0 ? '☀️' : [1,2].includes(code) ? '🌤️' : code === 3 ? '☁️' : [45,48].includes(code) ? '🌫️' : [95,96,99].includes(code) ? '⛈️' : code >= 51 && code <= 82 ? '🌧️' : code >= 71 && code <= 75 ? '❄️' : '🌡️';
+    const tripDates = {1:'2026-07-01',2:'2026-07-02',3:'2026-07-03',4:'2026-07-04',5:'2026-07-05',6:'2026-07-06'};
+    const tripDateLabels = {1:'7/1（三）',2:'7/2（四）',3:'7/3（五）',4:'7/4（六）',5:'7/5（日）',6:'7/6（一）'};
 
     let currentDay = 1;
     let activeMainTab = 'itinerary';
@@ -432,7 +617,7 @@ const travelData = {
     function renderDayTabs(){
       const wrap = document.getElementById('day-tabs');
       wrap.innerHTML = Object.keys(travelData).map(day => `
-        <button id="day-${day}" onclick="switchDay(${day})" class="tap snap-center shrink-0 rounded-2xl px-4 py-2.5 text-xs font-black bg-slate-100 text-slate-500">D${day}</button>
+        <button id="day-${day}" onclick="switchDay(${day})" class="tap snap-center shrink-0 rounded-2xl px-4 py-2.5 text-xs font-black bg-slate-100 text-slate-500"><span class="block">D${day}</span><span class="block mt-0.5 text-[10px] opacity-80">${tripDateLabels[day]}</span></button>
       `).join('');
     }
 
@@ -454,36 +639,45 @@ const travelData = {
           return { city, data };
         }));
         weatherCache = Object.fromEntries(results.map(({city,data}) => [city.key, data]));
-        grid.innerHTML = results.map(({city,data}) => {
-          const cur = data.current || {};
-          const d = data.daily || {};
-          const code = cur.weather_code ?? d.weather_code?.[0] ?? 0;
-          return `
-            <article class="rounded-2xl border border-slate-100 bg-white p-2.5 text-center shadow-sm">
-              <div class="text-lg leading-none">${weatherIcon(code)}</div>
-              <div class="mt-1 text-[12px] font-black text-slate-900">${city.name}</div>
-              <div class="mt-1 text-[11px] font-black text-sky-700">${Math.round(cur.temperature_2m ?? 0)}°C</div>
-              <div class="text-[10px] text-slate-500">體感 ${Math.round(cur.apparent_temperature ?? cur.temperature_2m ?? 0)}°</div>
-              <div class="mt-1 rounded-xl bg-slate-50 px-1.5 py-1 text-[10px] leading-relaxed text-slate-600">
-                今 ${Math.round(d.temperature_2m_min?.[0] ?? 0)}-${Math.round(d.temperature_2m_max?.[0] ?? 0)}°｜雨${d.precipitation_probability_max?.[0] ?? '-'}%<br>
-                明 ${Math.round(d.temperature_2m_min?.[1] ?? 0)}-${Math.round(d.temperature_2m_max?.[1] ?? 0)}°｜雨${d.precipitation_probability_max?.[1] ?? '-'}%
-              </div>
-            </article>`;
-        }).join('');
-        document.getElementById('weather-updated').textContent = new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
-        if(manual) showToast('天氣已更新');
+        renderTripWeatherCards();
+        if(manual) showToast('旅遊日天氣已更新');
       }catch(err){
         grid.innerHTML = cities.map(c => `
-          <a href="https://www.google.com/search?q=${encodeURIComponent(c.name+' 天氣 日本氣象')}" target="_blank" class="tap rounded-2xl border border-amber-100 bg-amber-50 p-2.5 text-center">
-            <div class="text-lg">🌦️</div><div class="text-[12px] font-black text-amber-900">${c.name}</div><div class="text-[10px] text-amber-700">天氣讀取失敗<br>點我查詢</div>
+          <a href="https://www.google.com/search?q=${encodeURIComponent(c.name+' 2026/7 天氣 日本氣象')}" target="_blank" class="tap rounded-2xl border border-amber-100 bg-amber-50 p-2.5 text-center">
+            <div class="text-lg">🌦️</div><div class="text-[12px] font-black text-amber-900">${c.name}</div><div class="text-[10px] text-amber-700">預報讀取失敗<br>點我查詢</div>
           </a>
         `).join('');
         document.getElementById('weather-updated').textContent = '未連線';
       }
     }
 
+    function renderTripWeatherCards(){
+      const grid = document.getElementById('weather-grid');
+      const targetDate = tripDates[currentDay];
+      grid.innerHTML = cities.map(city => {
+        const data = weatherCache[city.key];
+        const d = data?.daily || {};
+        const idx = d.time ? d.time.indexOf(targetDate) : -1;
+        if(idx < 0){
+          return `<article class="rounded-2xl border border-slate-100 bg-white p-2.5 text-center shadow-sm"><div class="text-lg">🌦️</div><div class="mt-1 text-[12px] font-black text-slate-900">${city.name}</div><div class="text-[10px] text-slate-500">${tripDateLabels[currentDay]}<br>尚無預報</div></article>`;
+        }
+        const code = d.weather_code?.[idx] ?? 0;
+        return `
+          <article class="rounded-2xl border border-slate-100 bg-white p-2.5 text-center shadow-sm">
+            <div class="text-lg leading-none">${weatherIcon(code)}</div>
+            <div class="mt-1 text-[12px] font-black text-slate-900">${city.name}</div>
+            <div class="mt-1 text-[10px] font-black text-sky-700">${tripDateLabels[currentDay]}</div>
+            <div class="mt-1 rounded-xl bg-slate-50 px-1.5 py-1 text-[10px] leading-relaxed text-slate-600">
+              ${weatherText[code] || '天氣'}<br>
+              ${Math.round(d.temperature_2m_min?.[idx] ?? 0)}-${Math.round(d.temperature_2m_max?.[idx] ?? 0)}°｜雨${d.precipitation_probability_max?.[idx] ?? '-'}%
+            </div>
+          </article>`;
+      }).join('');
+      document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
+    }
+
     function weatherApiUrl(city){
-      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=2`;
+      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
     }
 
     async function openWeatherDetail(key){
@@ -492,7 +686,7 @@ const travelData = {
       const modal = document.getElementById('weather-detail-modal');
       const body = document.getElementById('weather-detail-body');
       document.getElementById('weather-detail-title').textContent = `${city.name}天氣詳情`;
-      document.getElementById('weather-detail-subtitle').textContent = '今日與明日｜Open‑Meteo 即時資料';
+      document.getElementById('weather-detail-subtitle').textContent = `D${currentDay} ${tripDateLabels[currentDay]}｜Open‑Meteo 預報`;
       body.innerHTML = `<div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-center text-xs font-bold text-slate-500">讀取中…</div>`;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -504,42 +698,43 @@ const travelData = {
           data = await res.json();
           weatherCache[key] = data;
         }
-        const cur = data.current || {};
         const d = data.daily || {};
-        const code = cur.weather_code ?? d.weather_code?.[0] ?? 0;
-        const todayCode = d.weather_code?.[0] ?? code;
-        const tomorrowCode = d.weather_code?.[1] ?? todayCode;
+        const idx = d.time ? d.time.indexOf(tripDates[currentDay]) : -1;
+        const nextIdx = Math.min(idx + 1, (d.time?.length || 1) - 1);
+        if(idx < 0) throw new Error('date unavailable');
+        const code = d.weather_code?.[idx] ?? 0;
+        const nextCode = d.weather_code?.[nextIdx] ?? code;
         body.innerHTML = `
           <div class="rounded-3xl bg-slate-950 p-4 text-white">
             <div class="flex items-center justify-between gap-3">
               <div>
-                <p class="text-[11px] text-slate-300">目前天氣</p>
-                <p class="mt-1 text-2xl font-black">${weatherIcon(code)} ${Math.round(cur.temperature_2m ?? 0)}°C</p>
+                <p class="text-[11px] text-slate-300">D${currentDay}｜${tripDateLabels[currentDay]}</p>
+                <p class="mt-1 text-2xl font-black">${weatherIcon(code)} ${weatherText[code] || '天氣'}</p>
               </div>
               <div class="text-right text-[11px] leading-relaxed text-slate-300">
-                <p>體感 ${Math.round(cur.apparent_temperature ?? cur.temperature_2m ?? 0)}°C</p>
-                <p>濕度 ${cur.relative_humidity_2m ?? '-'}%</p>
-                <p>風速 ${cur.wind_speed_10m ?? '-'} km/h</p>
+                <p>高溫 ${Math.round(d.temperature_2m_max?.[idx] ?? 0)}°C</p>
+                <p>低溫 ${Math.round(d.temperature_2m_min?.[idx] ?? 0)}°C</p>
+                <p>降雨 ${d.precipitation_probability_max?.[idx] ?? '-'}%</p>
               </div>
             </div>
-            <p class="mt-3 rounded-2xl bg-white/10 p-3 text-xs leading-relaxed text-slate-100">${weatherText[code] || '天氣變化'}。夏天關西午後雷雨很會臨時加戲，出門前按一下「↻ 天氣」最保險。</p>
+            <p class="mt-3 rounded-2xl bg-white/10 p-3 text-xs leading-relaxed text-slate-100">這是旅遊日期對應的 ${city.name} 預報。出發前再按一次「↻ 天氣」，避免午後雷雨臨時加戲。</p>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="rounded-3xl border border-sky-100 bg-sky-50 p-4">
-              <p class="text-[11px] font-black text-sky-700">今日</p>
-              <p class="mt-1 text-xl font-black text-slate-900">${weatherIcon(todayCode)} ${weatherText[todayCode] || '-'}</p>
-              <p class="mt-2 text-xs leading-relaxed text-slate-600">高溫 ${Math.round(d.temperature_2m_max?.[0] ?? 0)}°C<br>低溫 ${Math.round(d.temperature_2m_min?.[0] ?? 0)}°C<br>降雨 ${d.precipitation_probability_max?.[0] ?? '-'}%</p>
+              <p class="text-[11px] font-black text-sky-700">當日 ${tripDateLabels[currentDay]}</p>
+              <p class="mt-1 text-xl font-black text-slate-900">${weatherIcon(code)} ${weatherText[code] || '-'}</p>
+              <p class="mt-2 text-xs leading-relaxed text-slate-600">高溫 ${Math.round(d.temperature_2m_max?.[idx] ?? 0)}°C<br>低溫 ${Math.round(d.temperature_2m_min?.[idx] ?? 0)}°C<br>降雨 ${d.precipitation_probability_max?.[idx] ?? '-'}%</p>
             </div>
             <div class="rounded-3xl border border-emerald-100 bg-emerald-50 p-4">
-              <p class="text-[11px] font-black text-emerald-700">明日</p>
-              <p class="mt-1 text-xl font-black text-slate-900">${weatherIcon(tomorrowCode)} ${weatherText[tomorrowCode] || '-'}</p>
-              <p class="mt-2 text-xs leading-relaxed text-slate-600">高溫 ${Math.round(d.temperature_2m_max?.[1] ?? 0)}°C<br>低溫 ${Math.round(d.temperature_2m_min?.[1] ?? 0)}°C<br>降雨 ${d.precipitation_probability_max?.[1] ?? '-'}%</p>
+              <p class="text-[11px] font-black text-emerald-700">隔日參考</p>
+              <p class="mt-1 text-xl font-black text-slate-900">${weatherIcon(nextCode)} ${weatherText[nextCode] || '-'}</p>
+              <p class="mt-2 text-xs leading-relaxed text-slate-600">高溫 ${Math.round(d.temperature_2m_max?.[nextIdx] ?? 0)}°C<br>低溫 ${Math.round(d.temperature_2m_min?.[nextIdx] ?? 0)}°C<br>降雨 ${d.precipitation_probability_max?.[nextIdx] ?? '-'}%</p>
             </div>
           </div>
-          <p class="rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-500">資料由 Open‑Meteo API 即時讀取，已在本頁轉成可閱讀格式，不會再開啟一整排 JSON 原始碼。</p>
+          <p class="rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-500">D1～D6 已分別對應 7/1～7/6 的旅遊日預報；預報會隨時間更新，越接近出發越準。</p>
         `;
       }catch(e){
-        body.innerHTML = `<a href="https://www.google.com/search?q=${encodeURIComponent(city.name+' 天氣 日本')}" target="_blank" rel="noopener noreferrer" class="tap block rounded-2xl border border-amber-100 bg-amber-50 p-4 text-center text-xs font-black text-amber-800">Open‑Meteo 暫時讀取失敗<br>點我改用 Google 查詢 ${city.name} 天氣</a>`;
+        body.innerHTML = `<a href="https://www.google.com/search?q=${encodeURIComponent(city.name+' 2026 7月 天氣 日本')}" target="_blank" rel="noopener noreferrer" class="tap block rounded-2xl border border-amber-100 bg-amber-50 p-4 text-center text-xs font-black text-amber-800">Open‑Meteo 暫時讀取失敗<br>點我改用 Google 查詢 ${city.name} 天氣</a>`;
       }
     }
 
@@ -558,6 +753,7 @@ const travelData = {
       active.className = 'tap snap-center shrink-0 rounded-2xl px-4 py-2.5 text-xs font-black bg-sky-600 text-white shadow-lg shadow-sky-500/20';
       switchMainTab('itinerary', false);
       renderItinerary(day);
+      if(Object.keys(weatherCache).length) renderTripWeatherCards();
       window.scrollTo({top:0, behavior:'smooth'});
     }
 
@@ -591,13 +787,13 @@ const travelData = {
       document.getElementById('day-hero').innerHTML = `
         <div class="flex items-start justify-between gap-3">
           <div>
-            <p class="text-[11px] font-black tracking-[.18em] text-sky-300">DAY ${day}</p>
+            <p class="hero-kicker text-[11px] font-black tracking-[.18em]">DAY ${day}</p>
             <h2 class="mt-1 text-base font-black leading-snug">${data.title}</h2>
           </div>
-          <span class="pill bg-white/10 text-sky-100 border border-white/10">${stats.count}站</span>
+          <span class="hero-pill pill bg-white/10 text-sky-100 border border-white/10">${stats.count}站</span>
         </div>
-        <div class="mt-3 rounded-2xl bg-white/10 p-3 text-[12px] leading-relaxed text-slate-100">${data.clothing}</div>
-        <div class="mt-3 grid grid-cols-3 gap-2">
+        <div class="hero-clothing mt-3 rounded-2xl bg-white/10 p-3 text-[12px] leading-relaxed text-slate-100">${data.clothing}</div>
+        <div class="hero-stats mt-3 grid grid-cols-3 gap-2">
           <div class="mini-stat"><div class="label">第一站</div><div class="value">${stats.first.time || '-'}<br>${stats.first.name || '-'}</div></div>
           <div class="mini-stat"><div class="label">戶外/移動</div><div class="value">約 ${stats.outdoor} 站<br>注意補水</div></div>
           <div class="mini-stat"><div class="label">收尾</div><div class="value">${stats.last.time || '-'}<br>${stats.last.name || '-'}</div></div>
@@ -859,6 +1055,68 @@ const travelData = {
       buildPrintArea();
       setTimeout(() => window.print(), 80);
     }
+
+
+    function routeGoogleUrl(items){
+      const q = s => encodeURIComponent(s.name + ' ' + s.addr);
+      if(items.length <= 1) return `https://www.google.com/maps/search/?api=1&query=${q(items[0])}`;
+      const origin=q(items[0]), destination=q(items[items.length-1]);
+      const waypoints = items.slice(1,-1).map(q).join('|');
+      return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=transit`;
+    }
+
+    function buildRouteOrderStrip(items){
+      return items.map((_, idx) => `
+        <span class="route-order-dot">${idx+1}</span>${idx < items.length-1 ? '<span class="route-order-arrow">→</span>' : ''}
+      `).join('');
+    }
+
+    function buildRouteLaunchList(items){
+      return items.map((item, idx) => `
+        <div>
+          <div class="route-step">
+            <span class="route-step-num">${idx+1}</span>
+            <div class="route-step-main">
+              <p class="route-step-title">${escapeHtml(item.time)}｜${escapeHtml(item.name)}</p>
+              <p class="route-step-addr">〒 ${escapeHtml(item.addr).replace(/^〒\s*/, '')}</p>
+            </div>
+          </div>
+          ${idx < items.length-1 ? '<div class="route-step-arrow">↓</div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function openRouteMap(){
+      const data = travelData[currentDay];
+      const modal = document.getElementById('route-map-modal');
+      document.getElementById('route-map-title').textContent = `D${currentDay} ${tripDateLabels[currentDay]} Google Maps 當日動線`;
+      document.getElementById('route-map-subtitle').textContent = '依行程順序顯示 1 → 2 → 3…，點按即可開啟實際導航';
+      document.getElementById('route-date').textContent = `DAY ${currentDay}｜${tripDateLabels[currentDay]}`;
+      document.getElementById('route-stop-count').textContent = `${data.items.length} 站`;
+      document.getElementById('route-order-strip').innerHTML = buildRouteOrderStrip(data.items);
+      document.getElementById('route-list').innerHTML = buildRouteLaunchList(data.items);
+      document.getElementById('route-google-link').href = routeGoogleUrl(data.items);
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.body.style.overflow='hidden';
+    }
+
+    function copyRouteAddresses(){
+      const data = travelData[currentDay];
+      let text = `🧭 D${currentDay} ${tripDateLabels[currentDay]} 今日動線\n${data.title}\n\n`;
+      data.items.forEach((item, idx) => {
+        text += `${idx+1}. ${item.time}｜${item.name}\n📍 ${item.addr}\n\n`;
+      });
+      text += '提醒：實際步行、電車與交通時間請以 Google Maps 現場導航為準。';
+      copyText(text, '今日動線地址清單已複製');
+    }
+
+    function closeRouteMap(){
+      const modal=document.getElementById('route-map-modal');
+      modal.classList.add('hidden'); modal.classList.remove('flex');
+      document.body.style.overflow='';
+    }
+
+
     function bindUiHelpers(){
       document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -867,6 +1125,7 @@ const travelData = {
             backdrop.classList.remove('flex');
             if(backdrop.id === 'modal') closeModal();
             if(backdrop.id === 'weather-detail-modal') closeWeatherDetail();
+            if(backdrop.id === 'route-map-modal') closeRouteMap();
           }
         });
       });
@@ -875,6 +1134,7 @@ const travelData = {
           closeModal();
           closeWeatherDetail();
           closePdfPreview();
+          closeRouteMap();
         }
       });
     }

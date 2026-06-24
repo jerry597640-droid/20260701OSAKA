@@ -125,6 +125,36 @@
     .route-action-card{ border-radius:22px; border:1px solid #bae6fd; background:#f0f9ff; padding:12px; }
 
 
+    /* 旅行記帳：localStorage 本機記憶，不須重新填入 */
+    .expense-hero{
+      border-radius:24px;
+      padding:14px;
+      background:linear-gradient(135deg,#064e3b 0%,#047857 55%,#0f766e 100%);
+      color:#fff;
+      box-shadow:0 14px 34px rgba(6,78,59,.22);
+    }
+    .expense-form-card{ border-radius:24px; border:1px solid #d1fae5; background:#ecfdf5; padding:14px; }
+    .expense-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .expense-field label{ display:block; margin:0 0 5px; font-size:10px; font-weight:950; color:#047857; }
+    .expense-field input,.expense-field select,.expense-field textarea{
+      width:100%; border:1px solid #a7f3d0; background:#fff; border-radius:16px;
+      padding:10px 11px; font-size:13px; font-weight:800; color:#0f172a; outline:none;
+    }
+    .expense-field textarea{ min-height:70px; resize:vertical; line-height:1.5; }
+    .expense-field input:focus,.expense-field select:focus,.expense-field textarea:focus{ border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,.16); }
+    .expense-summary{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .expense-total-card{ border-radius:18px; border:1px solid #e2e8f0; background:#fff; padding:10px; }
+    .expense-total-card .k{ font-size:10px; color:#64748b; font-weight:950; }
+    .expense-total-card .v{ margin-top:3px; font-size:14px; color:#0f172a; font-weight:950; }
+    .expense-record{ border-radius:20px; border:1px solid #e2e8f0; background:#fff; padding:12px; box-shadow:0 8px 22px rgba(15,23,42,.05); }
+    .expense-record-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .expense-record-name{ font-size:13px; font-weight:950; color:#0f172a; line-height:1.35; }
+    .expense-record-meta{ margin-top:4px; font-size:10.5px; color:#64748b; line-height:1.5; }
+    .expense-record-amount{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:14px; font-weight:950; color:#047857; white-space:nowrap; }
+    .expense-delete{ border:0; border-radius:14px; background:#fff1f2; color:#be123c; padding:8px 9px; font-size:11px; font-weight:950; }
+    @media(max-width:390px){ .expense-grid,.expense-summary{ grid-template-columns:1fr!important; } }
+
+
 
     /* 直式／橫式自適應：直式維持單欄，橫式改為左右分欄，減少長頁滑動 */
     @media (orientation: landscape) and (min-width: 700px) and (max-height: 680px){
@@ -167,7 +197,7 @@
         transform:none!important;
         width:calc(100vw - 360px)!important;
         max-width:none!important;
-        grid-template-columns:repeat(5,minmax(0,1fr))!important;
+        grid-template-columns:repeat(6,minmax(0,1fr))!important;
         padding-top:6px!important;
       }
       #bottom-nav button{ padding:6px 2px!important; font-size:10px!important; }
@@ -325,13 +355,15 @@
       <section id="packing-view" class="hidden"></section>
       <section id="ticket-view" class="hidden"></section>
       <section id="hotel-view" class="hidden"></section>
+      <section id="expense-view" class="hidden"></section>
     </main>
 
-    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-5 border-t border-slate-100 px-2 pt-2 tab-safe shadow-[0_-18px_40px_rgba(15,23,42,.08)]">
+    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-6 border-t border-slate-100 px-2 pt-2 tab-safe shadow-[0_-18px_40px_rgba(15,23,42,.08)]">
       <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-2xl py-2 text-[10px] font-black text-sky-600"><span class="block text-xl">🗓️</span>行程</button>
       <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🎒</span>打包</button>
       <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🎫</span>周遊券</button>
       <button onclick="switchMainTab('hotel')" id="nav-hotel" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🏡</span>民宿</button>
+      <button onclick="switchMainTab('expense')" id="nav-expense" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">💰</span>記帳</button>
       <button onclick="openRouteMap()" id="nav-route" class="tap rounded-2xl py-2 text-[10px] font-black text-slate-400"><span class="block text-xl">🧭</span>動線</button>
     </nav>
   </div>
@@ -605,6 +637,8 @@ const travelData = {
     let activeMainTab = 'itinerary';
     let modalPayload = { address:'' };
     let weatherCache = {};
+    const expenseStorageKey = 'kansai2026ExpenseRecords_v1';
+    const expenseDraftKey = 'kansai2026ExpenseDraft_v1';
 
     document.addEventListener('DOMContentLoaded', () => {
       renderDayTabs();
@@ -612,6 +646,7 @@ const travelData = {
       switchDay(1);
       refreshWeather(false);
       bindUiHelpers();
+      bindExpenseAutoSave();
     });
 
     function renderDayTabs(){
@@ -759,7 +794,7 @@ const travelData = {
 
     function switchMainTab(tab, shouldScroll=true){
       activeMainTab = tab;
-      ['itinerary','packing','ticket','hotel'].forEach(id => {
+      ['itinerary','packing','ticket','hotel','expense'].forEach(id => {
         document.getElementById(`${id}-view`).classList.toggle('hidden', id !== tab);
         const nav = document.getElementById(`nav-${id}`);
         nav.className = `tap rounded-2xl py-2 text-[10px] font-black ${id===tab ? 'text-sky-600 bg-sky-50' : 'text-slate-400'}`;
@@ -870,6 +905,7 @@ const travelData = {
             <button type="button" onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分、鶴見橋商店街の中です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('大阪府大阪市西成区鶴見橋1-15-21')}')" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">🚕 問路大字</button>
           </div>
         </div>`;
+      renderExpensePanel();
     }
 
     function panelWrap(title, items){
@@ -1114,6 +1150,281 @@ const travelData = {
       const modal=document.getElementById('route-map-modal');
       modal.classList.add('hidden'); modal.classList.remove('flex');
       document.body.style.overflow='';
+    }
+
+
+    function getExpenseRecords(){
+      try{ return JSON.parse(localStorage.getItem(expenseStorageKey) || '[]'); }
+      catch(e){ return []; }
+    }
+    function saveExpenseRecords(records){ localStorage.setItem(expenseStorageKey, JSON.stringify(records)); }
+    function getExpenseDraft(){
+      try{ return JSON.parse(localStorage.getItem(expenseDraftKey) || '{}'); }
+      catch(e){ return {}; }
+    }
+    function saveExpenseDraft(){
+      const draft = {
+        day: document.getElementById('expense-day')?.value || String(currentDay),
+        category: document.getElementById('expense-category')?.value || '餐飲',
+        item: document.getElementById('expense-item')?.value || '',
+        amount: document.getElementById('expense-amount')?.value || '',
+        currency: document.getElementById('expense-currency')?.value || 'JPY',
+        payer: document.getElementById('expense-payer')?.value || '',
+        note: document.getElementById('expense-note')?.value || ''
+      };
+      localStorage.setItem(expenseDraftKey, JSON.stringify(draft));
+    }
+    function bindExpenseAutoSave(){
+      document.addEventListener('input', (e) => {
+        if(e.target && e.target.closest && e.target.closest('#expense-view')) saveExpenseDraft();
+      });
+      document.addEventListener('change', (e) => {
+        if(e.target && e.target.closest && e.target.closest('#expense-view')) saveExpenseDraft();
+      });
+    }
+    function renderExpensePanel(){
+      const draft = Object.assign({day:String(currentDay),category:'餐飲',item:'',amount:'',currency:'JPY',payer:'',note:''}, getExpenseDraft());
+      const dayOptions = Object.keys(travelData).map(day => `<option value="${day}" ${String(draft.day)===String(day)?'selected':''}>D${day}｜${tripDateLabels[day]}</option>`).join('');
+      document.getElementById('expense-view').innerHTML = `
+        <div class="expense-hero card-shadow">
+          <p class="text-[10px] font-black tracking-[.16em] text-emerald-200">TRAVEL EXPENSE</p>
+          <h2 class="mt-1 text-base font-black">💰 旅行過程記帳</h2>
+          <p class="mt-2 text-xs leading-relaxed text-emerald-50">輸入資料會自動記憶在本機瀏覽器，下次打開同一個 HTML 仍會保留最後填入內容與記帳紀錄。</p>
+        </div>
+
+        <div class="mt-4 expense-form-card card-shadow">
+          <div class="expense-grid">
+            <div class="expense-field">
+              <label>日期 / 行程日</label>
+              <select id="expense-day">${dayOptions}</select>
+            </div>
+            <div class="expense-field">
+              <label>分類</label>
+              <select id="expense-category">
+                ${['餐飲','交通','門票','購物','住宿','伴手禮','其他'].map(c => `<option value="${c}" ${draft.category===c?'selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+            <div class="expense-field">
+              <label>項目</label>
+              <input id="expense-item" placeholder="例：一蘭拉麵、近鐵車票" value="${escapeHtml(draft.item)}">
+            </div>
+            <div class="expense-field">
+              <label>金額</label>
+              <input id="expense-amount" type="number" inputmode="decimal" min="0" step="1" placeholder="例：1200" value="${escapeHtml(draft.amount)}">
+            </div>
+            <div class="expense-field">
+              <label>幣別</label>
+              <select id="expense-currency">
+                ${['JPY','TWD','USD'].map(c => `<option value="${c}" ${draft.currency===c?'selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+            <div class="expense-field">
+              <label>付款人</label>
+              <input id="expense-payer" placeholder="例：爸爸、媽媽、現金、公費" value="${escapeHtml(draft.payer)}">
+            </div>
+          </div>
+          <div class="expense-field mt-3">
+            <label>備註</label>
+            <textarea id="expense-note" placeholder="例：4人共用、已退稅、現金支付">${escapeHtml(draft.note)}</textarea>
+          </div>
+          <div class="mt-3 grid grid-cols-2 gap-2">
+            <button type="button" onclick="addExpenseRecord()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">＋ 加入紀錄</button>
+            <button type="button" onclick="clearExpenseDraft()" class="tap rounded-2xl bg-white py-3 text-xs font-black text-slate-700 border border-slate-200">清空輸入</button>
+            <button type="button" onclick="copyExpenseSummary()" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">📋 複製總表</button>
+            <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/15">⬇️ 匯出 CSV</button>
+            <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap col-span-2 rounded-2xl bg-emerald-700 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">📊 匯出 Google Sheet</button>
+          </div>
+          <p class="mt-2 rounded-2xl bg-white/70 px-3 py-2 text-[11px] leading-relaxed text-emerald-900 border border-emerald-100">Google Sheet 匯出方式：系統會先複製成試算表格式，並開啟新的 Google Sheet；開啟後請在 A1 貼上，即可自動分欄成總表。</p>
+        </div>
+
+        <div class="section-title">
+          <h3>目前合計</h3>
+          <span id="expense-count" class="pill bg-emerald-50 text-emerald-700">0 筆</span>
+        </div>
+        <div id="expense-summary" class="expense-summary"></div>
+
+        <div class="section-title">
+          <h3>記帳紀錄</h3>
+          <button type="button" onclick="clearAllExpenses()" class="tap rounded-full bg-rose-50 px-3 py-2 text-[10px] font-black text-rose-700">清除全部</button>
+        </div>
+        <div id="expense-records" class="space-y-2"></div>
+      `;
+      renderExpenseRecords();
+    }
+    function addExpenseRecord(){
+      const amount = Number(document.getElementById('expense-amount')?.value || 0);
+      const item = (document.getElementById('expense-item')?.value || '').trim();
+      if(!item){ showToast('請先輸入項目'); return; }
+      if(!amount || amount <= 0){ showToast('請輸入金額'); return; }
+      const record = {
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+        day: document.getElementById('expense-day').value,
+        category: document.getElementById('expense-category').value,
+        item,
+        amount,
+        currency: document.getElementById('expense-currency').value,
+        payer: (document.getElementById('expense-payer').value || '').trim(),
+        note: (document.getElementById('expense-note').value || '').trim()
+      };
+      const records = getExpenseRecords();
+      records.unshift(record);
+      saveExpenseRecords(records);
+      saveExpenseDraft();
+      renderExpenseRecords();
+      showToast('已加入記帳紀錄');
+    }
+    function formatMoney(amount, currency){
+      const rounded = Math.round((Number(amount)||0) * 100) / 100;
+      if(currency === 'JPY') return `¥${rounded.toLocaleString('zh-TW')}`;
+      if(currency === 'TWD') return `NT$${rounded.toLocaleString('zh-TW')}`;
+      if(currency === 'USD') return `$${rounded.toLocaleString('zh-TW')}`;
+      return `${rounded.toLocaleString('zh-TW')} ${currency}`;
+    }
+    function renderExpenseRecords(){
+      const records = getExpenseRecords();
+      const summary = records.reduce((acc,r)=>{ acc[r.currency]=(acc[r.currency]||0)+Number(r.amount||0); return acc; },{});
+      document.getElementById('expense-count').textContent = `${records.length} 筆`;
+      const currencies = ['JPY','TWD','USD'];
+      document.getElementById('expense-summary').innerHTML = currencies.map(c => `
+        <div class="expense-total-card">
+          <div class="k">${c} 合計</div>
+          <div class="v">${formatMoney(summary[c]||0,c)}</div>
+        </div>
+      `).join('');
+      document.getElementById('expense-records').innerHTML = records.length ? records.map(r => `
+        <article class="expense-record">
+          <div class="expense-record-top">
+            <div class="min-w-0">
+              <div class="expense-record-name">${escapeHtml(r.item)}</div>
+              <div class="expense-record-meta">D${escapeHtml(r.day)}｜${escapeHtml(tripDateLabels[r.day] || '')}｜${escapeHtml(r.category)}${r.payer ? '｜付款：'+escapeHtml(r.payer) : ''}</div>
+              ${r.note ? `<div class="expense-record-meta">備註：${escapeHtml(r.note)}</div>` : ''}
+            </div>
+            <div class="text-right">
+              <div class="expense-record-amount">${formatMoney(r.amount,r.currency)}</div>
+              <button type="button" onclick="deleteExpenseRecord(${Number(r.id)})" class="expense-delete mt-2">刪除</button>
+            </div>
+          </div>
+        </article>
+      `).join('') : `<div class="rounded-3xl border border-slate-100 bg-slate-50 p-5 text-center text-xs font-bold text-slate-500">尚未新增記帳紀錄。旅途中買完就記，回台才不會變考古。</div>`;
+    }
+    function deleteExpenseRecord(id){
+      saveExpenseRecords(getExpenseRecords().filter(r => Number(r.id)!==Number(id)));
+      renderExpenseRecords();
+      showToast('已刪除');
+    }
+    function clearAllExpenses(){
+      if(!confirm('確定要清除全部記帳紀錄嗎？')) return;
+      saveExpenseRecords([]);
+      renderExpenseRecords();
+      showToast('記帳紀錄已清除');
+    }
+    function clearExpenseDraft(){
+      localStorage.removeItem(expenseDraftKey);
+      renderExpensePanel();
+      showToast('輸入欄位已清空');
+    }
+    function copyExpenseSummary(){
+      const records = getExpenseRecords();
+      if(!records.length){ showToast('目前沒有記帳紀錄'); return; }
+      const summary = records.reduce((acc,r)=>{ acc[r.currency]=(acc[r.currency]||0)+Number(r.amount||0); return acc; },{});
+      let text = '💰 2026 京阪奈旅行記帳\n\n';
+      Object.keys(summary).forEach(c => { text += `${c} 合計：${formatMoney(summary[c],c)}\n`; });
+      text += '\n明細：\n';
+      records.slice().reverse().forEach((r, idx) => {
+        text += `${idx+1}. D${r.day} ${tripDateLabels[r.day]||''}｜${r.category}｜${r.item}｜${formatMoney(r.amount,r.currency)}${r.payer?'｜付款：'+r.payer:''}${r.note?'｜'+r.note:''}\n`;
+      });
+      copyText(text, '記帳總表已複製');
+    }
+
+    function csvCell(value){
+      const s = String(value ?? '').replace(/"/g, '""');
+      return `"${s}"`;
+    }
+    function exportExpenseSummaryCSV(){
+      const records = getExpenseRecords();
+      if(!records.length){ showToast('目前沒有記帳紀錄'); return; }
+      const summary = records.reduce((acc,r)=>{ acc[r.currency]=(acc[r.currency]||0)+Number(r.amount||0); return acc; },{});
+      const rows = [];
+      rows.push(['2026 京阪奈旅行記帳總表']);
+      rows.push(['匯出時間', new Date().toLocaleString('zh-TW')]);
+      rows.push([]);
+      rows.push(['幣別','合計']);
+      ['JPY','TWD','USD'].forEach(c => rows.push([c, summary[c] || 0]));
+      Object.keys(summary).filter(c => !['JPY','TWD','USD'].includes(c)).forEach(c => rows.push([c, summary[c] || 0]));
+      rows.push([]);
+      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','建立時間']);
+      records.slice().reverse().forEach((r, idx) => {
+        rows.push([
+          idx + 1,
+          `D${r.day}`,
+          tripDateLabels[r.day] || '',
+          r.category || '',
+          r.item || '',
+          Number(r.amount || 0),
+          r.currency || '',
+          r.payer || '',
+          r.note || '',
+          r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : ''
+        ]);
+      });
+      const csv = '\ufeff' + rows.map(row => row.map(csvCell).join(',')).join('\r\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      a.href = url;
+      a.download = `2026_京阪奈旅行記帳總表_${stamp}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast('總表 CSV 已匯出');
+    }
+
+
+    function buildExpenseExportRows(){
+      const records = getExpenseRecords();
+      const summary = records.reduce((acc,r)=>{ acc[r.currency]=(acc[r.currency]||0)+Number(r.amount||0); return acc; },{});
+      const rows = [];
+      rows.push(['2026 京阪奈旅行記帳總表']);
+      rows.push(['匯出時間', new Date().toLocaleString('zh-TW')]);
+      rows.push([]);
+      rows.push(['幣別','合計']);
+      ['JPY','TWD','USD'].forEach(c => rows.push([c, summary[c] || 0]));
+      Object.keys(summary).filter(c => !['JPY','TWD','USD'].includes(c)).forEach(c => rows.push([c, summary[c] || 0]));
+      rows.push([]);
+      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','建立時間']);
+      records.slice().reverse().forEach((r, idx) => {
+        rows.push([
+          idx + 1,
+          `D${r.day}`,
+          tripDateLabels[r.day] || '',
+          r.category || '',
+          r.item || '',
+          Number(r.amount || 0),
+          r.currency || '',
+          r.payer || '',
+          r.note || '',
+          r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : ''
+        ]);
+      });
+      return rows;
+    }
+    function tsvCell(value){
+      return String(value ?? '').replace(/\t/g,' ').replace(/\r?\n/g,' ');
+    }
+    function exportExpenseToGoogleSheet(){
+      const records = getExpenseRecords();
+      if(!records.length){ showToast('目前沒有記帳紀錄'); return; }
+      const rows = buildExpenseExportRows();
+      const tsv = rows.map(row => row.map(tsvCell).join('\t')).join('\n');
+      const win = window.open('https://sheets.new', '_blank', 'noopener,noreferrer');
+      copyText(tsv, '已複製 Google Sheet 表格，請貼到 A1');
+      if(!win){ showToast('已複製表格；請允許彈出視窗後再開 Google Sheet'); }
+      setTimeout(() => {
+        alert('Google Sheet 匯出資料已複製。\n\n操作方式：\n1. 等新的 Google Sheet 開啟\n2. 點選 A1 儲存格\n3. 貼上資料\n\n貼上後會自動分欄成完整總表。');
+      }, 350);
     }
 
 

@@ -68,6 +68,48 @@
     #day-hero .mini-stat .value{ color:#ffffff!important; text-shadow:0 1px 1px rgba(0,0,0,.18); }
     @media(max-width:390px){ #day-hero .hero-stats{ grid-template-columns:1fr!important; } }
 
+    /* 專業每日提醒卡片：今日結論、風險等級、降雨時段、行程策略 */
+    .weather-advice-card{
+      border-radius:20px;
+      background:rgba(255,255,255,.13)!important;
+      color:#f8fafc!important;
+      border:1px solid rgba(255,255,255,.16);
+      padding:12px;
+    }
+    .weather-advice-card.light{
+      background:#f8fafc!important;
+      color:#0f172a!important;
+      border:1px solid #e2e8f0;
+    }
+    .advice-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .advice-label{font-size:10px;font-weight:950;letter-spacing:.12em;color:#7dd3fc;}
+    .weather-advice-card.light .advice-label{color:#0284c7;}
+    .advice-conclusion{margin-top:4px;font-size:13px;line-height:1.45;font-weight:950;color:#fff;}
+    .weather-advice-card.light .advice-conclusion{color:#0f172a;}
+    .risk-badge{flex:0 0 auto;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:950;border:1px solid rgba(255,255,255,.18);}
+    .risk-low{background:rgba(16,185,129,.18);color:#bbf7d0;}
+    .risk-mid{background:rgba(245,158,11,.18);color:#fde68a;}
+    .risk-high{background:rgba(244,63,94,.20);color:#fecdd3;}
+    .risk-extreme{background:rgba(126,34,206,.25);color:#e9d5ff;}
+    .weather-advice-card.light .risk-low{background:#dcfce7;color:#166534;border-color:#bbf7d0;}
+    .weather-advice-card.light .risk-mid{background:#fef3c7;color:#92400e;border-color:#fde68a;}
+    .weather-advice-card.light .risk-high{background:#ffe4e6;color:#9f1239;border-color:#fecdd3;}
+    .weather-advice-card.light .risk-extreme{background:#f3e8ff;color:#6b21a8;border-color:#e9d5ff;}
+    .advice-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
+    .advice-box{border-radius:16px;background:rgba(15,23,42,.30);border:1px solid rgba(255,255,255,.12);padding:10px;}
+    .weather-advice-card.light .advice-box{background:#fff;border-color:#e2e8f0;}
+    .advice-box h4{margin:0 0 5px;font-size:11px;font-weight:950;color:#bae6fd;}
+    .weather-advice-card.light .advice-box h4{color:#0369a1;}
+    .advice-box p,.advice-box li{margin:0;font-size:12px;line-height:1.55;color:#f8fafc;font-weight:700;}
+    .weather-advice-card.light .advice-box p,.weather-advice-card.light .advice-box li{color:#334155;}
+    .rain-window-list{display:grid;gap:5px;}
+    .rain-window-item{display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:12px;background:rgba(255,255,255,.10);padding:7px 8px;font-size:11px;font-weight:950;color:#fff;}
+    .weather-advice-card.light .rain-window-item{background:#eff6ff;color:#0f172a;}
+    .rain-window-item span:last-child{color:#fde68a;white-space:nowrap;}
+    .weather-advice-card.light .rain-window-item span:last-child{color:#0369a1;}
+    @media(orientation:landscape) and (min-width:680px){ .advice-grid{grid-template-columns:1fr 1fr;} .advice-box.full{grid-column:1/-1;} }
+
+
     /* D1～D6 固定同一行：避免日期文字造成 D6 換到下一列 */
     #day-tabs{
       display:grid!important;
@@ -281,7 +323,7 @@
       #print-area{ display:block!important; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Microsoft JhengHei",sans-serif; }
       .print-sheet{ max-width:760px; margin:0 auto; }
       .print-title{ font-size:22px; font-weight:900; margin:0 0 8px; }
-      .print-subtitle{ font-size:13px; color:#475569; margin:0 0 14px; line-height:1.6; }
+      .print-subtitle{ font-size:13px; color:#475569; margin:0 0 14px; line-height:1.6; white-space:pre-line; }
       .print-card{ break-inside:avoid; page-break-inside:avoid; border:1px solid #e2e8f0; border-radius:16px; padding:12px; margin:0 0 10px; }
       .print-time{ font-weight:900; color:#0369a1; margin-right:8px; }
       .print-name{ font-weight:900; }
@@ -731,42 +773,242 @@ const travelData = {
       };
     }
 
-    function buildWeatherBasedAdvice(day=currentDay){
-      const base = travelData[day]?.clothing || '';
-      const w = getTripWeatherSnapshot(day);
-      if(!w){
-        return `📌 每日提醒：目前尚未取得旅遊日天氣，先依原行程建議準備。${base}`;
+    function isWetWeatherCode(code){
+      const c = Number(code ?? 0);
+      return (c >= 51 && c <= 67) || (c >= 80 && c <= 82) || [95,96,99].includes(c);
+    }
+
+    function formatHourFromIso(value){
+      if(!value) return '--:--';
+      const t = String(value).split('T')[1] || String(value).slice(11,16);
+      return t ? t.slice(0,5) : '--:--';
+    }
+
+    function mergeRainHourGroups(entries){
+      if(!entries.length) return [];
+      const groups = [];
+      let group = [entries[0]];
+      for(let i=1;i<entries.length;i++){
+        const prevHour = Number(entries[i-1].time.slice(11,13));
+        const curHour = Number(entries[i].time.slice(11,13));
+        if(curHour - prevHour <= 1){ group.push(entries[i]); }
+        else{ groups.push(group); group = [entries[i]]; }
       }
+      groups.push(group);
+      return groups.map(g => {
+        const start = formatHourFromIso(g[0].time);
+        const lastHour = Number(g[g.length-1].time.slice(11,13));
+        const end = String(Math.min(lastHour + 1, 24)).padStart(2,'0') + ':00';
+        const maxProb = Math.max(...g.map(x => Number(x.prob ?? 0)));
+        const avgProb = Math.round(g.reduce((sum,x)=>sum + Number(x.prob ?? 0),0) / g.length);
+        const peak = g.reduce((best,x)=> Number(x.prob ?? 0) > Number(best.prob ?? 0) ? x : best, g[0]);
+        const thunder = g.some(x => [95,96,99].includes(Number(x.code ?? 0)));
+        return { start, end, maxProb, avgProb, peakHour:formatHourFromIso(peak.time), thunder };
+      });
+    }
+
+    function getRainTimeSummary(day=currentDay, cityKey){
+      const key = cityKey || primaryWeatherCityByDay[day] || 'osaka';
+      const city = cities.find(c => c.key === key) || cities[0];
+      const data = weatherCache[key];
+      const target = tripDates[day];
+      const h = data?.hourly || {};
+      const times = h.time || [];
+      const probs = h.precipitation_probability || [];
+      const codes = h.weather_code || [];
+      const prec = h.precipitation || [];
+      if(!times.length){
+        const w = getTripWeatherSnapshot(day);
+        return {
+          city,
+          available:false,
+          summary:`☔ 可能下雨時間：目前尚未取得逐時預報；先以全天降雨機率 ${w?.rain ?? '-'}% 判斷，出門前請再按「更新天氣」。`,
+          compact:`尚無逐時資料｜全天雨${w?.rain ?? '-'}%`,
+          windows:[]
+        };
+      }
+      const entries = times.map((time,i)=>({
+        time,
+        prob:Number(probs[i] ?? 0),
+        code:Number(codes[i] ?? 0),
+        precipitation:Number(prec[i] ?? 0)
+      })).filter(x => String(x.time).startsWith(target));
+      if(!entries.length){
+        const w = getTripWeatherSnapshot(day);
+        return {
+          city,
+          available:false,
+          summary:`☔ 可能下雨時間：${city.name} ${tripDateLabels[day]} 尚無逐時預報；先以全天降雨機率 ${w?.rain ?? '-'}% 作為參考。`,
+          compact:`尚無逐時資料｜全天雨${w?.rain ?? '-'}%`,
+          windows:[]
+        };
+      }
+      const maxEntry = entries.reduce((best,x)=> x.prob > best.prob ? x : best, entries[0]);
+      const rainy = entries.filter(x => x.prob >= 30 || isWetWeatherCode(x.code) || x.precipitation > 0);
+      if(!rainy.length){
+        return {
+          city,
+          available:true,
+          summary:`☔ 可能下雨時間：逐時預報顯示全日降雨機率多低於 30%；最高約 ${maxEntry.prob}%（${formatHourFromIso(maxEntry.time)}）。仍建議帶摺疊晴雨傘備用。`,
+          compact:`全日偏低｜最高${formatHourFromIso(maxEntry.time)} ${maxEntry.prob}%`,
+          windows:[]
+        };
+      }
+      const groups = mergeRainHourGroups(rainy);
+      const topText = groups.slice(0,4).map(g => {
+        const thunderText = g.thunder ? '，可能雷雨' : '';
+        return `${g.start}–${g.end} 約 ${g.avgProb}–${g.maxProb}%${thunderText}`;
+      }).join('；');
+      const compact = groups.slice(0,2).map(g => `${g.start}–${g.end} ${g.maxProb}%`).join('、') + (groups.length > 2 ? '…' : '');
+      return {
+        city,
+        available:true,
+        summary:`☔ 可能下雨時間：${topText}。最高機率約 ${maxEntry.prob}%（${formatHourFromIso(maxEntry.time)}）。`,
+        compact,
+        windows:groups
+      };
+    }
+
+    function getDayTripProfile(day){
+      const profiles = {
+        1:{city:'大阪', theme:'落地、Outlet、難波購物', outdoor:'中', indoor:'臨空城、難波 Parks、商圈', rainPlan:'若午後下雨，臨空城與難波 Parks 都可當作室內避雨點；拖行李時請優先走有電梯與雨棚的路線。', gear:'輕便雨具、防水購物袋、行李箱防水套或大塑膠袋。'},
+        2:{city:'大阪', theme:'大阪城、遊船、通天閣', outdoor:'高', indoor:'梅田、豬排餐廳、通天閣周邊商店', rainPlan:'上午先處理大阪城與 Aqua-Liner 換票；若午後雷雨，Wonder Cruise 船班可能受影響，提早查現場公告並把梅田或新世界室內點作為緩衝。', gear:'晴雨傘、薄雨衣、防滑鞋、手機防水袋。'},
+        3:{city:'京都', theme:'清水寺、二年坂、祇園', outdoor:'高', indoor:'祇園町家咖啡、商店街、車站地下街', rainPlan:'清水寺、三年坂、二年坂建議上午完成。若午後雨勢升高，減少石板路與坡道停留，改到町家咖啡或提前返大阪。', gear:'防滑慢跑鞋、晴雨傘、薄雨衣、備用襪。'},
+        4:{city:'奈良', theme:'奈良公園、東大寺、春日大社', outdoor:'高', indoor:'東向商店街、奈良町、咖啡店', rainPlan:'奈良公園與東大寺建議上午完成。若午後降雨超過 50%，鹿公園地面易濕滑泥濘，改走東向商店街、奈良町或室內咖啡店較穩。', gear:'好清洗衣物、防滑鞋、雨具、防水袋；雨天避免穿白鞋。'},
+        5:{city:'大阪', theme:'天神橋筋、大阪港、聖瑪麗亞號', outdoor:'中高', indoor:'生活今昔館、商店街、天保山 Market Place', rainPlan:'雨天先完成生活今昔館與天神橋筋商店街；若大阪港午後雨勢或風勢偏強，聖瑪麗亞號船班需預留替代時間。', gear:'晴雨傘、防風薄外套、帽子；港邊注意風雨。'},
+        6:{city:'大阪', theme:'神社、市場、機場返程', outdoor:'中', indoor:'木津市場、關西機場', rainPlan:'返程日重點是準時與行李防雨。若上午降雨，神社停留縮短，優先完成市場與回民宿打包，提早前往天下茶屋與機場。', gear:'行李防水、輕便雨具、防滑鞋；票券與護照放防水夾。'}
+      };
+      return profiles[day] || profiles[1];
+    }
+
+    function getWeatherRiskInfo(w, rainSummary){
+      if(!w) return { level:'資料不足', cls:'risk-mid', score:1, title:'風險待確認' };
+      const rain = Number(w.rain ?? 0);
+      const maxTemp = Number(w.max ?? 0);
+      const code = Number(w.code ?? 0);
+      const windows = rainSummary?.windows || [];
+      const maxHourly = windows.length ? Math.max(...windows.map(g => Number(g.maxProb ?? 0))) : rain;
+      const thunder = [95,96,99].includes(code) || windows.some(g => g.thunder);
+      let score = 0;
+      if(rain >= 30 || maxHourly >= 35) score += 1;
+      if(rain >= 55 || maxHourly >= 60) score += 1;
+      if(rain >= 75 || maxHourly >= 75 || thunder) score += 1;
+      if(maxTemp >= 32) score += 1;
+      if(maxTemp >= 35) score += 1;
+      if(score <= 1) return { level:'低', cls:'risk-low', score, title:'低風險' };
+      if(score === 2) return { level:'中', cls:'risk-mid', score, title:'中風險' };
+      if(score <= 4) return { level:'高', cls:'risk-high', score, title:'高風險' };
+      return { level:'極高', cls:'risk-extreme', score, title:'極高風險' };
+    }
+
+    function buildRainWindowText(rainSummary){
+      const windows = rainSummary?.windows || [];
+      if(!windows.length) return rainSummary?.compact || '全日降雨機率偏低';
+      return windows.slice(0,3).map(g => `${g.start}–${g.end} ${g.avgProb}–${g.maxProb}%${g.thunder ? '（雷雨）' : ''}`).join('；');
+    }
+
+    function buildWeatherAdviceModel(day=currentDay){
+      const w = getTripWeatherSnapshot(day);
+      const profile = getDayTripProfile(day);
+      if(!w){
+        return {
+          ready:false,
+          conclusion:'目前尚未取得旅遊日天氣，先依原行程提醒準備；出門前請按「更新天氣」。',
+          risk:{ level:'待確認', cls:'risk-mid', title:'待確認' },
+          weatherLine:'預報尚未載入',
+          rainText:'尚無逐時資料',
+          peakText:'出門前再更新一次較準',
+          strategy:profile.rainPlan,
+          heat:'依 7 月關西常態，仍建議防曬、補水與安排冷氣休息點。',
+          gear:profile.gear,
+          profile
+        };
+      }
+      const rainSummary = getRainTimeSummary(day, w.city.key);
+      const risk = getWeatherRiskInfo(w, rainSummary);
       const rain = Number(w.rain ?? 0);
       const max = Number(w.max ?? 0);
       const code = Number(w.code ?? 0);
-      const isThunder = [95,96,99].includes(code);
-      const isRain = (code >= 51 && code <= 82) || isThunder || rain >= 40;
-      const parts = [];
-      parts.push(`🌦️ 每日提醒｜依據 ${w.city.name} ${w.dateLabel} 預報：${w.text}，${w.min}-${w.max}°C，降雨機率 ${w.rain ?? '-'}%。`);
-      if(isThunder || rain >= 70){
-        parts.push('⛈️ 降雨偏高：請把晴雨傘、薄雨衣、防水鞋或防滑鞋列為必備，手機、護照與票券建議放防水袋；戶外點若遇雷雨，優先改成室內用餐、商場或車站休息。');
-      }else if(isRain){
-        parts.push('🌧️ 有雨機率：建議攜帶輕量晴雨傘，鞋子以防滑好走為主，行程間預留等雨與轉乘緩衝時間。');
+      const windows = rainSummary.windows || [];
+      const maxHourly = windows.length ? Math.max(...windows.map(g => Number(g.maxProb ?? 0))) : rain;
+      const thunder = [95,96,99].includes(code) || windows.some(g => g.thunder);
+      let conclusion = '';
+      if(thunder || maxHourly >= 70 || rain >= 70){
+        conclusion = `今日 ${profile.city} 天氣風險偏高，建議把戶外景點盡量排在降雨前完成，午後保留室內或商店街備案。`;
+      }else if(maxHourly >= 45 || rain >= 40){
+        conclusion = `今日有短暫降雨風險，行程可照走，但請帶傘並預留等雨與轉乘緩衝。`;
+      }else if(max >= 34){
+        conclusion = `今日降雨風險較低，但高溫悶熱是主風險，請把補水與冷氣休息排進行程。`;
       }else{
-        parts.push('☀️ 降雨風險較低：仍建議帶抗 UV 晴雨傘，主要重點是防曬、補水與避免中午長時間曝曬。');
+        conclusion = `今日天氣整體可執行原行程，重點是防曬、補水與保留少量雨具備援。`;
       }
-      if(max >= 34){
-        parts.push('🔥 高溫警戒：穿透氣快乾衣物，手持風扇、補水、電解質飲品必備；每 60–90 分鐘安排一次冷氣休息。');
-      }else if(max >= 30){
-        parts.push('🥵 悶熱注意：建議穿涼感上衣、透氣短褲或薄長褲，並準備毛巾、濕紙巾與防曬。');
-      }else{
-        parts.push('👟 體感較舒適：仍以好走鞋、防曬與輕便機能服為主。');
-      }
-      if(day === 3) parts.push('京都清水寺與二年坂坡道多，請優先穿慢跑鞋或支撐性佳的鞋。');
-      if(day === 4) parts.push('奈良公園請穿好清洗、不怕鹿靠近的衣物，雨天更要注意地面濕滑。');
-      if(day === 5) parts.push('大阪港與船班可能有海風，建議多帶薄外套或防曬外衫。');
-      if(day === 6) parts.push('返程日以輕便、防雨與拖行李好走為優先，避免穿太厚或不耐髒的鞋。');
-      return parts.join(' ');
+      let heat = '';
+      if(max >= 35) heat = `最高溫約 ${max}°C，屬高溫警戒；每 60–90 分鐘安排冷氣休息，補水與電解質飲料不可少。`;
+      else if(max >= 32) heat = `最高溫約 ${max}°C，體感可能偏悶熱；建議手持風扇、涼感衣物、濕紙巾與防曬。`;
+      else heat = `最高溫約 ${max}°C，仍需防曬與補水，但高溫壓力相對較低。`;
+      const rainText = windows.length ? buildRainWindowText(rainSummary) : rainSummary.compact;
+      const peakText = rainSummary.summary.replace(/^☔ 可能下雨時間：/, '');
+      let gear = profile.gear;
+      if(thunder || rain >= 60 || maxHourly >= 60) gear += ' 另建議薄雨衣、手機防水袋與備用襪。';
+      else if(rain >= 30 || maxHourly >= 35) gear += ' 至少帶一支輕量晴雨傘。';
+      if(max >= 32) gear += ' 高溫日請加帶電解質飲品或鹽糖。';
+      return {
+        ready:true,
+        conclusion,
+        risk,
+        weatherLine:`${w.city.name} ${w.dateLabel}｜${w.text}｜${w.min}-${w.max}°C｜全天雨 ${w.rain ?? '-'}%`,
+        rainText,
+        peakText,
+        strategy:profile.rainPlan,
+        heat,
+        gear,
+        profile
+      };
+    }
+
+    function buildWeatherBasedAdvice(day=currentDay){
+      const a = buildWeatherAdviceModel(day);
+      return [
+        `今日結論：${a.conclusion}`,
+        `天氣風險：${a.risk.level}`,
+        `天氣摘要：${a.weatherLine}`,
+        `可能下雨時段：${a.rainText}`,
+        `行程建議：${a.strategy}`,
+        `高溫提醒：${a.heat}`,
+        `攜帶建議：${a.gear}`
+      ].join('\n');
+    }
+
+    function buildWeatherAdviceHtml(day=currentDay, mode='dark'){
+      const a = buildWeatherAdviceModel(day);
+      const lightClass = mode === 'light' ? ' light' : '';
+      const rainRows = (a.rainText || '').split('；').filter(Boolean).map(x => {
+        const parts = x.trim().split(' ');
+        const time = parts[0] || x;
+        const prob = parts.slice(1).join(' ') || '';
+        return `<div class="rain-window-item"><span>${escapeHtml(time)}</span><span>${escapeHtml(prob)}</span></div>`;
+      }).join('') || `<div class="rain-window-item"><span>全日</span><span>${escapeHtml(a.rainText || '偏低')}</span></div>`;
+      return `
+        <div class="weather-advice-card${lightClass}">
+          <div class="advice-top">
+            <div>
+              <div class="advice-label">TODAY WEATHER DECISION</div>
+              <div class="advice-conclusion">${escapeHtml(a.conclusion)}</div>
+            </div>
+            <div class="risk-badge ${a.risk.cls}">風險 ${escapeHtml(a.risk.level)}</div>
+          </div>
+          <div class="advice-grid">
+            <div class="advice-box full"><h4>🌦️ 天氣摘要</h4><p>${escapeHtml(a.weatherLine)}</p></div>
+            <div class="advice-box"><h4>☔ 可能下雨時段</h4><div class="rain-window-list">${rainRows}</div></div>
+            <div class="advice-box"><h4>🧭 行程調整建議</h4><p>${escapeHtml(a.strategy)}</p></div>
+            <div class="advice-box"><h4>🔥 高溫／體感提醒</h4><p>${escapeHtml(a.heat)}</p></div>
+            <div class="advice-box"><h4>🎒 攜帶建議</h4><p>${escapeHtml(a.gear)}</p></div>
+          </div>
+        </div>`;
     }
 
     function weatherApiUrl(city){
-      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
+      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
     }
 
     async function openWeatherDetail(key){
@@ -808,7 +1050,8 @@ const travelData = {
             </div>
             <p class="mt-3 rounded-2xl bg-white/10 p-3 text-xs leading-relaxed text-slate-100">這是旅遊日期對應的 ${city.name} 預報。出發前再按一次「↻ 天氣」，每日提醒會依最新預報重新調整。</p>
           </div>
-          <div class="rounded-3xl border border-amber-100 bg-amber-50 p-4 text-xs font-bold leading-relaxed text-amber-900">${buildWeatherBasedAdvice(currentDay)}</div>
+          <div class="rounded-3xl border border-sky-100 bg-sky-50 p-4 text-xs font-bold leading-relaxed text-sky-900">${getRainTimeSummary(currentDay, city.key).summary}</div>
+          ${buildWeatherAdviceHtml(currentDay, 'light')}
           <div class="grid grid-cols-2 gap-3">
             <div class="rounded-3xl border border-sky-100 bg-sky-50 p-4">
               <p class="text-[11px] font-black text-sky-700">當日 ${tripDateLabels[currentDay]}</p>
@@ -882,7 +1125,7 @@ const travelData = {
           </div>
           <span class="hero-pill pill bg-white/10 text-sky-100 border border-white/10">${stats.count}站</span>
         </div>
-        <div class="hero-clothing mt-3 rounded-2xl bg-white/10 p-3 text-[12px] leading-relaxed text-slate-100">${buildWeatherBasedAdvice(day)}</div>
+        ${buildWeatherAdviceHtml(day)}
         <div class="hero-stats mt-3 grid grid-cols-3 gap-2">
           <div class="mini-stat"><div class="label">第一站</div><div class="value">${stats.first.time || '-'}<br>${stats.first.name || '-'}</div></div>
           <div class="mini-stat"><div class="label">戶外/移動</div><div class="value">約 ${stats.outdoor} 站<br>注意補水</div></div>
@@ -1121,7 +1364,7 @@ const travelData = {
             <main id="pdf-preview-sheet" class="rounded-3xl bg-white p-5 shadow-2xl sm:p-8">
               <p class="mb-2 text-[11px] font-black tracking-[0.18em] text-sky-600">KANSAI 2026｜DAY ${currentDay}</p>
               <h1 class="text-xl font-black leading-snug text-slate-950 sm:text-2xl">${escapeHtml(data.title)}</h1>
-              <p class="mt-3 rounded-2xl bg-sky-50 p-3 text-xs font-bold leading-relaxed text-sky-900 sm:text-sm">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
+              <p class="mt-3 rounded-2xl bg-sky-50 p-3 text-xs font-bold leading-relaxed text-sky-900 sm:text-sm whitespace-pre-line">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
               <div class="mt-4 space-y-3">${cards}</div>
               <p class="mt-5 border-t border-slate-200 pt-3 text-[11px] leading-relaxed text-slate-500">住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
             </main>

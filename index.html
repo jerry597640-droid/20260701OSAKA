@@ -316,6 +316,42 @@
     }
 
     #print-area{ display:none; }
+
+
+    /* 旅遊達人五項強化：攻略、體力、雨天備案、出發檢查、交通重點 */
+    .traveler-guide{ margin-top:14px; }
+    .traveler-guide-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .traveler-guide-head h3{ margin:0; font-size:13px; font-weight:950; color:#0f172a; }
+    .traveler-guide-head p{ margin:3px 0 0; font-size:10px; line-height:1.5; color:#64748b; font-weight:700; }
+    .guide-grid{ display:grid; grid-template-columns:1fr; gap:10px; }
+    .guide-card{ border:1px solid #e2e8f0; background:#fff; border-radius:24px; padding:13px; box-shadow:0 10px 26px rgba(15,23,42,.055); }
+    .guide-card.primary{ background:linear-gradient(135deg,#eff6ff,#ffffff); border-color:#bae6fd; }
+    .guide-card.warning{ background:linear-gradient(135deg,#fff7ed,#ffffff); border-color:#fed7aa; }
+    .guide-card.safe{ background:linear-gradient(135deg,#ecfdf5,#ffffff); border-color:#bbf7d0; }
+    .guide-title{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; }
+    .guide-title span:first-child{ font-size:12px; font-weight:950; color:#0f172a; }
+    .guide-tag{ border-radius:999px; padding:5px 8px; font-size:10px; font-weight:950; white-space:nowrap; }
+    .stamina-low{ background:#dcfce7; color:#166534; }
+    .stamina-mid{ background:#e0f2fe; color:#075985; }
+    .stamina-high{ background:#fef3c7; color:#92400e; }
+    .stamina-extreme{ background:#ffe4e6; color:#9f1239; }
+    .guide-text{ margin:0; font-size:12px; line-height:1.65; color:#334155; font-weight:750; }
+    .guide-list{ margin:0; padding-left:0; list-style:none; display:grid; gap:7px; }
+    .guide-list li{ display:flex; gap:7px; align-items:flex-start; font-size:12px; line-height:1.55; color:#334155; font-weight:750; }
+    .guide-list li:before{ content:'•'; color:#0284c7; font-weight:950; }
+    .depart-checklist{ display:grid; gap:8px; margin-top:2px; }
+    .depart-checkitem{ display:flex; align-items:flex-start; gap:9px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:16px; padding:9px 10px; }
+    .depart-checkitem input{ margin-top:2px; width:18px; height:18px; accent-color:#0284c7; flex:0 0 auto; }
+    .depart-checkitem span{ font-size:12px; line-height:1.45; color:#334155; font-weight:850; }
+    .depart-checkitem input:checked + span{ color:#64748b; text-decoration:line-through; }
+    .guide-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .guide-action-btn{ border-radius:16px; padding:10px 8px; font-size:11px; font-weight:950; text-align:center; }
+    @media(orientation:landscape) and (min-width:680px){
+      .traveler-guide{ margin-top:12px; }
+      .guide-grid{ grid-template-columns:1.1fr .9fr; }
+      .guide-card.full{ grid-column:1/-1; }
+    }
+
     @media print{
       @page{ size:A4; margin:12mm; }
       body{ background:white!important; color:#0f172a!important; }
@@ -360,9 +396,17 @@
             <button onclick="openWeatherDetail('nara')" class="tap rounded-2xl border border-sky-100 bg-white px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">Open‑Meteo<br>奈良詳情</button>
           </div>
           <p class="mt-2 text-[10px] leading-relaxed text-slate-500">資料來源：Open-Meteo。上方按鈕會直接顯示該城市的可讀式天氣詳情，不會跳出原始 JSON；出門前再刷新一次，夏天午後雷雨像老闆臨時交辦，早知道早閃。</p>
-          <div class="mt-2 no-print">
-            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="tap flex w-full items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-white px-3 py-2.5 text-center text-[11px] font-black text-sky-700 shadow-sm">
-              🌐 氣象資料來源：Open‑Meteo 官方網站
+          <div class="mt-2 no-print space-y-2">
+            <button type="button" onclick="openPrimaryLocalWeather()" class="tap flex w-full items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-white px-3 py-2.5 text-center text-[11px] font-black text-sky-700 shadow-sm">
+              <span>🌦️</span><span id="primary-local-weather-label">開啟今日主行程當地氣象資訊</span>
+            </button>
+            <div class="grid grid-cols-3 gap-2">
+              <a href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=270000" target="_blank" rel="noopener noreferrer" class="tap rounded-2xl border border-sky-100 bg-sky-50 px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">大阪<br>當地氣象</a>
+              <a href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=260000" target="_blank" rel="noopener noreferrer" class="tap rounded-2xl border border-sky-100 bg-sky-50 px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">京都<br>當地氣象</a>
+              <a href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=290000" target="_blank" rel="noopener noreferrer" class="tap rounded-2xl border border-sky-100 bg-sky-50 px-2 py-2 text-center text-[10px] font-black text-sky-700 shadow-sm">奈良<br>當地氣象</a>
+            </div>
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="tap flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-center text-[10px] font-black text-slate-600 shadow-sm">
+              🌐 資料來源：Open‑Meteo 官方網站
             </a>
           </div>
         </section>
@@ -387,6 +431,7 @@
         </div>
 
         <div id="day-hero" class="mt-4 rounded-3xl bg-slate-950 p-4 text-white card-shadow"></div>
+        <div id="traveler-guide" class="traveler-guide no-print"></div>
         <div class="section-title">
           <h3>今日時間軸</h3>
           <span id="timeline-count" class="pill bg-slate-100 text-slate-600">0 個停靠點</span>
@@ -509,7 +554,7 @@ const travelData = {
 
         items: [
 
-            { time: "12:00", name: "關西國際機場抵達", type: "flight", addr: "〒549-0001 大阪府泉佐野市泉州空港北1", note: "搭乘星宇航空 JX820 (08:30 桃園起飛)。出關後快速領取行李、領取網卡，並去臨櫃購買 ICOCA。" },
+            { time: "12:00", name: "關西國際機場抵達", type: "flight", addr: "〒549-0001 大阪府泉佐野市泉州空港北1", note: "搭乘星宇航空 JX820 (08:30 桃園起飛)。出關後快速領取行李、領取網卡，並去臨櫃購買 西瓜卡。" },
 
             { time: "13:10", name: "Rinku Premium Outlets 臨空城", type: "shop", addr: "〒598-8508 大阪府泉佐野市りんくう往來南3-28", note: "⚡ 限制 1.5 小時極速閃擊！大行李箱建議鎖在臨空城站內置物櫃，若客滿可拉至 Outlet 服務中心提供人工行李寄放服務。" },
 
@@ -519,7 +564,7 @@ const travelData = {
 
             { time: "19:00", name: "道頓堀與心齋橋商圈晚餐", type: "food", addr: "〒542-0071 大阪府大阪市中央区道頓堀1丁目", note: "與必拍的跑跑人地標拍照合影，晚餐推薦一蘭拉麵、金龍拉麵或章魚燒街頭小吃。" },
 
-            { time: "21:30", name: "🏠 順暢返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "由【難波站】搭乘地下鐵四橋線往住之江公園方向 ➔ 2站直達【花園町站】。由2號出口出站，走鶴見橋大馬路平坦商店街5分鐘回民宿，刷 ICOCA 扣款 ¥190。" }
+            { time: "21:30", name: "🏠 順暢返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "由【難波站】搭乘地下鐵四橋線往住之江公園方向 ➔ 2站直達【花園町站】。由2號出口出站，走鶴見橋大馬路平坦商店街5分鐘回民宿，刷 西瓜卡 扣款 ¥190。" }
 
         ]
 
@@ -601,7 +646,7 @@ const travelData = {
 
             { time: "14:30", name: "中谷堂搗麻糬秀 & 奈良町老街", type: "food", addr: "〒630-8218 奈良県奈良市橋本町29", note: "順路前往中谷堂觀看極速高速搗麻糬表演，買一顆熱騰騰的艾草紅豆麻糬，隨後漫步江戶風情奈良町古街。" },
 
-            { time: "17:00", name: "🏠 返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "【近鐵奈良站】搭近鐵奈良線回【大阪難波站】，轉地鐵四橋線 ➔ 2站直回【花園町站】。2號出口走回「靜谷」民宿。刷 ICOCA 扣近鐵 ¥680 + 地鐵 ¥190。" }
+            { time: "17:00", name: "🏠 返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "【近鐵奈良站】搭近鐵奈良線回【大阪難波站】，轉地鐵四橋線 ➔ 2站直回【花園町站】。2號出口走回「靜谷」民宿。刷 西瓜卡 扣近鐵 ¥680 + 地鐵 ¥190。" }
 
         ]
 
@@ -675,6 +720,11 @@ const travelData = {
     const tripDates = {1:'2026-07-01',2:'2026-07-02',3:'2026-07-03',4:'2026-07-04',5:'2026-07-05',6:'2026-07-06'};
     const tripDateLabels = {1:'7/1（三）',2:'7/2（四）',3:'7/3（五）',4:'7/4（六）',5:'7/5（日）',6:'7/6（一）'};
     const primaryWeatherCityByDay = {1:'osaka',2:'osaka',3:'kyoto',4:'nara',5:'osaka',6:'osaka'};
+    const localWeatherLinks = {
+      osaka: { label:'大阪', url:'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=270000' },
+      kyoto: { label:'京都', url:'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=260000' },
+      nara: { label:'奈良', url:'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=290000' }
+    };
 
     let currentDay = 1;
     let activeMainTab = 'itinerary';
@@ -881,6 +931,134 @@ const travelData = {
       return profiles[day] || profiles[1];
     }
 
+
+
+    const expertTripGuides = {
+      1:{
+        headline:'落地日不要硬衝，先把交通、寄物、購物節奏抓穩，晚上難波只保留輕鬆散步。',
+        stamina:{level:'中', cls:'stamina-mid', reason:'飛行、出關、Outlet 與難波購物，體力消耗主要在拖行李與移動。'},
+        rainBackup:'若午後下雨，臨空城 Outlet、難波 Parks、Luck:Rack 都可作為室內避雨點；拖行李時優先走車站電梯與有雨棚動線。',
+        transport:'KIX 抵達後先處理 西瓜卡、網卡與行李；臨空城購物時間控制在 1.5 小時，回大阪後以天下茶屋、花園町為主線，避免第一天在難波站迷路。',
+        checklist:['護照、機票與入境資料確認','西瓜卡 / Suica 與網卡可正常使用','行李寄物或民宿地址截圖','行動電源與 Google Maps 離線備援','購物收據集中放同一袋']
+      },
+      2:{
+        headline:'周遊券日重點是先換船票、再跑景點；上午完成大阪城與船班，午後保留天氣緩衝。',
+        stamina:{level:'高', cls:'stamina-high', reason:'大阪城、遊船、梅田、通天閣與新世界，轉乘與步行都偏多。'},
+        rainBackup:'若午後雷雨，Wonder Cruise 或戶外排隊可能受影響；可把梅田、餐廳、通天閣周邊室內點作為緩衝。',
+        transport:'大阪城港先換 Aqua-Liner 船票；梅田藍天大廈需注意 15:00 前免費入場；Wonder Cruise 務必提前 30 分鐘報到。',
+        checklist:['大阪周遊券 QR Code 已截圖','手機亮度可掃 QR 閘門','Aqua-Liner 與 Wonder Cruise 換票憑證','雨具與手機防水袋','安排一段冷氣休息時間']
+      },
+      3:{
+        headline:'京都日請把清水寺與坡道老街放上午完成，午後若下雨就縮短鴨川，改進咖啡店或商店街。',
+        stamina:{level:'極高', cls:'stamina-extreme', reason:'清水寺、三年坂、二年坂與祇園坡道多，步數與膝蓋負荷最高。'},
+        rainBackup:'若 13:00 後降雨升高，石板路與坡道會很滑；建議改祇園町家咖啡、四条河原町商店街，或提早回大阪。',
+        transport:'花園町到大國町可平行轉乘，再接御堂筋線到淀屋橋換京阪；祇園四條出站後建議直接計程車到清水寺觀光停車場，省掉上坡。',
+        checklist:['最防滑的慢跑鞋','晴雨傘或薄雨衣','備用襪與腳底貼布','計程車目的地日文大字卡','回程京阪與地鐵路線截圖']
+      },
+      4:{
+        headline:'奈良日請上午先完成奈良公園與東大寺；若午後雨勢變強，就轉往商店街、奈良町與咖啡店。',
+        stamina:{level:'高', cls:'stamina-high', reason:'奈良公園腹地大、春日大社參道長，戶外與步行時間多。'},
+        rainBackup:'鹿公園雨後容易泥濘濕滑，鹿也會靠近討食；雨天避免白鞋與長裙，午後可改東向商店街、中谷堂或奈良町。',
+        transport:'大阪難波搭近鐵奈良線最省力；集合點建議設定在近鐵奈良站或東向商店街入口，避免鹿公園走散。',
+        checklist:['防滑好洗的鞋與衣物','鹿仙貝現買現餵，不要放口袋','雨具、防水袋與濕紙巾','近鐵奈良站集合點截圖','回大阪難波與花園町路線確認']
+      },
+      5:{
+        headline:'大阪港與船班日要先換票、再逛室內；若風雨偏強，聖瑪麗亞號需保留替代方案。',
+        stamina:{level:'中高', cls:'stamina-high', reason:'上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。'},
+        rainBackup:'雨天可拉長大阪生活今昔館、天神橋筋商店街與天保山 Market Place；港邊風雨大時減少甲板停留。',
+        transport:'天六到大阪港建議堺筋線到堺筋本町，再平行轉中央線；到港後先換聖瑪麗亞號船票。',
+        checklist:['周遊券 QR Code 與船班時間確認','防風薄外套或帽子固定夾','港邊雨具與手機防水袋','先換聖瑪麗亞號船票','大阪港回新世界路線截圖']
+      },
+      6:{
+        headline:'回程日以準時與行李防雨為最高原則；神社、市場都要輕量化，寧可早到機場不要壓線。',
+        stamina:{level:'中', cls:'stamina-mid', reason:'行程不長，但有打包、拖行李、搭南海電鐵與機場手續。'},
+        rainBackup:'若上午下雨，難波八阪神社停留縮短，優先木津市場、回民宿打包與提早到天下茶屋。',
+        transport:'退房後走鶴見橋商店街到天下茶屋，遮陽避雨且拖行李較舒服；南海空港急行一線直達 KIX。',
+        checklist:['護照、機票、錢包與手機確認','行李秤重與液體分裝','伴手禮與免稅品空間預留','天下茶屋到關西機場班次截圖','至少提早 3 小時抵達機場']
+      }
+    };
+
+    const defaultChecklistStateKey = 'kansai2026_daily_checklist_v1';
+    function getChecklistState(){
+      try{ return JSON.parse(localStorage.getItem(defaultChecklistStateKey) || '{}') || {}; }
+      catch(e){ return {}; }
+    }
+    function saveChecklistState(state){
+      try{ localStorage.setItem(defaultChecklistStateKey, JSON.stringify(state)); }catch(e){}
+    }
+    function toggleDailyChecklist(day, idx, checked){
+      const state = getChecklistState();
+      const key = `D${day}`;
+      state[key] = state[key] || {};
+      state[key][idx] = !!checked;
+      saveChecklistState(state);
+      showToast(checked ? '檢查項目已完成' : '已取消勾選');
+    }
+    function resetDailyChecklist(day=currentDay){
+      const state = getChecklistState();
+      delete state[`D${day}`];
+      saveChecklistState(state);
+      renderExpertTripGuide(day);
+      showToast(`D${day} 出發檢查已重置`);
+    }
+    function buildExpertGuideText(day=currentDay){
+      const g = expertTripGuides[day] || expertTripGuides[1];
+      return [
+        `今日攻略：${g.headline}`,
+        `體力等級：${g.stamina.level}｜${g.stamina.reason}`,
+        `雨天備案：${g.rainBackup}`,
+        `今日交通重點：${g.transport}`,
+        `出發前檢查：${g.checklist.join('、')}`
+      ].join('\n');
+    }
+    function buildExpertTripGuideHtml(day=currentDay){
+      const g = expertTripGuides[day] || expertTripGuides[1];
+      const checked = (getChecklistState()[`D${day}`] || {});
+      const checklist = g.checklist.map((text, idx) => `
+        <label class="depart-checkitem tap">
+          <input type="checkbox" ${checked[idx] ? 'checked' : ''} onchange="toggleDailyChecklist(${day}, ${idx}, this.checked)">
+          <span>${escapeHtml(text)}</span>
+        </label>`).join('');
+      return `
+        <div class="traveler-guide-head">
+          <div>
+            <h3>旅遊達人五項提醒</h3>
+            <p>D${day}｜${escapeHtml(tripDateLabels[day] || '')}，每天早上先看這區，30 秒決定今天怎麼走。</p>
+          </div>
+          <span class="pill bg-sky-50 text-sky-700">領隊版</span>
+        </div>
+        <div class="guide-grid">
+          <section class="guide-card primary full">
+            <div class="guide-title"><span>① 今日攻略一句話</span><span class="guide-tag bg-sky-100 text-sky-800">先看這句</span></div>
+            <p class="guide-text">${escapeHtml(g.headline)}</p>
+          </section>
+          <section class="guide-card">
+            <div class="guide-title"><span>② 今日體力等級</span><span class="guide-tag ${g.stamina.cls}">${escapeHtml(g.stamina.level)}</span></div>
+            <p class="guide-text">${escapeHtml(g.stamina.reason)}</p>
+          </section>
+          <section class="guide-card warning">
+            <div class="guide-title"><span>③ 雨天備案</span><span class="guide-tag bg-orange-100 text-orange-800">備案</span></div>
+            <p class="guide-text">${escapeHtml(g.rainBackup)}</p>
+          </section>
+          <section class="guide-card safe">
+            <div class="guide-title"><span>④ 今日交通重點</span><span class="guide-tag bg-emerald-100 text-emerald-800">防迷路</span></div>
+            <p class="guide-text">${escapeHtml(g.transport)}</p>
+          </section>
+          <section class="guide-card full">
+            <div class="guide-title"><span>⑤ 出發前檢查清單</span><span class="guide-tag bg-slate-100 text-slate-700">可記憶</span></div>
+            <div class="depart-checklist">${checklist}</div>
+            <div class="guide-actions">
+              <button type="button" onclick="resetDailyChecklist(${day})" class="tap guide-action-btn bg-slate-100 text-slate-700">重置今日勾選</button>
+              <button type="button" onclick="copyText(buildExpertGuideText(${day}), '五項提醒已複製')" class="tap guide-action-btn bg-sky-600 text-white">複製今日提醒</button>
+            </div>
+          </section>
+        </div>`;
+    }
+    function renderExpertTripGuide(day=currentDay){
+      const target = document.getElementById('traveler-guide');
+      if(target) target.innerHTML = buildExpertTripGuideHtml(day);
+    }
+
     function getWeatherRiskInfo(w, rainSummary){
       if(!w) return { level:'資料不足', cls:'risk-mid', score:1, title:'風險待確認' };
       const rain = Number(w.rain ?? 0);
@@ -1007,6 +1185,20 @@ const travelData = {
         </div>`;
     }
 
+    function updatePrimaryLocalWeatherButton(){
+      const label = document.getElementById('primary-local-weather-label');
+      if(!label) return;
+      const cityKey = primaryWeatherCityByDay[currentDay] || 'osaka';
+      const city = localWeatherLinks[cityKey] || localWeatherLinks.osaka;
+      label.textContent = `開啟 D${currentDay} ${tripDateLabels[currentDay]}｜${city.label}當地氣象資訊`;
+    }
+
+    function openPrimaryLocalWeather(){
+      const cityKey = primaryWeatherCityByDay[currentDay] || 'osaka';
+      const city = localWeatherLinks[cityKey] || localWeatherLinks.osaka;
+      window.open(city.url, '_blank', 'noopener,noreferrer');
+    }
+
     function weatherApiUrl(city){
       return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
     }
@@ -1086,6 +1278,7 @@ const travelData = {
       active.className = 'tap snap-center shrink-0 rounded-2xl px-4 py-2.5 text-xs font-black bg-sky-600 text-white shadow-lg shadow-sky-500/20';
       switchMainTab('itinerary', false);
       renderItinerary(day);
+      updatePrimaryLocalWeatherButton();
       if(Object.keys(weatherCache).length) renderTripWeatherCards();
       window.scrollTo({top:0, behavior:'smooth'});
     }
@@ -1132,6 +1325,7 @@ const travelData = {
           <div class="mini-stat"><div class="label">收尾</div><div class="value">${stats.last.time || '-'}<br>${stats.last.name || '-'}</div></div>
         </div>
       `;
+      renderExpertTripGuide(day);
       const timeline = document.getElementById('timeline');
       timeline.innerHTML = data.items.map((item, idx) => itineraryCard(item, idx)).join('');
     }
@@ -1178,11 +1372,11 @@ const travelData = {
         ['🌂','抗 UV 晴雨傘','遮陽、防午後雷雨，一支扛兩種麻煩。'],
         ['🧴','防曬乳、濕紙巾、補水用品','流汗後補擦防曬，避免第一天就變烤蝦。'],
         ['👟','透氣防滑慢跑鞋','清水寺、奈良與大阪城都很吃腳力。'],
-        ['💳','ICOCA / Suica','地鐵、近鐵、京阪與便利商店皆方便。'],
+        ['💳','西瓜卡 / Suica','地鐵、近鐵、京阪與便利商店皆方便。'],
         ['🔋','行動電源與離線截圖','電子周遊券、地圖、天氣都靠手機，電量就是戰鬥力。']
       ]);
       document.getElementById('ticket-view').innerHTML = `
-        <div class="rounded-3xl bg-slate-950 p-4 text-white card-shadow"><h2 class="text-base font-black">🎫 大阪周遊券電子版避雷</h2><p class="mt-2 text-xs leading-relaxed text-slate-300">重點只有一句：電子周遊券請掃 QR Code，不要拿去感應 ICOCA 區。</p></div>
+        <div class="rounded-3xl bg-slate-950 p-4 text-white card-shadow"><h2 class="text-base font-black">🎫 大阪周遊券電子版避雷</h2><p class="mt-2 text-xs leading-relaxed text-slate-300">重點只有一句：電子周遊券請掃 QR Code，不要拿去感應 西瓜卡 區。</p></div>
         <div class="mt-4 space-y-3">
           ${infoBlock('⚠️ 不要用 NFC 感應','手機電子周遊券沒有一般交通卡感應功能，請找支援 QR Code 的閘門或窗口。','rose')}
           ${infoBlock('🚇 地鐵過閘','打開周遊券 QR Code 頁面，對準閘門讀取口掃描。手機亮度建議調高。','sky')}
@@ -1303,6 +1497,42 @@ const travelData = {
     .pdf-addr{margin:6px 0 0;font-size:11.5px;line-height:1.55;color:#64748b;}
     .footer{margin-top:18px;border-top:1px solid #e2e8f0;padding-top:12px;font-size:11.5px;line-height:1.6;color:#64748b;}
     @media(max-width:640px){.sheet{width:94vw;min-height:auto;padding:24px 18px;border-radius:16px;}h1{font-size:20px}.subtitle{font-size:12px}.pdf-row{display:block}.pdf-time{display:block;margin-bottom:4px}.toolbar{padding:10px}.toolbar button{flex:1;max-width:170px}}
+
+
+    /* 旅遊達人五項強化：攻略、體力、雨天備案、出發檢查、交通重點 */
+    .traveler-guide{ margin-top:14px; }
+    .traveler-guide-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .traveler-guide-head h3{ margin:0; font-size:13px; font-weight:950; color:#0f172a; }
+    .traveler-guide-head p{ margin:3px 0 0; font-size:10px; line-height:1.5; color:#64748b; font-weight:700; }
+    .guide-grid{ display:grid; grid-template-columns:1fr; gap:10px; }
+    .guide-card{ border:1px solid #e2e8f0; background:#fff; border-radius:24px; padding:13px; box-shadow:0 10px 26px rgba(15,23,42,.055); }
+    .guide-card.primary{ background:linear-gradient(135deg,#eff6ff,#ffffff); border-color:#bae6fd; }
+    .guide-card.warning{ background:linear-gradient(135deg,#fff7ed,#ffffff); border-color:#fed7aa; }
+    .guide-card.safe{ background:linear-gradient(135deg,#ecfdf5,#ffffff); border-color:#bbf7d0; }
+    .guide-title{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; }
+    .guide-title span:first-child{ font-size:12px; font-weight:950; color:#0f172a; }
+    .guide-tag{ border-radius:999px; padding:5px 8px; font-size:10px; font-weight:950; white-space:nowrap; }
+    .stamina-low{ background:#dcfce7; color:#166534; }
+    .stamina-mid{ background:#e0f2fe; color:#075985; }
+    .stamina-high{ background:#fef3c7; color:#92400e; }
+    .stamina-extreme{ background:#ffe4e6; color:#9f1239; }
+    .guide-text{ margin:0; font-size:12px; line-height:1.65; color:#334155; font-weight:750; }
+    .guide-list{ margin:0; padding-left:0; list-style:none; display:grid; gap:7px; }
+    .guide-list li{ display:flex; gap:7px; align-items:flex-start; font-size:12px; line-height:1.55; color:#334155; font-weight:750; }
+    .guide-list li:before{ content:'•'; color:#0284c7; font-weight:950; }
+    .depart-checklist{ display:grid; gap:8px; margin-top:2px; }
+    .depart-checkitem{ display:flex; align-items:flex-start; gap:9px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:16px; padding:9px 10px; }
+    .depart-checkitem input{ margin-top:2px; width:18px; height:18px; accent-color:#0284c7; flex:0 0 auto; }
+    .depart-checkitem span{ font-size:12px; line-height:1.45; color:#334155; font-weight:850; }
+    .depart-checkitem input:checked + span{ color:#64748b; text-decoration:line-through; }
+    .guide-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .guide-action-btn{ border-radius:16px; padding:10px 8px; font-size:11px; font-weight:950; text-align:center; }
+    @media(orientation:landscape) and (min-width:680px){
+      .traveler-guide{ margin-top:12px; }
+      .guide-grid{ grid-template-columns:1.1fr .9fr; }
+      .guide-card.full{ grid-column:1/-1; }
+    }
+
     @media print{
       @page{size:A4;margin:12mm;}
       body{background:white;}

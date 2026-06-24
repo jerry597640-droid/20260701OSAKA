@@ -632,6 +632,7 @@ const travelData = {
     const weatherIcon = code => code === 0 ? '☀️' : [1,2].includes(code) ? '🌤️' : code === 3 ? '☁️' : [45,48].includes(code) ? '🌫️' : [95,96,99].includes(code) ? '⛈️' : code >= 51 && code <= 82 ? '🌧️' : code >= 71 && code <= 75 ? '❄️' : '🌡️';
     const tripDates = {1:'2026-07-01',2:'2026-07-02',3:'2026-07-03',4:'2026-07-04',5:'2026-07-05',6:'2026-07-06'};
     const tripDateLabels = {1:'7/1（三）',2:'7/2（四）',3:'7/3（五）',4:'7/4（六）',5:'7/5（日）',6:'7/6（一）'};
+    const primaryWeatherCityByDay = {1:'osaka',2:'osaka',3:'kyoto',4:'nara',5:'osaka',6:'osaka'};
 
     let currentDay = 1;
     let activeMainTab = 'itinerary';
@@ -675,7 +676,8 @@ const travelData = {
         }));
         weatherCache = Object.fromEntries(results.map(({city,data}) => [city.key, data]));
         renderTripWeatherCards();
-        if(manual) showToast('旅遊日天氣已更新');
+        renderItinerary(currentDay);
+        if(manual) showToast('旅遊日天氣與每日提醒已更新');
       }catch(err){
         grid.innerHTML = cities.map(c => `
           <a href="https://www.google.com/search?q=${encodeURIComponent(c.name+' 2026/7 天氣 日本氣象')}" target="_blank" class="tap rounded-2xl border border-amber-100 bg-amber-50 p-2.5 text-center">
@@ -709,6 +711,58 @@ const travelData = {
           </article>`;
       }).join('');
       document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
+    }
+
+    function getTripWeatherSnapshot(day=currentDay){
+      const cityKey = primaryWeatherCityByDay[day] || 'osaka';
+      const city = cities.find(c => c.key === cityKey) || cities[0];
+      const data = weatherCache[city.key];
+      const d = data?.daily || {};
+      const idx = d.time ? d.time.indexOf(tripDates[day]) : -1;
+      if(idx < 0) return null;
+      return {
+        city,
+        dateLabel: tripDateLabels[day],
+        code: d.weather_code?.[idx] ?? 0,
+        min: Math.round(d.temperature_2m_min?.[idx] ?? 0),
+        max: Math.round(d.temperature_2m_max?.[idx] ?? 0),
+        rain: d.precipitation_probability_max?.[idx] ?? null,
+        text: weatherText[d.weather_code?.[idx] ?? 0] || '天氣'
+      };
+    }
+
+    function buildWeatherBasedAdvice(day=currentDay){
+      const base = travelData[day]?.clothing || '';
+      const w = getTripWeatherSnapshot(day);
+      if(!w){
+        return `📌 每日提醒：目前尚未取得旅遊日天氣，先依原行程建議準備。${base}`;
+      }
+      const rain = Number(w.rain ?? 0);
+      const max = Number(w.max ?? 0);
+      const code = Number(w.code ?? 0);
+      const isThunder = [95,96,99].includes(code);
+      const isRain = (code >= 51 && code <= 82) || isThunder || rain >= 40;
+      const parts = [];
+      parts.push(`🌦️ 每日提醒｜依據 ${w.city.name} ${w.dateLabel} 預報：${w.text}，${w.min}-${w.max}°C，降雨機率 ${w.rain ?? '-'}%。`);
+      if(isThunder || rain >= 70){
+        parts.push('⛈️ 降雨偏高：請把晴雨傘、薄雨衣、防水鞋或防滑鞋列為必備，手機、護照與票券建議放防水袋；戶外點若遇雷雨，優先改成室內用餐、商場或車站休息。');
+      }else if(isRain){
+        parts.push('🌧️ 有雨機率：建議攜帶輕量晴雨傘，鞋子以防滑好走為主，行程間預留等雨與轉乘緩衝時間。');
+      }else{
+        parts.push('☀️ 降雨風險較低：仍建議帶抗 UV 晴雨傘，主要重點是防曬、補水與避免中午長時間曝曬。');
+      }
+      if(max >= 34){
+        parts.push('🔥 高溫警戒：穿透氣快乾衣物，手持風扇、補水、電解質飲品必備；每 60–90 分鐘安排一次冷氣休息。');
+      }else if(max >= 30){
+        parts.push('🥵 悶熱注意：建議穿涼感上衣、透氣短褲或薄長褲，並準備毛巾、濕紙巾與防曬。');
+      }else{
+        parts.push('👟 體感較舒適：仍以好走鞋、防曬與輕便機能服為主。');
+      }
+      if(day === 3) parts.push('京都清水寺與二年坂坡道多，請優先穿慢跑鞋或支撐性佳的鞋。');
+      if(day === 4) parts.push('奈良公園請穿好清洗、不怕鹿靠近的衣物，雨天更要注意地面濕滑。');
+      if(day === 5) parts.push('大阪港與船班可能有海風，建議多帶薄外套或防曬外衫。');
+      if(day === 6) parts.push('返程日以輕便、防雨與拖行李好走為優先，避免穿太厚或不耐髒的鞋。');
+      return parts.join(' ');
     }
 
     function weatherApiUrl(city){
@@ -752,8 +806,9 @@ const travelData = {
                 <p>降雨 ${d.precipitation_probability_max?.[idx] ?? '-'}%</p>
               </div>
             </div>
-            <p class="mt-3 rounded-2xl bg-white/10 p-3 text-xs leading-relaxed text-slate-100">這是旅遊日期對應的 ${city.name} 預報。出發前再按一次「↻ 天氣」，避免午後雷雨臨時加戲。</p>
+            <p class="mt-3 rounded-2xl bg-white/10 p-3 text-xs leading-relaxed text-slate-100">這是旅遊日期對應的 ${city.name} 預報。出發前再按一次「↻ 天氣」，每日提醒會依最新預報重新調整。</p>
           </div>
+          <div class="rounded-3xl border border-amber-100 bg-amber-50 p-4 text-xs font-bold leading-relaxed text-amber-900">${buildWeatherBasedAdvice(currentDay)}</div>
           <div class="grid grid-cols-2 gap-3">
             <div class="rounded-3xl border border-sky-100 bg-sky-50 p-4">
               <p class="text-[11px] font-black text-sky-700">當日 ${tripDateLabels[currentDay]}</p>
@@ -827,7 +882,7 @@ const travelData = {
           </div>
           <span class="hero-pill pill bg-white/10 text-sky-100 border border-white/10">${stats.count}站</span>
         </div>
-        <div class="hero-clothing mt-3 rounded-2xl bg-white/10 p-3 text-[12px] leading-relaxed text-slate-100">${data.clothing}</div>
+        <div class="hero-clothing mt-3 rounded-2xl bg-white/10 p-3 text-[12px] leading-relaxed text-slate-100">${buildWeatherBasedAdvice(day)}</div>
         <div class="hero-stats mt-3 grid grid-cols-3 gap-2">
           <div class="mini-stat"><div class="label">第一站</div><div class="value">${stats.first.time || '-'}<br>${stats.first.name || '-'}</div></div>
           <div class="mini-stat"><div class="label">戶外/移動</div><div class="value">約 ${stats.outdoor} 站<br>注意補水</div></div>
@@ -959,7 +1014,7 @@ const travelData = {
         <section class="print-sheet">
           <p style="font-size:11px;font-weight:900;color:#0284c7;letter-spacing:.14em;margin:0 0 6px;">KANSAI 2026｜DAY ${currentDay}</p>
           <h1 class="print-title">${escapeHtml(data.title)}</h1>
-          <p class="print-subtitle">${escapeHtml(data.clothing)}</p>
+          <p class="print-subtitle">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
           ${items}
           <p style="margin-top:14px;font-size:11px;color:#64748b;">住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
         </section>
@@ -1023,7 +1078,7 @@ const travelData = {
   <main class="sheet">
     <p class="kicker">KANSAI 2026｜DAY ${currentDay}</p>
     <h1>${escapeHtml(data.title)}</h1>
-    <p class="subtitle">${escapeHtml(data.clothing)}</p>
+    <p class="subtitle">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
     ${cards}
     <p class="footer">住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
   </main>
@@ -1066,7 +1121,7 @@ const travelData = {
             <main id="pdf-preview-sheet" class="rounded-3xl bg-white p-5 shadow-2xl sm:p-8">
               <p class="mb-2 text-[11px] font-black tracking-[0.18em] text-sky-600">KANSAI 2026｜DAY ${currentDay}</p>
               <h1 class="text-xl font-black leading-snug text-slate-950 sm:text-2xl">${escapeHtml(data.title)}</h1>
-              <p class="mt-3 rounded-2xl bg-sky-50 p-3 text-xs font-bold leading-relaxed text-sky-900 sm:text-sm">${escapeHtml(data.clothing)}</p>
+              <p class="mt-3 rounded-2xl bg-sky-50 p-3 text-xs font-bold leading-relaxed text-sky-900 sm:text-sm">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
               <div class="mt-4 space-y-3">${cards}</div>
               <p class="mt-5 border-t border-slate-200 pt-3 text-[11px] leading-relaxed text-slate-500">住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
             </main>

@@ -366,39 +366,7 @@
       .print-note{ margin-top:6px; font-size:12px; line-height:1.6; color:#334155; }
       .print-addr{ margin-top:4px; font-size:11px; color:#64748b; }
     }
-  
-
-    /* 相機拍照記帳整合：照片壓縮、預覽、草稿記憶 */
-    .receipt-photo-thumb{ margin-top:8px; width:100%; max-height:120px; object-fit:cover; border-radius:16px; border:1px solid #d1fae5; background:#f8fafc; }
-    .expense-camera-tools{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-    .expense-camera-btn{ border:0; border-radius:18px; padding:12px 10px; font-size:12px; font-weight:950; color:#fff; background:linear-gradient(135deg,#059669,#0284c7); box-shadow:0 12px 26px rgba(5,150,105,.18); }
-    .expense-restore-btn{ border:1px solid #a7f3d0; border-radius:18px; padding:12px 10px; font-size:12px; font-weight:950; color:#047857; background:#fff; }
-    .receipt-modal-card{ width:100%; max-width:480px; max-height:92vh; overflow:auto; border-radius:28px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,.45); }
-    .receipt-preview-box{ border-radius:24px; background:#0f172a; padding:10px; display:flex; align-items:center; justify-content:center; min-height:220px; }
-    .receipt-preview-box img{ max-width:100%; max-height:360px; object-fit:contain; border-radius:16px; }
-    .receipt-mini-note{ font-size:11px; line-height:1.6; color:#64748b; }
-    .receipt-form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .receipt-form-field label{ display:block; margin:0 0 5px; font-size:10px; font-weight:950; color:#0369a1; }
-    .receipt-form-field input,.receipt-form-field select,.receipt-form-field textarea{ width:100%; border:1px solid #cbd5e1; border-radius:16px; background:#fff; padding:11px 12px; font-size:13px; font-weight:800; outline:none; }
-    .receipt-form-field textarea{ min-height:64px; resize:vertical; }
-    .receipt-record-photo{ margin-top:8px; display:flex; align-items:center; gap:8px; color:#0369a1; font-size:10.5px; font-weight:950; }
-    .receipt-record-photo img{ width:54px; height:42px; object-fit:cover; border-radius:12px; border:1px solid #bae6fd; }
-    @media(max-width:390px){ .expense-camera-tools,.receipt-form-grid{ grid-template-columns:1fr; } }
-
-    /* AI 收據辨識設定 */
-    .ai-settings-btn{ border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:18px; padding:12px 10px; font-size:12px; font-weight:950; }
-    .ai-status-box{ border-radius:18px; padding:11px 12px; font-size:11px; line-height:1.65; border:1px solid #e2e8f0; background:#f8fafc; color:#475569; }
-    .ai-status-box.ready{ border-color:#bbf7d0; background:#f0fdf4; color:#166534; }
-    .ai-status-box.loading{ border-color:#bfdbfe; background:#eff6ff; color:#1d4ed8; }
-    .ai-status-box.warn{ border-color:#fde68a; background:#fffbeb; color:#92400e; }
-    .ai-status-box.error{ border-color:#fecaca; background:#fef2f2; color:#991b1b; }
-    .ai-v2-badge{ display:inline-flex; align-items:center; gap:4px; border-radius:999px; padding:4px 8px; font-size:10px; font-weight:950; background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; }
-    .ai-v2-option{ display:flex; align-items:flex-start; gap:8px; border-radius:18px; border:1px solid #e2e8f0; background:#fff; padding:10px 12px; font-size:11px; line-height:1.55; color:#475569; }
-    .ai-v2-option input{ margin-top:3px; accent-color:#4f46e5; }
-    .ai-v2-option b{ color:#0f172a; }
-    .ai-code-box{ max-height:160px; overflow:auto; border-radius:18px; background:#0f172a; color:#e2e8f0; padding:12px; font-size:10px; line-height:1.55; white-space:pre-wrap; }
-
-</style>
+  </style>
 </head>
 <body>
   <div id="app" class="app-shell">
@@ -570,143 +538,10 @@
     </div>
   </div>
 
-  <div id="ai-receipt-settings-modal" class="modal-backdrop hidden fixed inset-0 z-50 items-end justify-center bg-slate-950/70 p-3 backdrop-blur-sm sm:items-center">
-    <div class="w-full max-w-md rounded-[28px] bg-white p-5 shadow-2xl">
-      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
-        <div>
-          <p class="text-[10px] font-black tracking-[.14em] text-indigo-600">AI RECEIPT v2</p>
-          <h3 class="mt-1 text-base font-black text-slate-900">⚙️ AI Receipt v2 辨識設定</h3>
-          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">拍照後可送至安全後端辨識；HTML 不保存 API Key。未連線或未設定時，會先離線保存照片，稍後可重試。</p>
-        </div>
-        <button onclick="closeAiReceiptSettings()" class="tap rounded-full bg-slate-100 px-3 py-2 text-xs font-black text-slate-500">✕</button>
-      </div>
-      <div class="mt-4 space-y-3">
-        <div class="rounded-2xl border border-indigo-100 bg-indigo-50 p-3">
-          <div class="ai-v2-badge">✨ AI Receipt v2</div>
-          <p class="mt-2 text-[11px] leading-relaxed text-indigo-900">建議使用「內建模式」：HTML 會呼叫預設後端端點；若尚未部署預設端點，會自動改為離線保存與稍後重試。進階者可改用自己的 Apps Script Web App URL。</p>
-        </div>
-        <div class="space-y-2">
-          <label class="ai-v2-option">
-            <input type="radio" name="ai-receipt-mode" id="ai-receipt-mode-builtin" value="builtin">
-            <span><b>使用內建 AI（推薦）</b><br>使用 HTML 內設定的 AI_RECEIPT_V2_DEFAULT_ENDPOINT。適合正式部署版本，使用者不用再輸入 URL。</span>
-          </label>
-          <label class="ai-v2-option">
-            <input type="radio" name="ai-receipt-mode" id="ai-receipt-mode-custom" value="custom">
-            <span><b>使用自己的 Web App</b><br>自行貼上 Google Apps Script / Cloudflare Worker URL，API Key 放在後端，避免外洩。</span>
-          </label>
-        </div>
-        <div class="receipt-form-field">
-          <label>自己的 Apps Script / Worker Web App URL</label>
-          <input id="ai-receipt-endpoint" placeholder="https://script.google.com/macros/s/......../exec 或 https://your-worker.workers.dev/receipt">
-        </div>
-        <label class="flex items-start gap-2 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-600">
-          <input id="ai-receipt-auto" type="checkbox" class="mt-0.5 h-4 w-4 accent-indigo-600">
-          <span><b class="text-slate-900">拍照後自動辨識</b><br>開啟後，拍完收據會自動送出辨識；成功後回填店家、日期、金額、幣別與分類。失敗時仍保存照片草稿，可稍後重試。</span>
-        </label>
-        <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-[11px] leading-relaxed text-emerald-900">
-          AI Receipt v2 回傳 JSON 可使用任一欄位命名：<br>
-          <code>{"merchant":"店家","date":"2026-07-01","amount":1200,"currency":"JPY","category":"餐飲"}</code>
-        </div>
-        <details class="rounded-2xl border border-slate-200 bg-white p-3">
-          <summary class="cursor-pointer text-[11px] font-black text-slate-700">後端 Web App doPost 範例</summary>
-          <pre class="ai-code-box mt-2">function doPost(e){
-  const req = JSON.parse(e.postData.contents || '{}');
-  // req.imageBase64 可送至 Gemini / Vision OCR。
-  // 請將 API Key 存在 Apps Script Properties，不要寫進 HTML。
-  const result = {
-    merchant: '範例店家',
-    date: '2026-07-01',
-    amount: 1200,
-    currency: 'JPY',
-    category: '餐飲',
-    confidence: 0.88,
-    note: '請人工核對後入帳'
-  };
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true,data:result}))
-    .setMimeType(ContentService.MimeType.JSON);
-}</pre>
-        </details>
-        <div class="grid grid-cols-2 gap-3">
-          <button onclick="saveAiReceiptSettings()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white">儲存設定</button>
-          <button onclick="clearAiReceiptSettings()" class="tap rounded-2xl border border-rose-100 bg-rose-50 py-3 text-xs font-black text-rose-700">清除設定</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <div id="toast" class="pointer-events-none fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-slate-950/90 px-4 py-2.5 text-[11px] font-black text-white opacity-0 shadow-xl transition-opacity">完成</div>
 
   <div id="print-area" aria-hidden="true"></div>
-
-  <input type="file" id="expense-camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleExpenseCameraFile(event)">
-
-  <div id="expense-receipt-modal" class="modal-backdrop hidden fixed inset-0 z-50 items-end justify-center bg-slate-950/70 p-3 backdrop-blur-sm sm:items-center">
-    <div class="receipt-modal-card">
-      <div class="flex items-start justify-between gap-3 border-b border-slate-100 p-5">
-        <div>
-          <p class="text-[10px] font-black tracking-[.14em] text-sky-600">PHOTO EXPENSE</p>
-          <h3 class="mt-1 text-base font-black text-slate-900">📷 拍照記帳核對</h3>
-          <p class="mt-1 receipt-mini-note">照片會先壓縮並存在本機瀏覽器，可還原上次草稿；請核對金額後再加入紀錄。</p>
-        </div>
-        <button onclick="closeReceiptModal()" class="tap rounded-full bg-slate-100 px-3 py-2 text-xs font-black text-slate-500">✕</button>
-      </div>
-      <div class="p-5 space-y-4">
-        <div class="receipt-preview-box"><img id="receipt-preview-img" alt="收據照片預覽"></div>
-        <div id="receipt-ai-status" class="ai-status-box warn">
-          ✨ AI Receipt v2：拍照後會優先自動辨識；若尚未設定後端或網路不穩，會先離線保存照片草稿，可稍後重新辨識。
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" onclick="openAiReceiptSettings()" class="tap ai-settings-btn">⚙️ AI Receipt v2</button>
-          <button type="button" onclick="runAiOnCurrentReceipt()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/15">🤖 重新 AI 辨識</button>
-        </div>
-        <div class="receipt-form-grid">
-          <div class="receipt-form-field">
-            <label>日期 / 行程日</label>
-            <select id="receipt-day"></select>
-          </div>
-          <div class="receipt-form-field">
-            <label>分類</label>
-            <select id="receipt-category">
-              <option>餐飲</option><option>交通</option><option>門票</option><option>購物</option><option>住宿</option><option>伴手禮</option><option>其他</option>
-            </select>
-          </div>
-          <div class="receipt-form-field">
-            <label>項目 / 店家</label>
-            <input id="receipt-item" placeholder="例：便利商店、餐廳、車票">
-          </div>
-          <div class="receipt-form-field">
-            <label>金額</label>
-            <input id="receipt-amount" type="number" inputmode="decimal" min="0" step="1" placeholder="例：1200">
-          </div>
-          <div class="receipt-form-field">
-            <label>幣別</label>
-            <select id="receipt-currency"><option>JPY</option><option>TWD</option><option>USD</option></select>
-          </div>
-          <div class="receipt-form-field">
-            <label>付款人</label>
-            <input id="receipt-payer" placeholder="例：爸爸、媽媽、現金、公費">
-          </div>
-        </div>
-        <div class="receipt-form-field">
-          <label>備註</label>
-          <textarea id="receipt-note" placeholder="例：收據拍照保存、4人共用、已退稅"></textarea>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" onclick="saveReceiptAsExpense()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">✅ 儲存入帳</button>
-          <button type="button" onclick="applyReceiptDraftToForm()" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">↩️ 帶回表單</button>
-          <button type="button" onclick="clearReceiptDraft()" class="tap rounded-2xl border border-rose-100 bg-rose-50 py-3 text-xs font-black text-rose-700">清除照片草稿</button>
-          <button type="button" onclick="closeReceiptModal()" class="tap rounded-2xl border border-slate-200 bg-white py-3 text-xs font-black text-slate-700">稍後處理</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="receipt-lightbox" class="modal-backdrop hidden fixed inset-0 z-[60] items-center justify-center bg-black/90 p-3" onclick="closeReceiptLightbox()">
-    <img id="receipt-lightbox-img" src="" alt="收據照片放大" class="max-h-[90vh] max-w-full rounded-2xl object-contain">
-  </div>
-
 
   <script>
 const travelData = {
@@ -897,11 +732,6 @@ const travelData = {
     let weatherCache = {};
     const expenseStorageKey = 'kansai2026ExpenseRecords_v1';
     const expenseDraftKey = 'kansai2026ExpenseDraft_v1';
-    const expenseReceiptDraftKey = 'kansai2026ExpenseReceiptDraft_v1';
-    const expenseAiSettingsKey = 'kansai2026ExpenseAiSettings_v2';
-    // AI Receipt v2 預設端點：正式部署時可填入你自己的 Cloudflare Worker / Apps Script URL。
-    // 保持空白時，系統會自動進入「離線保存 + 稍後重試」模式，不會阻擋記帳。
-    const AI_RECEIPT_V2_DEFAULT_ENDPOINT = '';
 
     document.addEventListener('DOMContentLoaded', () => {
       renderDayTabs();
@@ -1914,7 +1744,7 @@ const travelData = {
         <div class="expense-hero card-shadow">
           <p class="text-[10px] font-black tracking-[.16em] text-emerald-200">TRAVEL EXPENSE</p>
           <h2 class="mt-1 text-base font-black">💰 旅行過程記帳</h2>
-          <p class="mt-2 text-xs leading-relaxed text-emerald-50">輸入資料會自動記憶在本機瀏覽器，下次打開同一個 HTML 仍會保留最後填入內容與記帳紀錄。</p>
+          <p class="mt-2 text-xs leading-relaxed text-emerald-50">輸入資料會自動記憶在本機瀏覽器；下方預留「拍照記帳」按鈕，之後可串接到另一個照片識別網頁。</p>
         </div>
 
         <div class="mt-4 expense-form-card card-shadow">
@@ -1953,21 +1783,16 @@ const travelData = {
             <label>備註</label>
             <textarea id="expense-note" placeholder="例：4人共用、已退稅、現金支付">${escapeHtml(draft.note)}</textarea>
           </div>
-          <div class="expense-camera-tools">
-            <button type="button" onclick="triggerExpenseCamera()" class="tap expense-camera-btn">📷 拍照記帳</button>
-            <button type="button" onclick="restoreReceiptDraft()" class="tap expense-restore-btn">📂 還原照片草稿</button>
-            <button type="button" onclick="openAiReceiptSettings()" class="tap ai-settings-btn">⚙️ AI Receipt v2</button>
-            <button type="button" onclick="runAiOnCurrentReceipt()" class="tap rounded-[18px] bg-indigo-600 px-3 py-3 text-xs font-black text-white">🤖 辨識照片草稿</button>
-          </div>
-          <p class="mt-2 rounded-2xl bg-sky-50 px-3 py-2 text-[11px] leading-relaxed text-sky-900 border border-sky-100">AI Receipt v2 會先保存收據照片；若已連接後端端點，拍照後會自動辨識並回填店家、日期、金額、幣別與分類。</p>
-
           <div class="mt-3 grid grid-cols-2 gap-2">
+            <button type="button" onclick="openPhotoAccounting()" class="tap col-span-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-3 text-xs font-black text-white shadow-lg shadow-violet-500/20">📷 拍照記帳｜串接照片識別網頁</button>
+            <button type="button" onclick="setPhotoAccountingUrl()" class="tap col-span-2 rounded-2xl bg-violet-50 py-2.5 text-[11px] font-black text-violet-700 border border-violet-100">⚙️ 設定照片識別網頁連結</button>
             <button type="button" onclick="addExpenseRecord()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">＋ 加入紀錄</button>
             <button type="button" onclick="clearExpenseDraft()" class="tap rounded-2xl bg-white py-3 text-xs font-black text-slate-700 border border-slate-200">清空輸入</button>
             <button type="button" onclick="copyExpenseSummary()" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">📋 複製總表</button>
             <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/15">⬇️ 匯出 CSV</button>
             <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap col-span-2 rounded-2xl bg-emerald-700 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">📊 匯出 Google Sheet</button>
           </div>
+          <p id="photo-accounting-status" class="mt-2 rounded-2xl bg-violet-50 px-3 py-2 text-[11px] leading-relaxed text-violet-900 border border-violet-100">📷 拍照記帳按鈕已預留；尚未設定照片識別網頁連結時，點擊會提示設定。</p>
           <p class="mt-2 rounded-2xl bg-white/70 px-3 py-2 text-[11px] leading-relaxed text-emerald-900 border border-emerald-100">Google Sheet 匯出方式：系統會先複製成試算表格式，並開啟新的 Google Sheet；開啟後請在 A1 貼上，即可自動分欄成總表。</p>
         </div>
 
@@ -1984,7 +1809,60 @@ const travelData = {
         <div id="expense-records" class="space-y-2"></div>
       `;
       renderExpenseRecords();
+      refreshPhotoAccountingStatus();
     }
+
+    const photoAccountingUrlKey = 'kansai_photo_accounting_external_url_v1';
+    function getPhotoAccountingUrl(){
+      return localStorage.getItem(photoAccountingUrlKey) || '';
+    }
+    function refreshPhotoAccountingStatus(){
+      const el = document.getElementById('photo-accounting-status');
+      if(!el) return;
+      const url = getPhotoAccountingUrl();
+      el.textContent = url
+        ? `📷 拍照記帳已設定：${url}`
+        : '📷 拍照記帳按鈕已預留；尚未設定照片識別網頁連結時，點擊會提示設定。';
+    }
+    function setPhotoAccountingUrl(){
+      const current = getPhotoAccountingUrl();
+      const url = prompt('請貼上之後要串接的照片識別網頁網址\n例如：https://example.com/receipt-scan', current);
+      if(url === null) return;
+      const clean = url.trim();
+      if(!clean){
+        localStorage.removeItem(photoAccountingUrlKey);
+        refreshPhotoAccountingStatus();
+        showToast('已清除照片識別網頁連結');
+        return;
+      }
+      if(!/^https?:\/\//i.test(clean)){
+        showToast('請輸入 http:// 或 https:// 開頭的網址');
+        return;
+      }
+      localStorage.setItem(photoAccountingUrlKey, clean);
+      refreshPhotoAccountingStatus();
+      showToast('照片識別網頁連結已儲存');
+    }
+    function openPhotoAccounting(){
+      const url = getPhotoAccountingUrl();
+      if(!url){
+        const ok = confirm('尚未設定照片識別網頁連結。\n\n是否現在設定？');
+        if(ok) setPhotoAccountingUrl();
+        return;
+      }
+      const day = document.getElementById('expense-day')?.value || currentDay || '';
+      const currency = document.getElementById('expense-currency')?.value || 'JPY';
+      const query = new URLSearchParams({
+        source: 'kansai-travel-html',
+        day: day ? `D${day}` : '',
+        date: tripDates[day] || '',
+        currency
+      }).toString();
+      const target = url.includes('?') ? `${url}&${query}` : `${url}?${query}`;
+      window.open(target, '_blank', 'noopener,noreferrer');
+      showToast('已開啟拍照記帳網頁');
+    }
+
     function addExpenseRecord(){
       const amount = Number(document.getElementById('expense-amount')?.value || 0);
       const item = (document.getElementById('expense-item')?.value || '').trim();
@@ -1999,15 +1877,13 @@ const travelData = {
         amount,
         currency: document.getElementById('expense-currency').value,
         payer: (document.getElementById('expense-payer').value || '').trim(),
-        note: (document.getElementById('expense-note').value || '').trim(),
-        photoData: window.__expenseAttachedPhoto || ''
+        note: (document.getElementById('expense-note').value || '').trim()
       };
       const records = getExpenseRecords();
       records.unshift(record);
       saveExpenseRecords(records);
       saveExpenseDraft();
       renderExpenseRecords();
-      window.__expenseAttachedPhoto = '';
       showToast('已加入記帳紀錄');
     }
     function formatMoney(amount, currency){
@@ -2035,7 +1911,6 @@ const travelData = {
               <div class="expense-record-name">${escapeHtml(r.item)}</div>
               <div class="expense-record-meta">D${escapeHtml(r.day)}｜${escapeHtml(tripDateLabels[r.day] || '')}｜${escapeHtml(r.category)}${r.payer ? '｜付款：'+escapeHtml(r.payer) : ''}</div>
               ${r.note ? `<div class="expense-record-meta">備註：${escapeHtml(r.note)}</div>` : ''}
-              ${r.photoData ? `<button type="button" onclick="event.stopPropagation();openReceiptLightbox('${String(r.id)}')" class="receipt-record-photo"><img src="${r.photoData}" alt="收據照片"><span>📷 收據照片已保存｜點擊放大</span></button>` : ''}
             </div>
             <div class="text-right">
               <div class="expense-record-amount">${formatMoney(r.amount,r.currency)}</div>
@@ -2090,7 +1965,7 @@ const travelData = {
       ['JPY','TWD','USD'].forEach(c => rows.push([c, summary[c] || 0]));
       Object.keys(summary).filter(c => !['JPY','TWD','USD'].includes(c)).forEach(c => rows.push([c, summary[c] || 0]));
       rows.push([]);
-      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','是否有照片','建立時間']);
+      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','建立時間']);
       records.slice().reverse().forEach((r, idx) => {
         rows.push([
           idx + 1,
@@ -2102,7 +1977,6 @@ const travelData = {
           r.currency || '',
           r.payer || '',
           r.note || '',
-          r.photoData ? '是' : '否',
           r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : ''
         ]);
       });
@@ -2132,7 +2006,7 @@ const travelData = {
       ['JPY','TWD','USD'].forEach(c => rows.push([c, summary[c] || 0]));
       Object.keys(summary).filter(c => !['JPY','TWD','USD'].includes(c)).forEach(c => rows.push([c, summary[c] || 0]));
       rows.push([]);
-      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','是否有照片','建立時間']);
+      rows.push(['序號','行程日','日期','分類','項目','金額','幣別','付款人','備註','建立時間']);
       records.slice().reverse().forEach((r, idx) => {
         rows.push([
           idx + 1,
@@ -2144,7 +2018,6 @@ const travelData = {
           r.currency || '',
           r.payer || '',
           r.note || '',
-          r.photoData ? '是' : '否',
           r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : ''
         ]);
       });
@@ -2167,327 +2040,6 @@ const travelData = {
     }
 
 
-
-
-    function triggerExpenseCamera(){
-      const input = document.getElementById('expense-camera-input');
-      if(input){ input.value=''; input.click(); }
-    }
-
-    function getReceiptDraft(){
-      try{ return JSON.parse(localStorage.getItem(expenseReceiptDraftKey) || '{}'); }
-      catch(e){ return {}; }
-    }
-    function saveReceiptDraft(data){
-      localStorage.setItem(expenseReceiptDraftKey, JSON.stringify(data || {}));
-    }
-    function getAiReceiptSettings(){
-      try{ return Object.assign({mode:'builtin', endpoint:'', auto:true}, JSON.parse(localStorage.getItem(expenseAiSettingsKey) || '{}')); }
-      catch(e){ return {mode:'builtin', endpoint:'', auto:true}; }
-    }
-    function getActiveAiReceiptEndpoint(settings){
-      const s = settings || getAiReceiptSettings();
-      return s.mode === 'custom' ? (s.endpoint || '').trim() : (AI_RECEIPT_V2_DEFAULT_ENDPOINT || '').trim();
-    }
-    function describeAiReceiptMode(settings){
-      const s = settings || getAiReceiptSettings();
-      const endpoint = getActiveAiReceiptEndpoint(s);
-      if(endpoint) return s.mode === 'custom' ? '✅ AI Receipt v2 已使用自訂 Web App。拍照後會自動辨識並回填欄位。' : '✅ AI Receipt v2 內建端點已啟用。拍照後會自動辨識並回填欄位。';
-      return '📷 AI Receipt v2 離線保存模式：目前尚未連接後端端點，照片會先保存成草稿；部署端點後可按「重新 AI 辨識」。';
-    }
-    function saveAiReceiptSettings(){
-      const endpoint = (document.getElementById('ai-receipt-endpoint')?.value || '').trim();
-      const auto = !!document.getElementById('ai-receipt-auto')?.checked;
-      const mode = document.getElementById('ai-receipt-mode-custom')?.checked ? 'custom' : 'builtin';
-      localStorage.setItem(expenseAiSettingsKey, JSON.stringify({mode, endpoint, auto}));
-      closeAiReceiptSettings();
-      const activeEndpoint = getActiveAiReceiptEndpoint({mode, endpoint, auto});
-      updateReceiptAiStatus(activeEndpoint ? 'ready' : 'warn', describeAiReceiptMode({mode, endpoint, auto}));
-      showToast(activeEndpoint ? 'AI Receipt v2 設定已啟用' : 'AI Receipt v2 已切換為離線保存模式');
-    }
-    function clearAiReceiptSettings(){
-      localStorage.removeItem(expenseAiSettingsKey);
-      const ep = document.getElementById('ai-receipt-endpoint'); if(ep) ep.value='';
-      const au = document.getElementById('ai-receipt-auto'); if(au) au.checked=true;
-      const bi = document.getElementById('ai-receipt-mode-builtin'); if(bi) bi.checked=true;
-      updateReceiptAiStatus('warn','📷 AI Receipt v2 離線保存模式：照片會先保存成草稿，之後可設定後端並重新辨識。');
-      showToast('AI Receipt v2 設定已清除');
-    }
-    function openAiReceiptSettings(){
-      const s = getAiReceiptSettings();
-      const modal = document.getElementById('ai-receipt-settings-modal');
-      const ep = document.getElementById('ai-receipt-endpoint'); if(ep) ep.value = s.endpoint || '';
-      const au = document.getElementById('ai-receipt-auto'); if(au) au.checked = s.auto !== false;
-      const bi = document.getElementById('ai-receipt-mode-builtin'); if(bi) bi.checked = (s.mode || 'builtin') !== 'custom';
-      const cu = document.getElementById('ai-receipt-mode-custom'); if(cu) cu.checked = (s.mode || 'builtin') === 'custom';
-      modal.classList.remove('hidden'); modal.classList.add('flex');
-    }
-    function closeAiReceiptSettings(){
-      const modal = document.getElementById('ai-receipt-settings-modal');
-      modal.classList.add('hidden'); modal.classList.remove('flex');
-    }
-    function updateReceiptAiStatus(kind, message){
-      const el = document.getElementById('receipt-ai-status');
-      if(!el) return;
-      el.className = 'ai-status-box ' + (kind || 'warn');
-      el.textContent = message;
-    }
-    function buildReceiptDayOptions(selectedDay){
-      return Object.keys(travelData).map(day => `<option value="${day}" ${String(selectedDay)===String(day)?'selected':''}>D${day}｜${tripDateLabels[day]}</option>`).join('');
-    }
-    async function handleExpenseCameraFile(event){
-      const file = event.target.files && event.target.files[0];
-      if(!file) return;
-      showToast('正在壓縮收據照片');
-      const dataUrl = await readFileAsDataURL(file);
-      const compressed = await compressReceiptImage(dataUrl, 1100, 0.72);
-      const draft = Object.assign({
-        day: getExpenseDefaultDay(),
-        category: document.getElementById('expense-category')?.value || '餐飲',
-        item: document.getElementById('expense-item')?.value || '',
-        amount: document.getElementById('expense-amount')?.value || '',
-        currency: document.getElementById('expense-currency')?.value || 'JPY',
-        payer: document.getElementById('expense-payer')?.value || '',
-        note: document.getElementById('expense-note')?.value || '收據照片保存',
-        photoData: compressed,
-        capturedAt: new Date().toISOString()
-      }, getReceiptDraft(), { photoData: compressed, capturedAt: new Date().toISOString() });
-      if(!draft.day) draft.day = getExpenseDefaultDay();
-      saveReceiptDraft(draft);
-      openReceiptModal(draft);
-      showToast('照片已保存為草稿');
-      const aiSettings = getAiReceiptSettings();
-      if(getActiveAiReceiptEndpoint(aiSettings) && aiSettings.auto !== false){
-        analyzeReceiptWithAppsScript(compressed, draft);
-      } else {
-        updateReceiptAiStatus('warn','📷 AI Receipt v2 離線保存：照片草稿已保存。部署內建端點或填入自己的 Web App 後，可按「重新 AI 辨識」自動回填。');
-      }
-    }
-    function normalizeAiReceiptResult(raw){
-      const data = raw && raw.data ? raw.data : raw;
-      if(!data || typeof data !== 'object') throw new Error('AI 回傳格式不是 JSON 物件');
-      const storeName = data.storeName || data.store || data.merchant || data.shopName || data.vendor || data.item || '';
-      const totalAmount = data.totalAmount ?? data.amount ?? data.total ?? data.price ?? '';
-      const suggestedCategory = data.suggestedCategory || data.category || data.type || '餐飲';
-      const currency = data.currency || 'JPY';
-      const date = data.date || data.purchaseDate || data.consumeDate || '';
-      const confidence = data.confidence ?? data.score ?? '';
-      const note = data.note || data.memo || data.rawText || '';
-      return { storeName:String(storeName || ''), totalAmount, suggestedCategory:String(suggestedCategory || '餐飲'), currency:String(currency || 'JPY'), date:String(date || ''), note:String(note || ''), confidence };
-    }
-    function dayFromReceiptDate(dateStr){
-      if(!dateStr) return '';
-      const normalized = String(dateStr).replace(/\//g,'-');
-      const found = Object.keys(tripDates).find(day => tripDates[day] === normalized);
-      return found || '';
-    }
-    async function analyzeReceiptWithAppsScript(imageDataUrl, draft){
-      const settings = getAiReceiptSettings();
-      const endpoint = getActiveAiReceiptEndpoint(settings);
-      if(!endpoint){
-        updateReceiptAiStatus('warn','📷 AI Receipt v2 離線保存：目前尚未連接後端端點。照片已保存，可先手動填寫；部署端點後可重新辨識。');
-        return;
-      }
-      updateReceiptAiStatus('loading','🤖 AI Receipt v2 辨識中：正在辨識店家、日期、金額、幣別與分類…');
-      try{
-        const payload = {
-          imageDataUrl,
-          imageBase64: String(imageDataUrl || '').split(',')[1] || '',
-          mimeType: 'image/jpeg',
-          trip: '2026 京阪奈自由行',
-          currentDay: currentDay,
-          defaultDate: tripDates[currentDay] || '',
-          expectedFields: ['merchant','storeName','date','amount','totalAmount','currency','category','suggestedCategory'],
-          outputSchema: { merchant:'string', date:'YYYY-MM-DD', amount:'number', currency:'JPY/TWD/USD', category:'餐飲/交通/門票/購物/住宿/伴手禮/其他', confidence:'0-1' }
-        };
-        const res = await fetch(endpoint, {
-          method:'POST',
-          headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-          redirect:'follow'
-        });
-        if(!res.ok) throw new Error('HTTP ' + res.status);
-        const text = await res.text();
-        let json;
-        try{ json = JSON.parse(text); }
-        catch(e){ throw new Error('Apps Script 回傳不是 JSON：' + text.slice(0,80)); }
-        const result = normalizeAiReceiptResult(json);
-        applyAiReceiptResult(result, draft);
-        const conf = result.confidence !== '' && result.confidence !== undefined ? `｜信心 ${Math.round(Number(result.confidence)*100)}%` : '';
-        updateReceiptAiStatus('ready',`✅ AI Receipt v2 完成：${result.storeName || '未命名店家'}｜${result.currency || 'JPY'} ${Number(result.totalAmount || 0).toLocaleString()}${conf}。請核對後再儲存入帳。`);
-        showToast('AI Receipt v2 已自動回填欄位');
-      }catch(err){
-        console.error('AI receipt analyze failed', err);
-        updateReceiptAiStatus('error','⚠️ AI Receipt v2 辨識失敗：' + (err.message || err) + '。照片草稿仍已保存，可手動填寫或稍後重試。');
-        showToast('AI 辨識失敗，照片已保存');
-      }
-    }
-    function applyAiReceiptResult(result, draft){
-      const categoryList = ['餐飲','交通','門票','購物','住宿','伴手禮','其他'];
-      const normalizedCategory = categoryList.includes(result.suggestedCategory) ? result.suggestedCategory : (categoryList.includes(result.category) ? result.category : '其他');
-      const mappedDay = dayFromReceiptDate(result.date) || draft?.day || getExpenseDefaultDay();
-      const merged = Object.assign({}, getReceiptDraft(), draft || {}, {
-        day: mappedDay,
-        category: normalizedCategory,
-        item: result.storeName || draft?.item || '',
-        amount: result.totalAmount || draft?.amount || '',
-        currency: result.currency || draft?.currency || 'JPY',
-        note: result.note ? ('AI Receipt v2：' + result.note) : (draft?.note || 'AI Receipt v2 辨識後請核對'),
-        aiRaw: result,
-        aiUpdatedAt: new Date().toISOString()
-      });
-      saveReceiptDraft(merged);
-      if(document.getElementById('expense-receipt-modal') && !document.getElementById('expense-receipt-modal').classList.contains('hidden')){
-        document.getElementById('receipt-day').innerHTML = buildReceiptDayOptions(merged.day);
-        document.getElementById('receipt-category').value = merged.category;
-        document.getElementById('receipt-item').value = merged.item;
-        document.getElementById('receipt-amount').value = merged.amount;
-        document.getElementById('receipt-currency').value = merged.currency;
-        document.getElementById('receipt-payer').value = merged.payer || '';
-        document.getElementById('receipt-note').value = merged.note || '';
-      }
-    }
-    function runAiOnCurrentReceipt(){
-      const d = collectReceiptForm ? collectReceiptForm() : getReceiptDraft();
-      const photo = d.photoData || getReceiptDraft().photoData;
-      if(!photo){ showToast('目前沒有照片草稿可辨識'); return; }
-      saveReceiptDraft(d);
-      analyzeReceiptWithAppsScript(photo, d);
-    }
-
-    function openReceiptModal(draft){
-      draft = Object.assign({day:getExpenseDefaultDay(),category:'餐飲',item:'',amount:'',currency:'JPY',payer:'',note:'收據照片保存',photoData:''}, draft || getReceiptDraft());
-      document.getElementById('receipt-preview-img').src = draft.photoData || '';
-      document.getElementById('receipt-day').innerHTML = buildReceiptDayOptions(draft.day || getExpenseDefaultDay());
-      document.getElementById('receipt-category').value = draft.category || '餐飲';
-      document.getElementById('receipt-item').value = draft.item || '';
-      document.getElementById('receipt-amount').value = draft.amount || '';
-      document.getElementById('receipt-currency').value = draft.currency || 'JPY';
-      document.getElementById('receipt-payer').value = draft.payer || '';
-      document.getElementById('receipt-note').value = draft.note || '收據照片保存';
-      const modal = document.getElementById('expense-receipt-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      const s = getAiReceiptSettings();
-      if(getActiveAiReceiptEndpoint(s)){
-        updateReceiptAiStatus('ready', describeAiReceiptMode(s) + ' 可按「重新 AI 辨識」，或拍照後自動辨識。');
-      }else{
-        updateReceiptAiStatus('warn','📷 AI Receipt v2 離線保存模式：目前可先保存照片並手動填寫；部署端點後可重新辨識。');
-      }
-    }
-    function closeReceiptModal(){
-      const modal = document.getElementById('expense-receipt-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-    function collectReceiptForm(){
-      return {
-        day: document.getElementById('receipt-day')?.value || getExpenseDefaultDay(),
-        category: document.getElementById('receipt-category')?.value || '餐飲',
-        item: (document.getElementById('receipt-item')?.value || '').trim(),
-        amount: document.getElementById('receipt-amount')?.value || '',
-        currency: document.getElementById('receipt-currency')?.value || 'JPY',
-        payer: (document.getElementById('receipt-payer')?.value || '').trim(),
-        note: (document.getElementById('receipt-note')?.value || '').trim(),
-        photoData: getReceiptDraft().photoData || document.getElementById('receipt-preview-img')?.src || '',
-        capturedAt: getReceiptDraft().capturedAt || new Date().toISOString()
-      };
-    }
-    function saveReceiptAsExpense(){
-      const d = collectReceiptForm();
-      if(!d.item){ showToast('請先輸入項目 / 店家'); return; }
-      const amount = Number(d.amount || 0);
-      if(!amount || amount <= 0){ showToast('請輸入金額'); return; }
-      const records = getExpenseRecords();
-      records.unshift({
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-        day: d.day,
-        category: d.category,
-        item: d.item,
-        amount,
-        currency: d.currency,
-        payer: d.payer,
-        note: d.note,
-        photoData: d.photoData || ''
-      });
-      saveExpenseRecords(records);
-      saveReceiptDraft(d);
-      // 同步最後輸入到一般表單，避免下一次重填
-      localStorage.setItem(expenseDraftKey, JSON.stringify({day:d.day,category:d.category,item:d.item,amount:d.amount,currency:d.currency,payer:d.payer,note:d.note}));
-      closeReceiptModal();
-      renderExpensePanel();
-      showToast('拍照記帳已儲存');
-    }
-    function applyReceiptDraftToForm(){
-      const d = collectReceiptForm();
-      saveReceiptDraft(d);
-      const setVal = (id,val) => { const el=document.getElementById(id); if(el) el.value = val || ''; };
-      setVal('expense-day', d.day);
-      setVal('expense-category', d.category);
-      setVal('expense-item', d.item);
-      setVal('expense-amount', d.amount);
-      setVal('expense-currency', d.currency);
-      setVal('expense-payer', d.payer);
-      setVal('expense-note', d.note);
-      window.__expenseAttachedPhoto = d.photoData || '';
-      saveExpenseDraft();
-      closeReceiptModal();
-      showToast('已帶回一般記帳表單');
-    }
-    function restoreReceiptDraft(){
-      const d = getReceiptDraft();
-      if(!d.photoData){ showToast('目前沒有可還原的照片草稿'); return; }
-      openReceiptModal(d);
-      showToast('已還原照片草稿');
-    }
-    function clearReceiptDraft(){
-      if(!confirm('確定要清除拍照記帳草稿嗎？')) return;
-      localStorage.removeItem(expenseReceiptDraftKey);
-      window.__expenseAttachedPhoto = '';
-      closeReceiptModal();
-      showToast('拍照草稿已清除');
-    }
-    function readFileAsDataURL(file){
-      return new Promise((resolve,reject)=>{
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-    function compressReceiptImage(dataUrl, maxWidth=1100, quality=0.72){
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => {
-          try{
-            let w = img.width, h = img.height;
-            if(w > maxWidth){ h = Math.round(h * maxWidth / w); w = maxWidth; }
-            const canvas = document.createElement('canvas');
-            canvas.width = w; canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img,0,0,w,h);
-            resolve(canvas.toDataURL('image/jpeg', quality));
-          }catch(e){ resolve(dataUrl); }
-        };
-        img.onerror = () => resolve(dataUrl);
-        img.src = dataUrl;
-      });
-    }
-    function openReceiptLightbox(recordId){
-      const record = getExpenseRecords().find(r => String(r.id)===String(recordId));
-      if(!record || !record.photoData){ showToast('找不到收據照片'); return; }
-      document.getElementById('receipt-lightbox-img').src = record.photoData;
-      const lb = document.getElementById('receipt-lightbox');
-      lb.classList.remove('hidden');
-      lb.classList.add('flex');
-    }
-    function closeReceiptLightbox(){
-      const lb = document.getElementById('receipt-lightbox');
-      lb.classList.add('hidden');
-      lb.classList.remove('flex');
-    }
-
     function bindUiHelpers(){
       document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -2497,8 +2049,6 @@ const travelData = {
             if(backdrop.id === 'modal') closeModal();
             if(backdrop.id === 'weather-detail-modal') closeWeatherDetail();
             if(backdrop.id === 'route-map-modal') closeRouteMap();
-            if(backdrop.id === 'expense-receipt-modal') closeReceiptModal();
-            if(backdrop.id === 'receipt-lightbox') closeReceiptLightbox();
           }
         });
       });
@@ -2508,8 +2058,6 @@ const travelData = {
           closeWeatherDetail();
           closePdfPreview();
           closeRouteMap();
-          closeReceiptModal();
-          closeReceiptLightbox();
         }
       });
     }

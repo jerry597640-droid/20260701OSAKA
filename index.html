@@ -375,9 +375,15 @@
             <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊</h1>
             <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜領隊隨身極客版</p>
           </div>
-          <button onclick="refreshWeather(true)" class="tap shrink-0 rounded-xl bg-slate-900 px-3 py-1.5 text-[10.5px] font-black text-white shadow-md shadow-slate-900/10 flex items-center gap-1">
-            <i data-lucide="refresh-cw" class="w-3 h-3"></i> 刷天氣
-          </button>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <!-- 頂部 API 金鑰設定捷徑 -->
+            <button onclick="openReceiptAiSettings()" class="tap rounded-xl bg-violet-600 p-2 text-[10.5px] font-black text-white shadow-md shadow-violet-500/10 flex items-center justify-center" title="API 設定">
+              <i data-lucide="key" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="refreshWeather(true)" class="tap rounded-xl bg-slate-900 px-3 py-1.5 text-[10.5px] font-black text-white shadow-md shadow-slate-900/10 flex items-center gap-1">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 刷天氣
+            </button>
+          </div>
         </div>
 
         <!-- 氣象實體小看板 -->
@@ -598,7 +604,9 @@
     <div class="receipt-ai-sheet flex flex-col max-h-[85vh]">
       <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
-          <p class="text-[9px] font-black tracking-widest text-violet-600">AI RECEIPT SCANNER</p>
+          <p class="text-[9px] font-black tracking-widest text-violet-600 flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-violet-500"></i> AI RECEIPT SCANNER
+          </p>
           <h3 class="mt-0.5 text-sm font-black text-slate-950">📷 拍照辨識自動入帳</h3>
         </div>
         <button onclick="closeReceiptAiModal()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
@@ -611,7 +619,9 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
-        <button onclick="triggerEmbeddedReceiptCamera()" class="tap rounded-xl bg-violet-600 py-2.5 text-xs font-black text-white">拍照/上傳</button>
+        <button onclick="triggerEmbeddedReceiptCamera()" class="tap rounded-xl bg-violet-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
+          <i data-lucide="camera" class="w-4 h-4"></i> 拍照/上傳
+        </button>
         <button onclick="closeReceiptAiModal()" class="tap rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">關閉</button>
       </div>
     </div>
@@ -619,10 +629,12 @@
 
   <!-- AI 設置彈出層 -->
   <div id="receipt-ai-settings-modal" class="receipt-ai-modal">
-    <div class="receipt-ai-sheet">
+    <div class="receipt-ai-sheet animate-scale-up">
       <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
-          <p class="text-[9px] font-black tracking-widest text-blue-600">GEMINI API CONFIG</p>
+          <p class="text-[9px] font-black tracking-widest text-blue-600 flex items-center gap-1">
+            <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-500"></i> GEMINI API CONFIG
+          </p>
           <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 拍照辨識設置</h3>
         </div>
         <button onclick="closeReceiptAiSettings()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
@@ -631,17 +643,19 @@
       <div class="mt-3 space-y-3">
         <div class="ai-key-help">
           <p class="text-[11px] leading-relaxed text-slate-700 font-bold">
-            使用 Gemini 2.5 進行多模態辨識。系統有預設連線，若要使用您個人的免費 API 金鑰，請輸入於下方。
+            本工具使用 Gemini 2.5 Flash 進行多模態辨識。請輸入您的 API 金鑰（ApiKey）：
           </p>
           <div class="ai-key-actions">
-            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white block">🔑 免費取得 Gemini API Key</a>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white block rounded-xl py-2 text-xs font-black text-center flex items-center justify-center gap-1">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> 免費取得個人 Gemini API Key
+            </a>
           </div>
         </div>
 
         <div>
-          <label class="block text-[10px] font-black text-slate-500">個人 Gemini API Key (可選)</label>
+          <label class="block text-[10px] font-black text-slate-500">您的 Gemini API Key</label>
           <div class="ai-key-input-wrap">
-            <input id="receipt-ai-key-input" type="password" placeholder="未輸入則優先嘗試系統內置 Key" autocomplete="off">
+            <input id="receipt-ai-key-input" type="password" placeholder="請在此貼上您的 AI 金鑰 (AIzaSy...)" autocomplete="off">
             <button id="receipt-ai-key-eye" onclick="toggleReceiptAiKeyVisibility()" class="tap rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">👁</button>
           </div>
         </div>
@@ -655,8 +669,12 @@
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-2">
-        <button onclick="testReceiptAiKey()" class="tap rounded-xl bg-indigo-600 py-2.5 text-xs font-black text-white">🧪 測試連線</button>
-        <button onclick="saveReceiptAiSettingsFromModal()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white">💾 保存設置</button>
+        <button onclick="testReceiptAiKey()" class="tap rounded-xl bg-indigo-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 測試連線
+        </button>
+        <button onclick="saveReceiptAiSettingsFromModal()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i> 保存設置
+        </button>
         <button onclick="closeReceiptAiSettings()" class="tap col-span-2 rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">關閉</button>
       </div>
     </div>
@@ -674,7 +692,7 @@
         items: [
           { time: "12:00", name: "關西國際機場抵達", type: "flight", addr: "〒549-0001 大阪府泉佐野市泉州空港北1", note: "搭乘星宇航空 JX820 (08:30 桃園起飛)。出關後快速領取行李、領取網卡，並去臨櫃購買 西瓜卡。" },
           { time: "13:10", name: "Rinku Premium Outlets 臨空城", type: "shop", addr: "〒598-8508 大阪府泉佐野市りんくう往來南3-28", note: "⚡ 限制 1.5 小時極速閃擊！大行李箱建議鎖在臨空城站內置物櫃，若客滿可拉至 Outlet 服務中心提供人工行李寄放服務。" },
-          { time: "15:35", name: "民宿 JS曉宅・靜谷 Check-in", type: "hotel", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "搭乘南海電鐵至天下茶屋站，轉乘地下鐵四橋線1站至花園町站，出站走5分鐘即達。先回房吹冷氣、洗臉補水休息。" },
+          { time: "15:35", name: "民宿 JS暁宅・靜谷 Check-in", type: "hotel", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "搭乘南海電鐵至天下茶屋站，轉乘地下鐵四橋線1站至花園町站，出站走5分鐘即達。先回房吹冷氣、洗臉補水休息。" },
           { time: "17:30", name: "難波 Parks & Luck:Rack 購衣", type: "shop", addr: "〒556-0011 大阪府大阪市浪速区難波中2丁目10-70", note: "朝盛 Alpen Outdoors 露營旗艦店看焚火裝備。同棟 T-terrace 4樓有名牌折扣店 Luck:Rack，可用3-8折狂收潮流神服！" },
           { time: "19:00", name: "道頓堀與心齋橋商圈晚餐", type: "food", addr: "〒542-0071 大阪府大阪市中央区道頓堀1丁目", note: "與必拍的跑跑人地標拍照合影，晚餐推薦一蘭拉麵、金龍拉麵或章魚燒街頭小吃。" },
           { time: "21:30", name: "🏠 返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "由【難波站】搭乘地下鐵四橋線往住之江公園方向 ➔ 2站直達【花園町站】。由2號出口出站，走鶴見橋大馬路平坦商店街5分鐘回民宿，刷 西瓜卡 扣款 ¥190。" }
@@ -968,7 +986,7 @@
       document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
     }
 
-    // 氣象細節分析模型
+    // 氣象細節 analysis 模型
     function getTripWeatherSnapshot(day=currentDay) {
       const cityKey = primaryWeatherCityByDay[day] || 'osaka';
       const city = cities.find(c => c.key === cityKey) || cities[0];
@@ -1235,6 +1253,7 @@
       return windows.slice(0,3).map(g => `${g.start}–${g.end} ${g.avgProb}–${g.maxProb}%${g.thunder ? '⛈️' : ''}`).join('；');
     }
 
+    // 氣象建議產生器
     function buildWeatherAdviceModel(day=currentDay) {
       const w = getTripWeatherSnapshot(day);
       const profile = getDayTripProfile(day);
@@ -1898,7 +1917,13 @@
           <p class="text-[9px] font-black tracking-widest text-emerald-200 font-bold flex items-center gap-1">
             <i data-lucide="wallet" class="w-3.5 h-3.5"></i> KANSAI BUDGET
           </p>
-          <h2 class="mt-0.5 text-sm font-black">💰 隨行即時記帳 & 拍照 AI</h2>
+          <div class="flex items-center justify-between">
+            <h2 class="mt-0.5 text-sm font-black">💰 隨行即時記帳 & 拍照 AI</h2>
+            <!-- 記帳頁面設定 API 金鑰的快捷入口 -->
+            <button onclick="openReceiptAiSettings()" class="tap rounded-lg bg-emerald-800 border border-emerald-600 px-2 py-1 text-[9px] font-black text-white flex items-center gap-1 shadow-xs">
+              <i data-lucide="key" class="w-2.5 h-2.5"></i> API 金鑰設定
+            </button>
+          </div>
           <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機 LocalStorage。支援拍攝日本收據由 AI 自動辨識拆分。</p>
         </div>
 
@@ -2306,9 +2331,25 @@
       }
     }
 
+    // 觸發相機 - 新增一鍵自動防呆金鑰偵測機制
     function triggerEmbeddedReceiptCamera() {
+      const cfg = getReceiptAiSettings();
+      const apiKeyToUse = cfg.key || runtimeApiKey;
+      
+      if (!apiKeyToUse) {
+        // 如果未偵測到任何 API Key，溫馨提示並引導直接打開設定
+        showCustomConfirm(
+          '需要設定 API 金鑰', 
+          '拍照辨識發票需要使用您的 Gemini API Key (完全免費)。是否立即去設定您的專屬 Key？', 
+          () => {
+            openReceiptAiSettings();
+          }
+        );
+        return;
+      }
       document.getElementById('embedded-receipt-camera').click();
     }
+    
     function openReceiptAiModal() { document.getElementById('receipt-ai-modal').classList.add('show'); }
     function closeReceiptAiModal() { document.getElementById('receipt-ai-modal').classList.remove('show'); }
 
@@ -2389,7 +2430,7 @@
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
       const apiKeyToUse = cfg.key || runtimeApiKey;
-      if(!apiKeyToUse) throw new Error('未設定 API Key。請進入底部的「記帳」➔ 點選「拍照辨識」➔ 進行 API 設置。');
+      if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
       const model = cfg.model || 'gemini-2.5-flash-preview-09-2025';
       
       const prompt = `你是關西旅遊收據記帳助理。請嚴格解析該照片中的日本紙本收據/發票/明細，擷取必要資訊，僅輸出繁體中文 JSON 回覆，嚴禁 markdown 包裹或多餘論述。

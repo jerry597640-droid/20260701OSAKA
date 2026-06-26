@@ -549,7 +549,7 @@
     </div>
   </div>
 
-  <!-- 自製自訂 Alert/Confirm 模組 -->
+  <!-- 自製對話框與對話層 (取代 alert / confirm) -->
   <div id="custom-dialog" class="custom-dialog-backdrop">
     <div class="custom-dialog-box">
       <h3 id="dialog-title" class="text-sm font-black text-slate-950">提示</h3>
@@ -660,7 +660,7 @@
         items: [
           { time: "08:50", name: "大阪城港碼頭 🎫 搶先換票", type: "ticket", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "一抵達先去窗口出示電子周遊券 QR 碼！不要排 10:30 班次，直接兌換當天最早有空位的 Aqua-Liner 水上巴士船票，最安全！" },
           { time: "09:10", name: "大阪城天守閣", type: "scene", addr: "〒540-0002 大阪府大阪市中央区大阪城1-1", note: "免排隊買票，直接去檢票口掃電子周遊券 QR 碼登頂，避開大批旅行團。" },
-          { time: "10:30", name: "Aqua-Liner 水上巴士體驗", type: "ship", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "船艙內冷氣超強。原汁原味坐在舒適沙發上遊覽大川運河，完美避開上午烈日暴曬（價值¥1,800，周遊券免費）。" },
+          { time: "10:30", name: "Aqua-Liner 水上巴士體驗", type: "ship", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "船艙內冷氣超強。原汁原味坐在舒適沙發上遊覽大川運流（價值¥1,800，周遊券免費）。" },
           { time: "13:00", name: "梅田藍天大廈 空中庭園展望台", type: "scene", addr: "〒531-6039 大阪府大阪市北区大淀中1丁目1-88", note: "💡 防坑關鍵：從東梅田站走葛蘭綠地（Grand Green Osaka）平面無障礙綠色公園廊道至此，步行約15分鐘，確保15:00免費截止前刷進場。" },
           { time: "14:00", name: "午餐：Tonkatsu KYK 豬排飯", type: "food", addr: "〒530-0017 大阪府大阪市北区角田町8-47（阪急32番街 28階）", note: "在高空俯瞰梅田一邊享用頂級黑豚里肌豬排 / 腰內肉豬排定食。" },
           { time: "15:40", name: "🛳️ Wonder Cruise 碼頭報到", type: "ticket", addr: "〒542-0084 大阪府大阪市中央区宗右衛門町", note: "⚠️ 官方嚴格規定：已線上成功預訂 16:10 班次，必須提前 30 分鐘抵達日本橋碼頭窗口出示憑證與周遊券換取實體船票！" },
@@ -784,7 +784,7 @@
       },
       5: {
         headline: '大阪港與船班日要先換票、再逛室內；若風雨偏強，聖瑪麗亞號需保留替代方案。',
-        stamina: { level: '中高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。' },
+        stamina: { level: '主高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。' },
         rainBackup: '雨天可拉長大阪生活今昔館、天神橋筋商店街與天保山 Market Place；港邊風雨大時減少甲板停留。',
         transport: '天六到大阪港建議堺筋線到堺筋本町，再平行轉中央線；到港後先換聖瑪麗亞號船票。',
         checklist: ['周遊券掃描碼與出入憑證','防港灣強風的海風防風外套','提前兌換聖瑪麗亞號船票','天神橋筋商店街美食清單截圖','港口導航動線地圖下載']
@@ -1029,7 +1029,7 @@
         3: { city: '京都', theme: '清水寺、二年坂、祇園', outdoor: '高', indoor: '町家咖啡、四条商店街', rainPlan: '京都石板路雨天易滑，若雨勢過大改為町家咖啡散策，並增加計程車共乘流。', gear: '防滑抓地鞋、輕便雨衣、擦汗手帕。' },
         4: { city: '奈良', theme: '奈良公園、大佛、常夜燈', outdoor: '高', indoor: '東向商店街、奈良町', rainPlan: '奈良公園雨天草皮泥濘，避免白鞋。雨大則提早往東向商店街與奈良町室內。', gear: '大地色防髒衣物、深色慢跑鞋、輕便防潮袋。' },
         5: { city: '大阪', theme: '天神橋筋、大阪港、遊船', outdoor: '中高', indoor: '生活今昔館、商店街、天保山', rainPlan: '天神橋筋商店街與生活今昔館皆在室內，港口景點雨天室內商場好逛。', gear: '防港風薄外套、備用雨傘。' },
-        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套。' }
+        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套. '}
       };
       return profiles[day] || profiles[1];
     }
@@ -1190,7 +1190,7 @@
       let gear = profile.gear;
       if(thunder || rain >= 60 || maxHourly >= 60) gear += ' 強烈建議薄雨衣、重要物件防水密封袋。';
       else if(rain >= 30 || maxHourly >= 30) gear += ' 必備極輕量折疊晴雨傘。';
-      if(max >= 32) gear += ' 備好日本鹽糖或運動飲料。';
+      if(max >= 32) gear += ' 備好日本鹽糖或逆境防中暑物資。';
 
       return {
         ready: true, conclusion, risk,
@@ -1253,7 +1253,6 @@
       window.open(city.url, '_blank', 'noopener,noreferrer');
     }
 
-    // Open-Meteo URL Builder
     function weatherApiUrl(city) {
       return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
     }
@@ -1445,7 +1444,7 @@
 
       document.getElementById('hotel-view').innerHTML = `
         <div class="rounded-2xl bg-slate-950 p-4 text-white card-shadow">
-          <h2 class="text-sm font-black">🏡 民宿本營：JS曉宅・靜谷</h2>
+          <h2 class="text-sm font-black">🏡 民宿本營：JS暁宅・靜谷</h2>
           <p class="mt-1 text-[11px] text-slate-300">天下茶屋/花園町站步行5分鐘平坦商店街</p>
         </div>
         <div class="mt-3 rounded-2xl border border-slate-100 bg-white p-4 card-shadow text-xs leading-relaxed text-slate-600">
@@ -1701,7 +1700,7 @@
       document.body.style.overflow = '';
     }
 
-    // 記帳數據載入
+    // 記帳本體
     function getExpenseRecords() {
       try { return JSON.parse(localStorage.getItem(expenseStorageKey) || '[]'); }
       catch(e) { return []; }
@@ -1824,6 +1823,9 @@
           
           <div class="mt-3 space-y-2">
             <button type="button" onclick="triggerEmbeddedReceiptCamera()" class="tap w-full rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3 text-xs font-black text-white shadow-md">📷 拍照辨識 ➔ 自動拆解入帳</button>
+            
+            <!-- 方法 A：新增 AI 金鑰設定按鈕，補全 image_ca365f.png 中遺漏的控制選項 -->
+            <button type="button" onclick="openReceiptAiSettings()" class="tap w-full rounded-xl bg-violet-50 border border-violet-100 py-2.5 text-xs font-black text-violet-700">🤖 AI 設定 (填入 Gemini API 金鑰)</button>
             
             <div class="grid grid-cols-2 gap-2">
               <button type="button" onclick="addExpenseRecord()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white">＋ 記錄手動</button>
@@ -2009,9 +2011,6 @@
       showCustomAlert('操作提示', '已為您打開 Google 試算表。請點選 A1 儲存格，並直接貼上（Ctrl+V），資料將自動多列分開。');
     }
 
-    // ==========================================
-    // GEMINI AI 收據拍照多模態辨識 OCR
-    // ==========================================
     const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
     
     function getReceiptAiSettings() {
@@ -2107,7 +2106,6 @@
       }
     }
 
-    // 處理收據照片
     async function handleEmbeddedReceiptImage(event) {
       const file = event?.target?.files?.[0];
       if(event?.target) event.target.value = '';

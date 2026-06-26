@@ -1784,15 +1784,15 @@ const travelData = {
             <textarea id="expense-note" placeholder="例：4人共用、已退稅、現金支付">${escapeHtml(draft.note)}</textarea>
           </div>
           <div class="mt-3 grid grid-cols-2 gap-2">
-            <button type="button" onclick="openPhotoAccounting()" class="tap col-span-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-3 text-xs font-black text-white shadow-lg shadow-violet-500/20">📷 拍照記帳｜串接照片識別網頁</button>
-            <button type="button" onclick="setPhotoAccountingUrl()" class="tap col-span-2 rounded-2xl bg-violet-50 py-2.5 text-[11px] font-black text-violet-700 border border-violet-100">⚙️ 設定照片識別網頁連結</button>
+            <button type="button" onclick="openPhotoAccounting()" class="tap col-span-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-3 text-xs font-black text-white shadow-lg shadow-violet-500/20">📷 拍照記帳｜開啟 picture2026</button>
+            <button type="button" onclick="setPhotoAccountingUrl()" class="tap col-span-2 rounded-2xl bg-violet-50 py-2.5 text-[11px] font-black text-violet-700 border border-violet-100">⚙️ 修改照片識別網頁連結</button>
             <button type="button" onclick="addExpenseRecord()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">＋ 加入紀錄</button>
             <button type="button" onclick="clearExpenseDraft()" class="tap rounded-2xl bg-white py-3 text-xs font-black text-slate-700 border border-slate-200">清空輸入</button>
             <button type="button" onclick="copyExpenseSummary()" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">📋 複製總表</button>
             <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/15">⬇️ 匯出 CSV</button>
             <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap col-span-2 rounded-2xl bg-emerald-700 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">📊 匯出 Google Sheet</button>
           </div>
-          <p id="photo-accounting-status" class="mt-2 rounded-2xl bg-violet-50 px-3 py-2 text-[11px] leading-relaxed text-violet-900 border border-violet-100">📷 拍照記帳按鈕已預留；尚未設定照片識別網頁連結時，點擊會提示設定。</p>
+          <p id="photo-accounting-status" class="mt-2 rounded-2xl bg-violet-50 px-3 py-2 text-[11px] leading-relaxed text-violet-900 border border-violet-100">📷 拍照記帳已連結至 picture2026；點擊會帶入目前 D 日、日期、幣別與返回網址。</p>
           <p class="mt-2 rounded-2xl bg-white/70 px-3 py-2 text-[11px] leading-relaxed text-emerald-900 border border-emerald-100">Google Sheet 匯出方式：系統會先複製成試算表格式，並開啟新的 Google Sheet；開啟後請在 A1 貼上，即可自動分欄成總表。</p>
         </div>
 
@@ -1813,8 +1813,9 @@ const travelData = {
     }
 
     const photoAccountingUrlKey = 'kansai_photo_accounting_external_url_v1';
+    const defaultPhotoAccountingUrl = 'https://jerry597640-droid.github.io/picture2026/';
     function getPhotoAccountingUrl(){
-      return localStorage.getItem(photoAccountingUrlKey) || '';
+      return localStorage.getItem(photoAccountingUrlKey) || defaultPhotoAccountingUrl;
     }
     function refreshPhotoAccountingStatus(){
       const el = document.getElementById('photo-accounting-status');
@@ -1822,17 +1823,17 @@ const travelData = {
       const url = getPhotoAccountingUrl();
       el.textContent = url
         ? `📷 拍照記帳已設定：${url}`
-        : '📷 拍照記帳按鈕已預留；尚未設定照片識別網頁連結時，點擊會提示設定。';
+        : '📷 拍照記帳已連結至 picture2026；點擊會帶入目前 D 日、日期、幣別與返回網址。';
     }
     function setPhotoAccountingUrl(){
       const current = getPhotoAccountingUrl();
-      const url = prompt('請貼上之後要串接的照片識別網頁網址\n例如：https://example.com/receipt-scan', current);
+      const url = prompt('請貼上之後要串接的照片識別網頁網址\n預設：https://jerry597640-droid.github.io/picture2026/', current);
       if(url === null) return;
       const clean = url.trim();
       if(!clean){
         localStorage.removeItem(photoAccountingUrlKey);
         refreshPhotoAccountingStatus();
-        showToast('已清除照片識別網頁連結');
+        showToast('已恢復預設 picture2026 連結');
         return;
       }
       if(!/^https?:\/\//i.test(clean)){
@@ -1856,7 +1857,8 @@ const travelData = {
         source: 'kansai-travel-html',
         day: day ? `D${day}` : '',
         date: tripDates[day] || '',
-        currency
+        currency,
+        return: window.location.href
       }).toString();
       const target = url.includes('?') ? `${url}&${query}` : `${url}?${query}`;
       window.open(target, '_blank', 'noopener,noreferrer');

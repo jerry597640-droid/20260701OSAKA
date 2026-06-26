@@ -376,6 +376,14 @@
     .receipt-ai-preview{ width:100%; max-height:260px; object-fit:contain; border-radius:18px; background:#0f172a; border:1px solid #1e293b; }
     .receipt-ai-status{ border-radius:18px; background:#f8fafc; border:1px solid #e2e8f0; padding:12px; color:#475569; font-size:12px; line-height:1.6; }
     .receipt-ai-result{ border-radius:20px; background:#f5f3ff; border:1px solid #ddd6fe; padding:12px; font-size:12px; line-height:1.65; color:#312e81; }
+    .ai-key-help{ border-radius:22px; border:1px solid #dbeafe; background:linear-gradient(135deg,#eff6ff,#faf5ff); padding:12px; }
+    .ai-key-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .ai-key-actions a,.ai-key-actions button{ border-radius:16px; padding:10px 8px; font-size:11px; font-weight:950; text-align:center; text-decoration:none; }
+    .ai-key-input-wrap{ display:flex; gap:8px; align-items:center; margin-top:6px; }
+    .ai-key-input-wrap input{ flex:1; min-width:0; border:1px solid #cbd5e1; border-radius:16px; padding:11px 12px; font-size:12px; font-weight:800; color:#0f172a; background:white; }
+    .ai-test-status{ margin-top:10px; border-radius:16px; padding:10px 11px; font-size:11px; line-height:1.55; font-weight:850; background:#f8fafc; color:#475569; border:1px solid #e2e8f0; }
+    @media(max-width:390px){ .ai-key-actions{ grid-template-columns:1fr; } }
+
     @media(orientation:landscape) and (max-height:520px){ .receipt-ai-modal{ align-items:center; } .receipt-ai-sheet{ max-width:760px; } .receipt-ai-landscape{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; } }
 </style>
 </head>
@@ -1551,6 +1559,13 @@ const travelData = {
       .sheet{width:auto;min-height:auto;margin:0;box-shadow:none;border-radius:0;padding:0;}
       .pdf-card{border-color:#dbe3ee;}
     }
+
+    /* AI Receipt Turbo v3 */
+    .turbo-badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;padding:5px 8px;font-size:10px;font-weight:950}
+    .turbo-mode-box{border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0;padding:10px;margin-top:10px}
+    .turbo-mode-box label{display:flex;align-items:flex-start;gap:8px;font-size:11px;line-height:1.45;color:#475569;font-weight:800}
+    .turbo-mode-box input{margin-top:2px}
+
   </style>
 </head>
 <body>
@@ -1566,6 +1581,64 @@ const travelData = {
     ${cards}
     <p class="footer">住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
   </main>
+
+<script>
+/* AI Receipt Speed Boost Patch
+   - Smaller image upload payload
+   - Faster Gemini model preference
+   - Short JSON response
+   - Timeout protection
+*/
+(function(){
+  window.AI_RECEIPT_SPEED_CONFIG = {
+    maxImageSize: 960,
+    jpegQuality: 0.58,
+    modelFast: "gemini-2.0-flash-lite",
+    fallbackModel: "gemini-2.0-flash",
+    timeoutMs: 18000
+  };
+
+  window.aiReceiptFastPrompt = `請快速辨識這張日本收據或消費明細，只回傳 JSON，不要 markdown，不要解釋：
+{"storeName":"","date":"YYYY-MM-DD","totalAmount":0,"currency":"JPY","suggestedCategory":"餐飲|交通|住宿|購物|娛樂|其他","itemName":""}
+規則：
+1. 只取最終付款金額或合計金額。
+2. 日期看不到就回空字串。
+3. 店家看不到就用 itemName 或「未辨識店家」。
+4. 分類不確定用「其他」。
+5. itemName 只放最主要品項或簡短摘要。`;
+
+  window.compressReceiptForSpeed = function(dataUrl, maxSize, quality){
+    maxSize = maxSize || window.AI_RECEIPT_SPEED_CONFIG.maxImageSize;
+    quality = quality || window.AI_RECEIPT_SPEED_CONFIG.jpegQuality;
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext("2d", { alpha:false });
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        }catch(e){ resolve(dataUrl); }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
+
+  window.fetchWithTimeout = function(resource, options, timeoutMs){
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeoutMs || window.AI_RECEIPT_SPEED_CONFIG.timeoutMs);
+    const opts = Object.assign({}, options || {}, { signal: controller.signal });
+    return fetch(resource, opts).finally(() => clearTimeout(id));
+  };
+})();
+</script>
+
 </body>
 </html>`;
     }
@@ -1796,14 +1869,15 @@ const travelData = {
           </div>
           <div class="mt-3 grid grid-cols-2 gap-2">
             <button type="button" onclick="triggerEmbeddedReceiptCamera()" class="tap col-span-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-3 text-xs font-black text-white shadow-lg shadow-violet-500/20">📷 拍照識別｜自動加入記帳</button>
-            <button type="button" onclick="openReceiptAiSettings()" class="tap col-span-2 rounded-2xl bg-violet-50 py-2.5 text-[11px] font-black text-violet-700 border border-violet-100">⚙️ 設定 Gemini API Key</button>
+            <button type="button" onclick="openReceiptAiSettings()" class="tap col-span-2 rounded-2xl bg-violet-50 py-2.5 text-[11px] font-black text-violet-700 border border-violet-100">🤖 AI 設定／取得 Gemini API Key
+⚡ 加速版：照片會先壓縮後再送出，並使用較精簡的辨識格式以縮短等待時間。</button>
             <button type="button" onclick="addExpenseRecord()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">＋ 加入紀錄</button>
             <button type="button" onclick="clearExpenseDraft()" class="tap rounded-2xl bg-white py-3 text-xs font-black text-slate-700 border border-slate-200">清空輸入</button>
             <button type="button" onclick="copyExpenseSummary()" class="tap rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">📋 複製總表</button>
             <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/15">⬇️ 匯出 CSV</button>
             <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap col-span-2 rounded-2xl bg-emerald-700 py-3 text-xs font-black text-white shadow-lg shadow-emerald-500/15">📊 匯出 Google Sheet</button>
           </div>
-          <p id="photo-accounting-status" class="mt-2 rounded-2xl bg-violet-50 px-3 py-2 text-[11px] leading-relaxed text-violet-900 border border-violet-100">📷 內嵌拍照識別已啟用；拍照後會辨識店家、項目、金額、日期，並自動加入記帳清單。</p>
+          <p id="photo-accounting-status" class="mt-2 rounded-2xl bg-violet-50 px-3 py-2 text-[11px] leading-relaxed text-violet-900 border border-violet-100">🚀 AI Receipt Turbo v3 已啟用；拍照後以速度優先辨識店家、金額、日期、分類，並自動加入記帳清單。</p>
           <p class="mt-2 rounded-2xl bg-white/70 px-3 py-2 text-[11px] leading-relaxed text-emerald-900 border border-emerald-100">Google Sheet 匯出方式：系統會先複製成試算表格式，並開啟新的 Google Sheet；開啟後請在 A1 貼上，即可自動分欄成總表。</p>
         </div>
 
@@ -1834,7 +1908,7 @@ const travelData = {
       const url = getPhotoAccountingUrl();
       el.textContent = url
         ? `📷 拍照記帳已設定：${url}`
-        : '📷 內嵌拍照識別已啟用；拍照後會辨識店家、項目、金額、日期，並自動加入記帳清單。';
+        : '🚀 AI Receipt Turbo v3 已啟用；拍照後以速度優先辨識店家、金額、日期、分類，並自動加入記帳清單。';
     }
     function setPhotoAccountingUrl(){
       const current = getPhotoAccountingUrl();
@@ -2097,23 +2171,58 @@ const travelData = {
     }
     function openReceiptAiSettings(){
       const cfg = getReceiptAiSettings();
-      const current = cfg.key || '';
-      const key = prompt('請貼上 Gemini API Key。\n金鑰只會儲存在這台手機／瀏覽器的 localStorage。\n正式公開版建議改由後端代理保護金鑰。', current);
-      if(key === null) return;
-      const clean = key.trim();
-      if(!clean){
-        saveReceiptAiSettings({key:'', model: cfg.model || 'gemini-2.5-flash'});
-        showToast('已清除 Gemini API Key');
-        return;
+      const modal = document.getElementById('receipt-ai-settings-modal');
+      const keyInput = document.getElementById('receipt-ai-key-input');
+      const modelInput = document.getElementById('receipt-ai-model-input');
+      const status = document.getElementById('receipt-ai-test-status');
+      if(keyInput) keyInput.value = cfg.key || '';
+      if(modelInput) modelInput.value = cfg.model || 'gemini-2.0-flash-lite';
+      if(status){ status.textContent = '尚未測試。若第一次使用，請先點「免費取得 Gemini API Key」。'; status.style.background='#f8fafc'; status.style.color='#475569'; status.style.borderColor='#e2e8f0'; }
+      if(modal) modal.classList.add('show');
+    }
+    function closeReceiptAiSettings(){
+      const modal = document.getElementById('receipt-ai-settings-modal');
+      if(modal) modal.classList.remove('show');
+    }
+    function toggleReceiptAiKeyVisibility(){
+      const input = document.getElementById('receipt-ai-key-input');
+      const btn = document.getElementById('receipt-ai-key-eye');
+      if(!input) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+      if(btn) btn.textContent = input.type === 'password' ? '👁' : '🙈';
+    }
+    function saveReceiptAiSettingsFromModal(){
+      const key = (document.getElementById('receipt-ai-key-input')?.value || '').trim();
+      const model = (document.getElementById('receipt-ai-model-input')?.value || 'gemini-2.0-flash-lite').trim() || 'gemini-2.0-flash-lite';
+      saveReceiptAiSettings({key, model});
+      showToast(key ? 'Gemini API Key 已儲存' : '已清除 Gemini API Key');
+      closeReceiptAiSettings();
+    }
+    async function testReceiptAiKey(){
+      const key = (document.getElementById('receipt-ai-key-input')?.value || '').trim();
+      const model = (document.getElementById('receipt-ai-model-input')?.value || 'gemini-2.0-flash-lite').trim() || 'gemini-2.0-flash-lite';
+      const status = document.getElementById('receipt-ai-test-status');
+      if(!status) return;
+      if(!key){
+        status.textContent='❌ 請先貼上 Gemini API Key。'; status.style.background='#fff1f2'; status.style.color='#be123c'; status.style.borderColor='#fecdd3'; return;
       }
-      const model = prompt('Gemini 模型名稱', cfg.model || 'gemini-2.5-flash') || 'gemini-2.5-flash';
-      saveReceiptAiSettings({key: clean, model: model.trim() || 'gemini-2.5-flash'});
-      showToast('AI 辨識設定已儲存');
+      status.textContent='🧪 正在測試 Gemini API Key…'; status.style.background='#eff6ff'; status.style.color='#1d4ed8'; status.style.borderColor='#bfdbfe';
+      try{
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({contents:[{parts:[{text:'Reply with OK only.'}]}], generationConfig:{temperature:0, maxOutputTokens:8}})
+        });
+        const body = await res.json().catch(()=>({}));
+        if(!res.ok) throw new Error(body?.error?.message || `HTTP ${res.status}`);
+        status.textContent='✅ Gemini API 連線成功。可以使用AI Receipt Turbo v3 自動入帳。'; status.style.background='#ecfdf5'; status.style.color='#047857'; status.style.borderColor='#a7f3d0';
+      }catch(err){
+        status.textContent='❌ API Key 無效或連線失敗：'+(err?.message||'未知錯誤'); status.style.background='#fff1f2'; status.style.color='#be123c'; status.style.borderColor='#fecdd3';
+      }
     }
     function triggerEmbeddedReceiptCamera(){
       const cfg = getReceiptAiSettings();
       if(!cfg.key){
-        const ok = confirm('尚未設定 Gemini API Key，無法進行自動辨識。\n\n是否現在設定？');
+        const ok = confirm('尚未設定 Gemini API Key，無法進行自動辨識。\n\n是否現在前往 AI 收據辨識設定？');
         if(ok) openReceiptAiSettings();
         return;
       }
@@ -2206,7 +2315,7 @@ const travelData = {
     async function recognizeReceiptWithGemini(image){
       const cfg = getReceiptAiSettings();
       if(!cfg.key) throw new Error('尚未設定 Gemini API Key');
-      const model = cfg.model || 'gemini-2.5-flash';
+      const model = cfg.model || 'gemini-2.0-flash-lite';
       const prompt = `你是日本旅遊收據記帳助理。請讀取這張收據或明細照片，輸出繁體中文 JSON，不要 markdown，不要多餘文字。\nSchema:\n{\n  "storeName":"店家名稱或商店名",\n  "date":"YYYY-MM-DD，若看不清楚請留空",\n  "totalAmount":1234,\n  "currency":"JPY 或 TWD 或 USD",\n  "category":"餐飲|交通|門票|購物|住宿|伴手禮|其他",\n  "items":[{"name":"品項名稱","amount":123}],\n  "note":"簡短備註，可包含辨識到的主要品項"\n}\n規則：totalAmount 請使用最終支付金額；日本便利商店、餐廳、小吃通常歸類餐飲；車票與交通卡儲值歸交通；景點票券歸門票；若不確定分類用其他。`;
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(cfg.key)}`,{
         method:'POST',
@@ -2256,16 +2365,321 @@ const travelData = {
 </script>
 
 
+
+<script>
+/* =========================================================
+   AI Receipt Turbo v3 Override
+   目的：加快拍照 OCR，降低等待時間，並保留自動入帳。
+   功能：
+   1. Turbo / Precise 模式切換
+   2. 前端縮圖與白邊裁切
+   3. Gemini 極簡 JSON 回傳
+   4. 18 秒逾時保護
+   5. 店家分類快取
+   ========================================================= */
+(function(){
+  const TURBO_CACHE_KEY = 'kansai_receipt_store_category_cache_v3';
+
+  function getStoreCategoryCache(){
+    try{ return JSON.parse(localStorage.getItem(TURBO_CACHE_KEY) || '{}'); }
+    catch(e){ return {}; }
+  }
+  function saveStoreCategoryCache(cache){
+    try{ localStorage.setItem(TURBO_CACHE_KEY, JSON.stringify(cache || {})); }catch(e){}
+  }
+  function normalizeStoreKey(name){
+    return String(name || '').trim().replace(/\s+/g,' ').toLowerCase();
+  }
+  function cacheStoreCategory(store, category){
+    const key = normalizeStoreKey(store);
+    if(!key || !category) return;
+    const cache = getStoreCategoryCache();
+    cache[key] = category;
+    saveStoreCategoryCache(cache);
+  }
+  function getCachedStoreCategory(store){
+    const key = normalizeStoreKey(store);
+    if(!key) return '';
+    return getStoreCategoryCache()[key] || '';
+  }
+  function getReceiptMode(){
+    const cfg = getReceiptAiSettings ? getReceiptAiSettings() : {};
+    return cfg.mode || 'turbo';
+  }
+  function abortableFetch(url, options, timeoutMs){
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), timeoutMs || 18000);
+    return fetch(url, Object.assign({}, options || {}, {signal: controller.signal}))
+      .finally(()=>clearTimeout(timer));
+  }
+  function cropWhiteMargins(canvas){
+    const ctx = canvas.getContext('2d', {willReadFrequently:true});
+    const w = canvas.width, h = canvas.height;
+    if(!w || !h) return canvas;
+    let img;
+    try{ img = ctx.getImageData(0,0,w,h); }catch(e){ return canvas; }
+    const data = img.data;
+    const threshold = 246;
+    let left=w, right=0, top=h, bottom=0;
+    const step = Math.max(1, Math.floor(Math.max(w,h)/900));
+    for(let y=0;y<h;y+=step){
+      for(let x=0;x<w;x+=step){
+        const i=(y*w+x)*4;
+        const r=data[i], g=data[i+1], b=data[i+2];
+        // not nearly white background
+        if(!(r>threshold && g>threshold && b>threshold)){
+          if(x<left) left=x;
+          if(x>right) right=x;
+          if(y<top) top=y;
+          if(y>bottom) bottom=y;
+        }
+      }
+    }
+    if(left>=right || top>=bottom) return canvas;
+    const pad = Math.round(Math.max(w,h)*0.025);
+    left = Math.max(0,left-pad); top = Math.max(0,top-pad);
+    right = Math.min(w,right+pad); bottom = Math.min(h,bottom+pad);
+    const cw = Math.max(1,right-left), ch = Math.max(1,bottom-top);
+    // avoid over-cropping if detection is too small
+    if(cw*ch < w*h*0.28) return canvas;
+    const out = document.createElement('canvas');
+    out.width = cw; out.height = ch;
+    out.getContext('2d').drawImage(canvas,left,top,cw,ch,0,0,cw,ch);
+    return out;
+  }
+
+  window.openReceiptAiSettings = function(){
+    const cfg = getReceiptAiSettings();
+    const modal = document.getElementById('receipt-ai-settings-modal');
+    const keyInput = document.getElementById('receipt-ai-key-input');
+    const modelInput = document.getElementById('receipt-ai-model-input');
+    const status = document.getElementById('receipt-ai-test-status');
+    if(keyInput) keyInput.value = cfg.key || '';
+    if(modelInput) modelInput.value = cfg.model || 'gemini-2.0-flash-lite';
+    const mode = cfg.mode || 'turbo';
+    const turbo = document.getElementById('receipt-ai-mode-turbo');
+    const precise = document.getElementById('receipt-ai-mode-precise');
+    if(turbo) turbo.checked = mode !== 'precise';
+    if(precise) precise.checked = mode === 'precise';
+    if(status){
+      status.textContent = '尚未測試。Turbo v3 會優先加快辨識速度。';
+      status.style.background='#f8fafc';
+      status.style.color='#475569';
+      status.style.borderColor='#e2e8f0';
+    }
+    if(modal) modal.classList.add('show');
+  };
+
+  window.saveReceiptAiSettingsFromModal = function(){
+    const key = (document.getElementById('receipt-ai-key-input')?.value || '').trim();
+    const model = (document.getElementById('receipt-ai-model-input')?.value || 'gemini-2.0-flash-lite').trim() || 'gemini-2.0-flash-lite';
+    const mode = document.getElementById('receipt-ai-mode-precise')?.checked ? 'precise' : 'turbo';
+    saveReceiptAiSettings({key, model, mode});
+    showToast(key ? `Gemini API Key 已儲存｜${mode === 'turbo' ? 'Turbo 模式' : '精確模式'}` : '已清除 Gemini API Key');
+    closeReceiptAiSettings();
+  };
+
+  window.compressReceiptImage = function(file, maxWidth, quality){
+    const mode = getReceiptMode();
+    maxWidth = maxWidth || (mode === 'precise' ? 1280 : 860);
+    quality = quality || (mode === 'precise' ? .72 : .54);
+    return new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('無法讀取照片'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('照片載入失敗'));
+        img.onload = () => {
+          try{
+            const ratio = Math.min(1, maxWidth / Math.max(img.width, img.height));
+            let canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.width * ratio));
+            canvas.height = Math.max(1, Math.round(img.height * ratio));
+            const ctx = canvas.getContext('2d', {alpha:false});
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(img,0,0,canvas.width,canvas.height);
+            if(mode === 'turbo') canvas = cropWhiteMargins(canvas);
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve({ dataUrl, base64:dataUrl.split(',')[1], mime:'image/jpeg', width:canvas.width, height:canvas.height, mode });
+          }catch(e){
+            reject(new Error('照片壓縮失敗：' + (e?.message || e)));
+          }
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  window.handleEmbeddedReceiptImage = async function(event){
+    const file = event?.target?.files?.[0];
+    if(event?.target) event.target.value = '';
+    if(!file) return;
+    openReceiptAiModal();
+    setReceiptAiResult('');
+    const resultBox = document.getElementById('receipt-ai-result');
+    if(resultBox) resultBox.classList.add('hidden');
+    const mode = getReceiptMode();
+    setReceiptAiStatus(mode === 'turbo'
+      ? '🚀 Turbo v3：正在壓縮、裁切收據並準備快速辨識…'
+      : '🔍 精確模式：正在保留較高清晰度並準備辨識…');
+    try{
+      const image = await compressReceiptImage(file);
+      embeddedReceiptLastImage = image;
+      const preview = document.getElementById('receipt-ai-preview');
+      if(preview){ preview.src = image.dataUrl; preview.classList.remove('hidden'); }
+      setReceiptAiStatus(mode === 'turbo'
+        ? `⚡ 已壓縮至 ${image.width}×${image.height}，正在快速讀取店家與金額…`
+        : `🔍 已壓縮至 ${image.width}×${image.height}，正在讀取收據內容…`);
+      const parsed = await recognizeReceiptWithGemini(image);
+      const normalized = normalizeReceiptResult(parsed);
+      if(!normalized.item || !normalized.amount){
+        throw new Error('AI 未能取得必要欄位，請重新拍照或手動輸入。');
+      }
+      cacheStoreCategory(normalized.item, normalized.category);
+      applyReceiptToExpenseForm(normalized);
+      addExpenseRecord();
+      setReceiptAiStatus('✅ Turbo v3 辨識完成，已自動加入記帳清單。');
+      setReceiptAiResult(`
+        <div class="font-black text-violet-900">✅ 已加入記帳 <span class="turbo-badge">${mode === 'turbo' ? '🚀 Turbo' : '🔍 精確'}</span></div>
+        <div class="mt-2">店家／項目：<b>${escapeHtml(normalized.item)}</b></div>
+        <div>日期：<b>${escapeHtml(normalized.date)}</b>｜D${escapeHtml(normalized.day)}</div>
+        <div>金額：<b>${formatMoney(normalized.amount, normalized.currency)}</b></div>
+        <div>分類：<b>${escapeHtml(normalized.category)}</b></div>
+        ${normalized.note ? `<div class="mt-2 text-violet-700">備註：${escapeHtml(normalized.note)}</div>` : ''}
+      `);
+      switchMainTab('expense', false);
+      renderExpensePanel();
+      showToast('AI Receipt Turbo v3 已自動加入記帳清單');
+    }catch(err){
+      const msg = err?.name === 'AbortError' ? '辨識逾時，請改用更清楚照片或精確模式。' : (err?.message || err);
+      setReceiptAiStatus('辨識失敗：' + msg, true);
+      setReceiptAiResult('<div class="font-black text-rose-700">⚠️ 可改用手動記帳、切換精確模式，或重新拍攝較清楚的收據。</div>');
+    }
+  };
+
+  window.recognizeReceiptWithGemini = async function(image){
+    const cfg = getReceiptAiSettings();
+    if(!cfg.key) throw new Error('尚未設定 Gemini API Key');
+    const mode = cfg.mode || image.mode || 'turbo';
+    const model = cfg.model || 'gemini-2.0-flash-lite';
+    const prompt = mode === 'precise'
+      ? `讀取這張日本旅遊收據，僅回傳 JSON，不要 markdown：
+{"s":"店家名稱","d":"YYYY-MM-DD或空字串","a":1234,"cur":"JPY","c":"餐飲|交通|門票|購物|住宿|伴手禮|其他","items":[{"n":"品項","a":123}],"note":"簡短備註"}
+規則：a 使用最終付款金額；看不到日期就空字串；分類不確定用其他。`
+      : `快速讀取收據，只回傳最小 JSON，不要 markdown：
+{"s":"","d":"","a":0,"cur":"JPY","c":"餐飲|交通|門票|購物|住宿|伴手禮|其他","note":""}
+只抓店家s、日期d、最終金額a、幣別cur、分類c。看不清楚就留空，不要猜長文。`;
+    const res = await abortableFetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(cfg.key)}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{parts:[{text:prompt},{inline_data:{mime_type:image.mime,data:image.base64}}]}],
+        generationConfig:{
+          temperature:0,
+          responseMimeType:'application/json',
+          maxOutputTokens: mode === 'turbo' ? 180 : 420
+        }
+      })
+    }, mode === 'turbo' ? 18000 : 28000);
+    const body = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(body?.error?.message || 'Gemini API 呼叫失敗');
+    const text = body?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '';
+    const match = text.match(/\{[\s\S]*\}/);
+    if(!match) throw new Error('AI 回傳格式不是 JSON');
+    return JSON.parse(match[0]);
+  };
+
+  window.normalizeReceiptResult = function(raw){
+    const store = String(raw?.s || raw?.storeName || raw?.merchant || raw?.name || '').trim();
+    const rawItems = Array.isArray(raw?.items) ? raw.items : [];
+    const itemNames = rawItems.map(x => String(x?.n || x?.name || '').trim()).filter(Boolean).slice(0,3);
+    const amount = Number(raw?.a ?? raw?.totalAmount ?? raw?.amount ?? 0);
+    let category = String(raw?.c || raw?.category || raw?.suggestedCategory || '').trim();
+    const cached = getCachedStoreCategory(store);
+    if(!category && cached) category = cached;
+    if(!['餐飲','交通','門票','購物','住宿','伴手禮','其他'].includes(category)) category = cached || '其他';
+    let currency = String(raw?.cur || raw?.currency || 'JPY').trim().toUpperCase();
+    if(!['JPY','TWD','USD'].includes(currency)) currency = 'JPY';
+    let date = String(raw?.d || raw?.date || '').trim();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) date = tripDates[currentDay] || getLocalDateString();
+    let day = getTripDayByDate(date) || String(currentDay || getExpenseDefaultDay());
+    const item = store || itemNames[0] || '拍照辨識支出';
+    const detail = itemNames.length ? `品項：${itemNames.join('、')}` : '';
+    const note = [String(raw?.note||'').trim(), detail].filter(Boolean).join('｜').slice(0,140);
+    return {item, amount, category, currency, date, day, note};
+  };
+})();
+</script>
+
+
   <!-- 內嵌拍照識別記帳：相機 input + 設定 + 辨識狀態 -->
   <input id="embedded-receipt-camera" type="file" accept="image/*" capture="environment" class="hidden" onchange="handleEmbeddedReceiptImage(event)">
+
+
+  <div id="receipt-ai-settings-modal" class="receipt-ai-modal no-print">
+    <div class="receipt-ai-sheet">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+        <div>
+          <p class="text-[10px] font-black tracking-[.16em] text-blue-600">GEMINI API KEY</p>
+          <h3 class="mt-1 text-base font-black text-slate-950">🤖 AI 收據辨識設定</h3>
+          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">第一次使用拍照識別前，請先取得並貼上 Gemini API Key。</p>
+        </div>
+        <button onclick="closeReceiptAiSettings()" class="tap rounded-full bg-slate-100 px-3 py-2 text-xs font-black text-slate-500">✕</button>
+      </div>
+      <div class="mt-4 ai-key-help">
+        <div class="text-[12px] leading-relaxed text-slate-700 font-bold">
+          操作步驟：登入 Google 帳號 → 建立 API Key → 複製後貼回下方欄位 → 儲存 → 測試。
+        </div>
+        <div class="ai-key-actions">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white">🔑 免費取得 Gemini API Key</a>
+          <a href="https://ai.google.dev/gemini-api/docs/api-key" target="_blank" rel="noopener noreferrer" class="tap bg-white text-blue-700 border border-blue-100">📖 官方申請教學</a>
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block text-[11px] font-black text-slate-500">Gemini API Key</label>
+        <div class="ai-key-input-wrap">
+          <input id="receipt-ai-key-input" type="password" placeholder="請貼上 AIza… 開頭的 Gemini API Key" autocomplete="off">
+          <button id="receipt-ai-key-eye" onclick="toggleReceiptAiKeyVisibility()" class="tap rounded-2xl bg-slate-100 px-3 py-3 text-xs font-black text-slate-600">👁</button>
+        </div>
+        <label class="mt-3 block text-[11px] font-black text-slate-500">模型名稱</label>
+        <div class="ai-key-input-wrap">
+          <input id="receipt-ai-model-input" type="text" value="gemini-2.0-flash-lite" autocomplete="off">
+        </div>
+        <div id="receipt-ai-test-status" class="ai-test-status">尚未測試。</div>
+        <div class="turbo-mode-box">
+          <div class="mb-2 flex items-center justify-between gap-2">
+            <span class="turbo-badge">🚀 Turbo v3</span>
+            <span class="text-[10px] font-black text-slate-400">速度優先 / 精確模式</span>
+          </div>
+          <label class="mb-2">
+            <input id="receipt-ai-mode-turbo" name="receipt-ai-mode" type="radio" value="turbo" checked>
+            <span><b class="text-slate-800">Turbo 模式（推薦）</b><br>壓縮至約 860px，只抓店家、日期、總金額、幣別與分類，旅途中最快。</span>
+          </label>
+          <label>
+            <input id="receipt-ai-mode-precise" name="receipt-ai-mode" type="radio" value="precise">
+            <span><b class="text-slate-800">精確模式</b><br>保留較高解析度並嘗試讀取品項，速度較慢，適合收據很清楚時使用。</span>
+          </label>
+        </div>
+
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <button onclick="testReceiptAiKey()" class="tap rounded-2xl bg-indigo-600 py-3 text-xs font-black text-white">🧪 測試 API Key</button>
+        <button onclick="saveReceiptAiSettingsFromModal()" class="tap rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white">💾 儲存設定</button>
+        <button onclick="closeReceiptAiSettings()" class="tap col-span-2 rounded-2xl bg-slate-900 py-3 text-xs font-black text-white">關閉</button>
+      </div>
+      <p class="mt-3 rounded-2xl bg-amber-50 p-3 text-[11px] leading-relaxed text-amber-900 border border-amber-100">提醒：此單機版會將 API Key 儲存在目前裝置的瀏覽器 localStorage。若要公開分享給多人使用，建議改用後端代理保護金鑰。</p>
+    </div>
+  </div>
 
   <div id="receipt-ai-modal" class="receipt-ai-modal no-print">
     <div class="receipt-ai-sheet">
       <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
           <p class="text-[10px] font-black tracking-[.16em] text-violet-600">AI RECEIPT SCAN</p>
-          <h3 class="mt-1 text-base font-black text-slate-950">📷 拍照識別自動入帳</h3>
-          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">辨識完成後會自動填入店家、日期、金額、分類，並加入下方記帳清單。</p>
+          <h3 class="mt-1 text-base font-black text-slate-950">📷 AI Receipt Turbo v3 自動入帳</h3>
+          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">Turbo 模式優先抓店家、日期、金額與分類；需要較完整品項時可在設定中改用精確模式。</p>
         </div>
         <button onclick="closeReceiptAiModal()" class="tap rounded-full bg-slate-100 px-3 py-2 text-xs font-black text-slate-500">✕</button>
       </div>
@@ -2284,5 +2698,63 @@ const travelData = {
       </div>
     </div>
   </div>
+
+<script>
+/* AI Receipt Speed Boost Patch
+   - Smaller image upload payload
+   - Faster Gemini model preference
+   - Short JSON response
+   - Timeout protection
+*/
+(function(){
+  window.AI_RECEIPT_SPEED_CONFIG = {
+    maxImageSize: 960,
+    jpegQuality: 0.58,
+    modelFast: "gemini-2.0-flash-lite",
+    fallbackModel: "gemini-2.0-flash",
+    timeoutMs: 18000
+  };
+
+  window.aiReceiptFastPrompt = `請快速辨識這張日本收據或消費明細，只回傳 JSON，不要 markdown，不要解釋：
+{"storeName":"","date":"YYYY-MM-DD","totalAmount":0,"currency":"JPY","suggestedCategory":"餐飲|交通|住宿|購物|娛樂|其他","itemName":""}
+規則：
+1. 只取最終付款金額或合計金額。
+2. 日期看不到就回空字串。
+3. 店家看不到就用 itemName 或「未辨識店家」。
+4. 分類不確定用「其他」。
+5. itemName 只放最主要品項或簡短摘要。`;
+
+  window.compressReceiptForSpeed = function(dataUrl, maxSize, quality){
+    maxSize = maxSize || window.AI_RECEIPT_SPEED_CONFIG.maxImageSize;
+    quality = quality || window.AI_RECEIPT_SPEED_CONFIG.jpegQuality;
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext("2d", { alpha:false });
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        }catch(e){ resolve(dataUrl); }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
+
+  window.fetchWithTimeout = function(resource, options, timeoutMs){
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeoutMs || window.AI_RECEIPT_SPEED_CONFIG.timeoutMs);
+    const opts = Object.assign({}, options || {}, { signal: controller.signal });
+    return fetch(resource, opts).finally(() => clearTimeout(id));
+  };
+})();
+</script>
+
 </body>
 </html>

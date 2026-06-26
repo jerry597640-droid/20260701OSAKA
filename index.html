@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>2026 京阪奈盛夏自由行神級手冊</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 導入高質感 Lucide 向量圖標 -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --primary-gradient: linear-gradient(135deg, #0f172a 0%, #075985 50%, #0c4a6e 100%);
-      --accent-gradient: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f766e 100%);
-      --ai-gradient: linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #5b21b6 100%);
+      --primary-gradient: linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0c4a6e 100%);
+      --accent-gradient: linear-gradient(135deg, #064e3b 0%, #059669 50%, #0f766e 100%);
+      --ai-gradient: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #5b21b6 100%);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -95,6 +97,12 @@
       font-size: 11px;
       font-weight: 900;
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+      z-index: 10;
+    }
+    .timeline-index.visited {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      color: white !important;
     }
     .detail-box { border-radius: 16px; border: 1px solid #e2e8f0; background: #ffffff; overflow: hidden; transition: all 0.2s ease; }
     .detail-box summary {
@@ -109,7 +117,7 @@
       justify-content: space-between;
     }
     .detail-box summary::-webkit-details-marker { display: none; }
-    .detail-box summary:after { content: '展开'; color: #0284c7; font-size: 10px; font-weight: 900; }
+    .detail-box summary:after { content: '展開'; color: #0284c7; font-size: 10px; font-weight: 900; }
     .detail-box[open] summary:after { content: '收合'; }
     .detail-box .addr { border-top: 1px solid #f1f5f9; padding: 10px 12px; font-size: 11px; line-height: 1.6; color: #64748b; user-select: all; }
     
@@ -361,17 +369,22 @@
       <div class="px-4 pt-4 pb-3">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <p class="text-[10px] font-black tracking-[0.2em] text-sky-600">KANSAI 2026</p>
+            <p class="text-[10px] font-black tracking-[0.2em] text-sky-600 flex items-center gap-1">
+              <i data-lucide="plane-takeoff" class="w-3.5 h-3.5"></i> KANSAI 2026
+            </p>
             <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊</h1>
             <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜領隊隨身極客版</p>
           </div>
-          <button onclick="refreshWeather(true)" class="tap shrink-0 rounded-xl bg-slate-900 px-3 py-1.5 text-[10.5px] font-black text-white shadow-md shadow-slate-900/10">↻ 刷天氣</button>
+          <button onclick="refreshWeather(true)" class="tap shrink-0 rounded-xl bg-slate-900 px-3 py-1.5 text-[10.5px] font-black text-white shadow-md shadow-slate-900/10 flex items-center gap-1">
+            <i data-lucide="refresh-cw" class="w-3 h-3"></i> 刷天氣
+          </button>
         </div>
 
         <!-- 氣象實體小看板 -->
         <section class="mt-3 rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50/50 to-white p-3 card-shadow">
           <div class="flex items-center justify-between gap-2 mb-1.5">
-            <div>
+            <div class="flex items-center gap-1">
+              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-600"></i>
               <p class="text-[11px] font-black text-slate-900">即時關西預報</p>
             </div>
             <span id="weather-updated" class="text-[9px] font-bold text-slate-400">讀取中</span>
@@ -386,7 +399,7 @@
           
           <div class="mt-2 space-y-1.5">
             <button type="button" onclick="openPrimaryLocalWeather()" class="tap flex w-full items-center justify-center gap-1.5 rounded-xl border border-sky-200 bg-white px-3 py-2 text-center text-[10.5px] font-black text-sky-700 shadow-xs">
-              <span>🌦️</span><span id="primary-local-weather-label">開啟今日主景點氣象</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i><span id="primary-local-weather-label">開啟今日主景點氣象</span>
             </button>
           </div>
         </section>
@@ -409,22 +422,35 @@
           <div class="section-title">
             <h3>快捷導航</h3>
           </div>
-          <span id="day-mini-info" class="pill bg-sky-50 text-sky-700">D1</span>
+          <span id="day-mini-info" class="pill bg-sky-50 text-sky-700 font-black">D1</span>
         </div>
         
         <div class="quick-grid">
           <button onclick="showPdfPage()" class="tap quick-btn bg-emerald-600 text-white shadow-md shadow-emerald-500/10">
-            <span class="text-base">📄</span><span>儲存<br>PDF</span>
+            <i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i><span>儲存<br>PDF</span>
           </button>
           <button onclick="shareTextItinerary()" class="tap quick-btn bg-slate-900 text-white shadow-md">
-            <span class="text-base">💬</span><span>LINE<br>複製</span>
+            <i data-lucide="share-2" class="w-4 h-4 mb-0.5"></i><span>LINE<br>複製</span>
           </button>
           <button onclick="openRouteMap()" class="tap quick-btn bg-sky-600 text-white shadow-md">
-            <span class="text-base">🗺️</span><span>導航<br>路徑</span>
+            <i data-lucide="map-pin" class="w-4 h-4 mb-0.5"></i><span>導航<br>路徑</span>
           </button>
           <button onclick="scrollToTimeline()" class="tap quick-btn bg-white text-slate-700 border border-slate-200 shadow-xs">
-            <span class="text-base">🧭</span><span>看<br>時間軸</span>
+            <i data-lucide="navigation" class="w-4 h-4 mb-0.5 text-slate-500"></i><span>看<br>時間軸</span>
           </button>
+        </div>
+
+        <!-- 每日行程進度條 -->
+        <div class="rounded-xl border border-sky-100 bg-sky-50/50 p-3 card-shadow">
+          <div class="flex justify-between items-center text-xs mb-1.5">
+            <span class="font-black text-sky-900 flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-sky-600"></i> 今日足跡完成率
+            </span>
+            <span id="footprint-progress-text" class="font-bold text-sky-700">0% (0 / 0 站)</span>
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-2">
+            <div id="footprint-progress-bar" class="bg-gradient-to-r from-sky-500 to-sky-700 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
         </div>
 
         <!-- 每日頭部氣象決策建議 -->
@@ -458,12 +484,12 @@
 
     <!-- 底部導航導航列 (磨砂玻璃貼底) -->
     <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-6 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
-      <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-xl py-1 text-[9px] font-black text-sky-600"><span class="block text-lg">🗓️</span>行程</button>
-      <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg">🎒</span>打包</button>
-      <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg">🎫</span>周遊券</button>
-      <button onclick="switchMainTab('hotel')" id="nav-hotel" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg">🏡</span>民宿</button>
-      <button onclick="switchMainTab('expense')" id="nav-expense" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg">💰</span>記帳</button>
-      <button onclick="openRouteMap()" id="nav-route" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg">🗺️</span>動線</button>
+      <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-xl py-1 text-[9px] font-black text-sky-600"><span class="block text-lg"><i data-lucide="calendar" class="w-5 h-5 mx-auto mb-0.5"></i></span>行程</button>
+      <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="luggage" class="w-5 h-5 mx-auto mb-0.5"></i></span>打包</button>
+      <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="ticket" class="w-5 h-5 mx-auto mb-0.5"></i></span>周遊券</button>
+      <button onclick="switchMainTab('hotel')" id="nav-hotel" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="home" class="w-5 h-5 mx-auto mb-0.5"></i></span>民宿</button>
+      <button onclick="switchMainTab('expense')" id="nav-expense" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="japanese-yen" class="w-5 h-5 mx-auto mb-0.5"></i></span>記帳</button>
+      <button onclick="openRouteMap()" id="nav-route" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="map" class="w-5 h-5 mx-auto mb-0.5"></i></span>動線</button>
     </nav>
   </div>
 
@@ -549,9 +575,9 @@
     </div>
   </div>
 
-  <!-- 自製對話框與對話層 (取代 alert / confirm) -->
+  <!-- 自製自訂 Alert/Confirm 模組 -->
   <div id="custom-dialog" class="custom-dialog-backdrop">
-    <div class="custom-dialog-box">
+    <div class="custom-dialog-box animate-scale-up">
       <h3 id="dialog-title" class="text-sm font-black text-slate-950">提示</h3>
       <p id="dialog-message" class="mt-2 text-xs leading-relaxed text-slate-600"></p>
       <div id="dialog-actions" class="mt-4 flex justify-end gap-2"></div>
@@ -648,8 +674,8 @@
         items: [
           { time: "12:00", name: "關西國際機場抵達", type: "flight", addr: "〒549-0001 大阪府泉佐野市泉州空港北1", note: "搭乘星宇航空 JX820 (08:30 桃園起飛)。出關後快速領取行李、領取網卡，並去臨櫃購買 西瓜卡。" },
           { time: "13:10", name: "Rinku Premium Outlets 臨空城", type: "shop", addr: "〒598-8508 大阪府泉佐野市りんくう往來南3-28", note: "⚡ 限制 1.5 小時極速閃擊！大行李箱建議鎖在臨空城站內置物櫃，若客滿可拉至 Outlet 服務中心提供人工行李寄放服務。" },
-          { time: "15:35", name: "民宿 JS暁宅・靜谷 Check-in", type: "hotel", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "搭乘南海電鐵至天下茶屋站，轉乘地下鐵四橋線1站至花園町站，出站走5分鐘即達。先回房吹冷氣、洗臉補水休息。" },
-          { time: "17:30", name: "難波 Parks & Luck:Rack 購衣", type: "shop", addr: "〒556-0011 大阪府大阪市浪速区難波中2丁目10-70", note: "朝聖 Alpen Outdoors 露營旗艦店看焚火裝備。同棟 T-terrace 4樓有名牌折扣店 Luck:Rack，可用3-8折狂收潮流神服！" },
+          { time: "15:35", name: "民宿 JS曉宅・靜谷 Check-in", type: "hotel", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "搭乘南海電鐵至天下茶屋站，轉乘地下鐵四橋線1站至花園町站，出站走5分鐘即達。先回房吹冷氣、洗臉補水休息。" },
+          { time: "17:30", name: "難波 Parks & Luck:Rack 購衣", type: "shop", addr: "〒556-0011 大阪府大阪市浪速区難波中2丁目10-70", note: "朝盛 Alpen Outdoors 露營旗艦店看焚火裝備。同棟 T-terrace 4樓有名牌折扣店 Luck:Rack，可用3-8折狂收潮流神服！" },
           { time: "19:00", name: "道頓堀與心齋橋商圈晚餐", type: "food", addr: "〒542-0071 大阪府大阪市中央区道頓堀1丁目", note: "與必拍的跑跑人地標拍照合影，晚餐推薦一蘭拉麵、金龍拉麵或章魚燒街頭小吃。" },
           { time: "21:30", name: "🏠 返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "由【難波站】搭乘地下鐵四橋線往住之江公園方向 ➔ 2站直達【花園町站】。由2號出口出站，走鶴見橋大馬路平坦商店街5分鐘回民宿，刷 西瓜卡 扣款 ¥190。" }
         ]
@@ -660,7 +686,7 @@
         items: [
           { time: "08:50", name: "大阪城港碼頭 🎫 搶先換票", type: "ticket", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "一抵達先去窗口出示電子周遊券 QR 碼！不要排 10:30 班次，直接兌換當天最早有空位的 Aqua-Liner 水上巴士船票，最安全！" },
           { time: "09:10", name: "大阪城天守閣", type: "scene", addr: "〒540-0002 大阪府大阪市中央区大阪城1-1", note: "免排隊買票，直接去檢票口掃電子周遊券 QR 碼登頂，避開大批旅行團。" },
-          { time: "10:30", name: "Aqua-Liner 水上巴士體驗", type: "ship", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "船艙內冷氣超強。原汁原味坐在舒適沙發上遊覽大川運流（價值¥1,800，周遊券免費）。" },
+          { time: "10:30", name: "Aqua-Liner 水上巴士體驗", type: "ship", addr: "〒540-0002 大阪府大阪市中央区大阪城2", note: "船艙內冷氣超強。原汁原味坐在舒適沙發上遊覽大川運河，完美避開上午烈日暴曬（價值¥1,800，周遊券免費）。" },
           { time: "13:00", name: "梅田藍天大廈 空中庭園展望台", type: "scene", addr: "〒531-6039 大阪府大阪市北区大淀中1丁目1-88", note: "💡 防坑關鍵：從東梅田站走葛蘭綠地（Grand Green Osaka）平面無障礙綠色公園廊道至此，步行約15分鐘，確保15:00免費截止前刷進場。" },
           { time: "14:00", name: "午餐：Tonkatsu KYK 豬排飯", type: "food", addr: "〒530-0017 大阪府大阪市北区角田町8-47（阪急32番街 28階）", note: "在高空俯瞰梅田一邊享用頂級黑豚里肌豬排 / 腰內肉豬排定食。" },
           { time: "15:40", name: "🛳️ Wonder Cruise 碼頭報到", type: "ticket", addr: "〒542-0084 大阪府大阪市中央区宗右衛門町", note: "⚠️ 官方嚴格規定：已線上成功預訂 16:10 班次，必須提前 30 分鐘抵達日本橋碼頭窗口出示憑證與周遊券換取實體船票！" },
@@ -751,6 +777,7 @@
     const expenseStorageKey = 'kansai2026ExpenseRecords_v1';
     const expenseDraftKey = 'kansai2026ExpenseDraft_v1';
     const defaultChecklistStateKey = 'kansai2026_daily_checklist_v1';
+    const stationVisitedKey = 'kansai2026_station_visited_v1';
 
     // 達人每日指南常數
     const expertTripGuides = {
@@ -777,14 +804,14 @@
       },
       4: {
         headline: '奈良日請上午先完成奈良公園與東大寺；若午後雨勢變強，就轉往商店街、奈良町與咖啡店。',
-        stamina: { level: '高', cls: 'stamina-high', reason: '奈良公園腹地大、春日大社參道長，戶外與步行時間多.軍。', note: '鹿公園雨天草皮泥濘，避免白鞋。' },
+        stamina: { level: '高', cls: 'stamina-high', reason: '奈良公園腹地大、春日大社參道長，戶外與步行時間多。' },
         rainBackup: '鹿公園雨後容易泥濘濕滑，鹿也會靠近討食；雨天避免白鞋與長裙，午後可改東向商店街、中谷堂或奈良町。',
         transport: '大阪難波搭近鐵奈良線最省力；集合點建議設定在近鐵奈良站或東向商店街入口，避免鹿公園走散。',
         checklist: ['著好清洗、不怕髒衣物（鹿口水防禦）','防鹿便便之防滑深色鞋底跑鞋','防鹿口水與泥污的濕紙巾','近鐵難波站平行轉乘指引','小鹿仙貝放置包（避免外露）']
       },
       5: {
         headline: '大阪港與船班日要先換票、再逛室內；若風雨偏強，聖瑪麗亞號需保留替代方案。',
-        stamina: { level: '主高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。' },
+        stamina: { level: '中高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。' },
         rainBackup: '雨天可拉長大阪生活今昔館、天神橋筋商店街與天保山 Market Place；港邊風雨大時減少甲板停留。',
         transport: '天六到大阪港建議堺筋線到堺筋本町，再平行轉中央線；到港後先換聖瑪麗亞號船票。',
         checklist: ['周遊券掃描碼與出入憑證','防港灣強風的海風防風外套','提前兌換聖瑪麗亞號船票','天神橋筋商店街美食清單截圖','港口導航動線地圖下載']
@@ -806,6 +833,9 @@
       refreshWeather(false);
       bindUiHelpers();
       bindExpenseAutoSave();
+      
+      // 初始化 Lucide 圖標
+      lucide.createIcons();
     });
 
     // 渲染 D1~D6 Tabs
@@ -819,7 +849,7 @@
       `).join('');
     }
 
-    // 自製對話與確認框系統
+    // 安全、相容沙盒的 Dialog 控制系統
     function showCustomAlert(title, message, callback) {
       const dialog = document.getElementById('custom-dialog');
       const dTitle = document.getElementById('dialog-title');
@@ -828,9 +858,17 @@
 
       dTitle.textContent = title;
       dMsg.textContent = message;
-      dActions.innerHTML = `
-        <button onclick="closeCustomDialog(); ${callback ? 'triggerCallback(' + callback + ')' : ''}" class="tap rounded-xl bg-slate-900 px-4 py-2 text-xs font-black text-white">好</button>
-      `;
+      dActions.innerHTML = '';
+
+      const btn = document.createElement('button');
+      btn.className = 'tap rounded-xl bg-slate-900 px-4 py-2 text-xs font-black text-white';
+      btn.textContent = '確定';
+      btn.onclick = () => {
+        closeCustomDialog();
+        if(callback) callback();
+      };
+      dActions.appendChild(btn);
+
       dialog.classList.remove('hidden');
       dialog.classList.add('flex');
     }
@@ -843,16 +881,25 @@
 
       dTitle.textContent = title;
       dMsg.textContent = message;
-      dActions.innerHTML = `
-        <button onclick="closeCustomDialog()" class="tap rounded-xl bg-slate-100 px-4 py-2 text-xs font-black text-slate-600">取消</button>
-        <button id="custom-dialog-confirm-btn" class="tap rounded-xl bg-rose-600 px-4 py-2 text-xs font-black text-white">確定</button>
-      `;
-      
-      const confirmBtn = document.getElementById('custom-dialog-confirm-btn');
+      dActions.innerHTML = '';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'tap rounded-xl bg-slate-100 px-4 py-2 text-xs font-black text-slate-600';
+      cancelBtn.textContent = '取消';
+      cancelBtn.onclick = () => {
+        closeCustomDialog();
+      };
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.className = 'tap rounded-xl bg-rose-600 px-4 py-2 text-xs font-black text-white';
+      confirmBtn.textContent = '確定';
       confirmBtn.onclick = () => {
         closeCustomDialog();
         onConfirmCallback();
       };
+
+      dActions.appendChild(cancelBtn);
+      dActions.appendChild(confirmBtn);
 
       dialog.classList.remove('hidden');
       dialog.classList.add('flex');
@@ -1029,7 +1076,7 @@
         3: { city: '京都', theme: '清水寺、二年坂、祇園', outdoor: '高', indoor: '町家咖啡、四条商店街', rainPlan: '京都石板路雨天易滑，若雨勢過大改為町家咖啡散策，並增加計程車共乘流。', gear: '防滑抓地鞋、輕便雨衣、擦汗手帕。' },
         4: { city: '奈良', theme: '奈良公園、大佛、常夜燈', outdoor: '高', indoor: '東向商店街、奈良町', rainPlan: '奈良公園雨天草皮泥濘，避免白鞋。雨大則提早往東向商店街與奈良町室內。', gear: '大地色防髒衣物、深色慢跑鞋、輕便防潮袋。' },
         5: { city: '大阪', theme: '天神橋筋、大阪港、遊船', outdoor: '中高', indoor: '生活今昔館、商店街、天保山', rainPlan: '天神橋筋商店街與生活今昔館皆在室內，港口景點雨天室內商場好逛。', gear: '防港風薄外套、備用雨傘。' },
-        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套. '}
+        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套。' }
       };
       return profiles[day] || profiles[1];
     }
@@ -1057,6 +1104,46 @@
       showToast(`D${day} 檢查清單已重設`);
     }
 
+    // 景點足跡紀錄系統
+    function getVisitedState() {
+      try { return JSON.parse(localStorage.getItem(stationVisitedKey) || '{}') || {}; }
+      catch(e) { return {}; }
+    }
+    function saveVisitedState(state) {
+      try { localStorage.setItem(stationVisitedKey, JSON.stringify(state)); } catch(e){}
+    }
+    function toggleStationVisited(day, idx, checked) {
+      const state = getVisitedState();
+      const key = `D${day}`;
+      state[key] = state[key] || {};
+      state[key][idx] = !!checked;
+      saveVisitedState(state);
+      
+      const idxNode = document.getElementById(`station-idx-${day}-${idx}`);
+      if(idxNode) {
+        idxNode.className = `timeline-index ${checked ? 'visited' : ''}`;
+        idxNode.textContent = checked ? '✓' : idx + 1;
+      }
+      
+      updateFootprintProgressBar(day);
+      showToast(checked ? '已踩點足跡！' : '已取消踩點');
+    }
+    function updateFootprintProgressBar(day=currentDay) {
+      const data = travelData[day];
+      const state = getVisitedState()[`D${day}`] || {};
+      const total = data.items.length;
+      let visitedCount = 0;
+      for (let i = 0; i < total; i++) {
+        if (state[i]) visitedCount++;
+      }
+      const pct = total > 0 ? Math.round((visitedCount / total) * 100) : 0;
+      
+      const bar = document.getElementById('footprint-progress-bar');
+      const text = document.getElementById('footprint-progress-text');
+      if (bar) bar.style.width = `${pct}%`;
+      if (text) text.textContent = `${pct}% (${visitedCount} / ${total} 站)`;
+    }
+
     function buildExpertGuideText(day=currentDay) {
       const g = expertTripGuides[day] || expertTripGuides[1];
       return [
@@ -1080,7 +1167,7 @@
         <div class="traveler-guide-head mb-3">
           <div class="flex justify-between items-center">
             <h3>D${day} 旅遊達人隨行指引</h3>
-            <span class="pill bg-indigo-50 text-indigo-700">領隊精準版</span>
+            <span class="pill bg-indigo-50 text-indigo-700 font-black">領隊精準版</span>
           </div>
           <p class="text-[10px] text-slate-500 mt-1">D${day}｜${escapeHtml(tripDateLabels[day])} 行前 30 秒快速對焦決策區。</p>
         </div>
@@ -1190,7 +1277,7 @@
       let gear = profile.gear;
       if(thunder || rain >= 60 || maxHourly >= 60) gear += ' 強烈建議薄雨衣、重要物件防水密封袋。';
       else if(rain >= 30 || maxHourly >= 30) gear += ' 必備極輕量折疊晴雨傘。';
-      if(max >= 32) gear += ' 備好日本鹽糖或逆境防中暑物資。';
+      if(max >= 32) gear += ' 備好日本鹽糖或運動飲料。';
 
       return {
         ready: true, conclusion, risk,
@@ -1319,6 +1406,7 @@
       switchMainTab('itinerary', false);
       renderItinerary(day);
       updatePrimaryLocalWeatherButton();
+      updateFootprintProgressBar(day);
       if(Object.keys(weatherCache).length) renderTripWeatherCards();
       window.scrollTo({top:0, behavior:'smooth'});
     }
@@ -1371,6 +1459,9 @@
       renderExpertTripGuide(day);
       const timeline = document.getElementById('timeline');
       timeline.innerHTML = data.items.map((item, idx) => itineraryCard(item, idx)).join('');
+      
+      // 更新 Lucide 圖標
+      lucide.createIcons();
     }
 
     function typeMeta(type) {
@@ -1392,9 +1483,10 @@
     function itineraryCard(item, idx=0) {
       const [icon, badge] = typeMeta(item.type);
       const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}`;
+      const checkedState = getVisitedState()[`D${currentDay}`]?.[idx] || false;
       return `
         <article class="relative pl-6">
-          <span class="timeline-index">${idx+1}</span>
+          <span id="station-idx-${currentDay}-${idx}" class="timeline-index ${checkedState ? 'visited' : ''}">${checkedState ? '✓' : idx+1}</span>
           <div class="rounded-2xl border border-slate-100 bg-white p-4 card-shadow">
             <div class="flex items-start justify-between gap-3">
               <div class="shrink-0 rounded-xl bg-sky-50 px-2.5 py-1 text-center">
@@ -1408,6 +1500,14 @@
               </div>
             </div>
             <p class="mt-2 rounded-xl bg-slate-50 p-2.5 text-[11px] leading-relaxed text-slate-600">${item.note}</p>
+            
+            <div class="mt-2 flex items-center justify-between gap-2 border border-slate-100 bg-slate-50/50 rounded-xl p-2.5">
+              <span class="text-[11px] font-black text-slate-600 flex items-center gap-1">
+                <i data-lucide="footprints" class="w-3.5 h-3.5 text-sky-600"></i> 我已造訪此站
+              </span>
+              <input type="checkbox" ${checkedState ? 'checked' : ''} onchange="toggleStationVisited(${currentDay}, ${idx}, this.checked)" class="w-5 h-5 accent-sky-600 rounded">
+            </div>
+
             <details class="detail-box mt-2">
               <summary>📍 看實體地址及日文大字</summary>
               <div class="addr">${item.addr}</div>
@@ -1437,7 +1537,7 @@
         </div>
         <div class="mt-3 space-y-3">
           ${infoBlock('⚠️ 嚴禁使用傳統感應區', '數位周遊券不具備 NFC 射頻信號，必須在有配備條碼/QR掃描器的閘口過閘，或走人工檢票口。', 'rose')}
-          ${infoBlock('🚇 地鐵專用過閘口', '尋找通道有綠色 QR Code 圖標之新型閘機。提前條碼讀取口對準，亮光過關。', 'sky')}
+          ${infoBlock('🚇 地鐵專用過閘口', '尋找通道有綠色 QR Code 圖標之新型閘機。提前調亮手機螢幕並置於紅外線窗口上掃描即可。', 'sky')}
           ${infoBlock('🚢 遊船與景點搶先換票', '大阪城 Aqua-Liner、道頓堀 Wonder Cruise、聖瑪麗亞號等，皆須在景點窗口出示周遊卡條碼兌換實體票。', 'amber')}
           ${infoBlock('🔋 行動蓄電安全防線', '數位周遊卡最怕手機沒電，同行者可將各團員的 QR Code 截圖交叉儲存，防止單一設備沒電。', 'emerald')}
         </div>`;
@@ -1530,16 +1630,38 @@
       copyText(text, '行程已轉為 LINE 格式並複製成功！');
     }
 
-    async function copyText(text, msg) {
+    // 安全防護 Clipboard，避免 sandbox iframe 呼叫 writeText 失敗
+    function copyText(text, msg) {
+      const t = document.createElement('textarea');
+      t.value = text;
+      t.style.position = 'fixed';
+      t.style.top = '0';
+      t.style.left = '0';
+      t.style.width = '2em';
+      t.style.height = '2em';
+      t.style.padding = '0';
+      t.style.border = 'none';
+      t.style.outline = 'none';
+      t.style.boxShadow = 'none';
+      t.style.background = 'transparent';
+      document.body.appendChild(t);
+      t.select();
+      t.setSelectionRange(0, 99999);
+      let success = false;
       try {
-        await navigator.clipboard.writeText(text);
+        success = document.execCommand('copy');
+      } catch (err) {
+        success = false;
+      }
+      document.body.removeChild(t);
+
+      if (success) {
         showToast(msg);
-      } catch(e) {
-        const t = document.createElement('textarea');
-        t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
-        document.body.appendChild(t); t.select();
-        document.execCommand('copy'); document.body.removeChild(t);
-        showToast(msg);
+      } else {
+        // Fallback to Clipboard API as secondary option
+        navigator.clipboard.writeText(text)
+          .then(() => showToast(msg))
+          .catch(() => showToast('複製失敗，請手動複製！'));
       }
     }
     
@@ -1563,6 +1685,19 @@
         const val = parseFloat(twdInput.value) || 0;
         jpyInput.value = Math.round(val / jpyRate);
       }
+    }
+
+    // 記帳 - 智慧旅伴分帳計算
+    function calculateSplitBill() {
+      const totalJpy = parseFloat(document.getElementById('split-total-jpy')?.innerText.replace(/[^\d.-]/g, '')) || 0;
+      const totalTwd = parseFloat(document.getElementById('split-total-twd')?.innerText.replace(/[^\d.-]/g, '')) || 0;
+      const count = parseInt(document.getElementById('split-member-count')?.value) || 1;
+      
+      const splitJpyNode = document.getElementById('split-result-jpy');
+      const splitTwdNode = document.getElementById('split-result-twd');
+      
+      if (splitJpyNode) splitJpyNode.innerText = `¥${Math.round(totalJpy / count).toLocaleString('zh-TW')}`;
+      if (splitTwdNode) splitTwdNode.innerText = `NT$${Math.round(totalTwd / count).toLocaleString('zh-TW')}`;
     }
 
     // 行程 PDF 預覽與儲存
@@ -1694,6 +1829,7 @@
       copyText(text, '今日所有景點地址已複製，可用於日本計程車或地圖搜尋！');
     }
 
+    // 關閉地圖動線
     function closeRouteMap() {
       const modal = document.getElementById('route-map-modal');
       modal.classList.add('hidden'); modal.classList.remove('flex');
@@ -1759,18 +1895,22 @@
 
       document.getElementById('expense-view').innerHTML = `
         <div class="expense-hero card-shadow">
-          <p class="text-[9px] font-black tracking-widest text-emerald-200 font-bold">KANSAI BUDGET</p>
+          <p class="text-[9px] font-black tracking-widest text-emerald-200 font-bold flex items-center gap-1">
+            <i data-lucide="wallet" class="w-3.5 h-3.5"></i> KANSAI BUDGET
+          </p>
           <h2 class="mt-0.5 text-sm font-black">💰 隨行即時記帳 & 拍照 AI</h2>
           <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機 LocalStorage。支援拍攝日本收據由 AI 自動辨識拆分。</p>
         </div>
 
-        <!-- 匯率轉換工具 -->
-        <div class="rate-card space-y-2">
+        <!-- 匯率轉換與分帳工具 -->
+        <div class="rate-card space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-black text-emerald-800">💱 關西旅行即時匯率換算 (免網路)</span>
+            <span class="text-[11px] font-black text-emerald-800 flex items-center gap-1">
+              <i data-lucide="calculator" class="w-4 h-4"></i> 旅行極速計算器 (匯率+多旅伴分帳)
+            </span>
             <div class="flex items-center gap-1">
               <span class="text-[9px] text-slate-500 font-bold">匯率:</span>
-              <input id="currency-rate" type="number" step="0.001" class="w-16 p-1 text-[10px] border border-emerald-300 rounded-lg text-center" value="0.210" oninput="convertCurrency('jpy')">
+              <input id="currency-rate" type="number" step="0.001" class="w-16 p-1 text-[10px] border border-emerald-300 rounded-lg text-center font-bold" value="0.210" oninput="convertCurrency('jpy')">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
@@ -1781,6 +1921,19 @@
             <div>
               <label class="block text-[9px] text-emerald-700 font-bold">台幣 TWD ($)</label>
               <input id="currency-twd" type="number" class="w-full p-2 border border-emerald-200 rounded-xl text-xs font-bold" placeholder="210" oninput="convertCurrency('twd')">
+            </div>
+          </div>
+          <!-- 旅伴分賬模組 -->
+          <div class="border-t border-emerald-100 pt-2.5">
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-1 text-[10px] font-bold text-emerald-800">
+                <span>分帳旅伴人數:</span>
+                <input id="split-member-count" type="number" min="1" value="4" oninput="calculateSplitBill()" class="w-10 p-1 text-center border border-emerald-300 rounded-lg font-bold">
+              </div>
+              <div class="text-[10px] text-emerald-800 text-right">
+                <p>每人均攤日幣: <span id="split-result-jpy" class="font-black text-xs text-emerald-950">¥0</span></p>
+                <p>每人均攤台幣: <span id="split-result-twd" class="font-black text-xs text-emerald-950">NT$0</span></p>
+              </div>
             </div>
           </div>
         </div>
@@ -1818,24 +1971,31 @@
           </div>
           <div class="expense-field mt-2">
             <label>記帳備註</label>
-            <textarea id="expense-note" placeholder="備註細項">${escapeHtml(draft.note)}</textarea>
+            <textarea id="expense-note" placeholder="四人分攤、退稅明細">${escapeHtml(draft.note)}</textarea>
           </div>
           
           <div class="mt-3 space-y-2">
-            <button type="button" onclick="triggerEmbeddedReceiptCamera()" class="tap w-full rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3 text-xs font-black text-white shadow-md">📷 拍照辨識 ➔ 自動拆解入帳</button>
-            
-            <!-- 方法 A：新增 AI 金鑰設定按鈕，補全 image_ca365f.png 中遺漏的控制選項 -->
-            <button type="button" onclick="openReceiptAiSettings()" class="tap w-full rounded-xl bg-violet-50 border border-violet-100 py-2.5 text-xs font-black text-violet-700">🤖 AI 設定 (填入 Gemini API 金鑰)</button>
+            <button type="button" onclick="triggerEmbeddedReceiptCamera()" class="tap w-full rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3 text-xs font-black text-white shadow-md flex items-center justify-center gap-1.5">
+              <i data-lucide="camera" class="w-4 h-4"></i> 📷 拍照辨識 ➔ 自動拆解入帳
+            </button>
             
             <div class="grid grid-cols-2 gap-2">
-              <button type="button" onclick="addExpenseRecord()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white">＋ 記錄手動</button>
+              <button type="button" onclick="addExpenseRecord()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 記錄手動
+              </button>
               <button type="button" onclick="clearExpenseDraft()" class="tap rounded-xl bg-white border border-slate-200 py-2.5 text-xs font-black text-slate-700">清空輸入</button>
             </div>
             
             <div class="grid grid-cols-3 gap-1.5">
-              <button type="button" onclick="copyExpenseSummary()" class="tap rounded-xl bg-slate-900 py-2 text-[10px] font-black text-white">📋 複製總表</button>
-              <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-xl bg-indigo-600 py-2 text-[10px] font-black text-white">⬇️ 匯出 CSV</button>
-              <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap rounded-xl bg-emerald-800 py-2 text-[10px] font-black text-white">📊 匯出 Google</button>
+              <button type="button" onclick="copyExpenseSummary()" class="tap rounded-xl bg-slate-900 py-2 text-[10px] font-black text-white flex items-center justify-center gap-1">
+                <i data-lucide="clipboard-list" class="w-3 h-3"></i> 複製總表
+              </button>
+              <button type="button" onclick="exportExpenseSummaryCSV()" class="tap rounded-xl bg-indigo-600 py-2 text-[10px] font-black text-white flex items-center justify-center gap-1">
+                <i data-lucide="download" class="w-3 h-3"></i> 匯出 CSV
+              </button>
+              <button type="button" onclick="exportExpenseToGoogleSheet()" class="tap rounded-xl bg-emerald-800 py-2 text-[10px] font-black text-white flex items-center justify-center gap-1">
+                <i data-lucide="sheet" class="w-3 h-3"></i> 匯出 Google
+              </button>
             </div>
           </div>
         </div>
@@ -1846,6 +2006,16 @@
         </div>
         <div id="expense-summary" class="expense-summary"></div>
 
+        <!-- 記帳種類佔比指標 -->
+        <div class="rounded-2xl border border-slate-100 bg-white p-3 card-shadow space-y-2">
+          <h4 class="text-xs font-black text-slate-700 flex items-center gap-1">
+            <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-sky-600"></i> 消費種類比例 (依 JPY 折合統計)
+          </h4>
+          <div id="expense-category-bars" class="space-y-1.5 text-[10.5px]">
+            <!-- 佔比動態生成 -->
+          </div>
+        </div>
+
         <div class="section-title flex justify-between items-center">
           <h3>支出細項紀錄</h3>
           <button type="button" onclick="clearAllExpenses()" class="tap rounded-full bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-700">清除全部</button>
@@ -1853,6 +2023,7 @@
         <div id="expense-records" class="space-y-2"></div>`;
       
       renderExpenseRecords();
+      lucide.createIcons();
     }
 
     function addExpenseRecord() {
@@ -1879,7 +2050,7 @@
       records.unshift(record);
       saveExpenseRecords(records);
 
-      // 記帳成功後，立即清除輸入欄位（特別是備註），使下一次新增或開啟時回復乾淨，不影響輸入速度
+      // 記帳成功後，清除輸入欄位
       if (itemInput) itemInput.value = '';
       if (amountInput) amountInput.value = '';
       if (noteInput) noteInput.value = '';
@@ -1906,8 +2077,46 @@
       document.getElementById('expense-summary').innerHTML = currencies.map(c => `
         <div class="expense-total-card">
           <div class="k">${c} 總支出</div>
-          <div class="v font-bold">${formatMoney(summary[c]||0, c)}</div>
+          <div id="split-total-${c.toLowerCase()}" class="v font-bold">${formatMoney(summary[c]||0, c)}</div>
         </div>`).join('');
+
+      // 計算分類佔比 (日幣計，假設台幣折算匯率、美金折算匯率進行估算)
+      const jpyEx = 1;
+      const twdEx = 1 / 0.210; // 台幣轉日幣約除以 0.210
+      const usdEx = 150; // 美金轉日幣
+      
+      const categorySum = {};
+      let grandTotalJpy = 0;
+      
+      records.forEach(r => {
+        let valJpy = Number(r.amount || 0);
+        if (r.currency === 'TWD') valJpy = valJpy * twdEx;
+        if (r.currency === 'USD') valJpy = valJpy * usdEx;
+        categorySum[r.category] = (categorySum[r.category] || 0) + valJpy;
+        grandTotalJpy += valJpy;
+      });
+      
+      const barNode = document.getElementById('expense-category-bars');
+      if (barNode) {
+        if (grandTotalJpy === 0) {
+          barNode.innerHTML = `<div class="text-center text-slate-400 py-1">尚無支出，無法統計比例。</div>`;
+        } else {
+          barNode.innerHTML = Object.keys(categorySum).map(cat => {
+            const sum = categorySum[cat];
+            const pct = Math.round((sum / grandTotalJpy) * 100);
+            return `
+              <div>
+                <div class="flex justify-between font-bold text-slate-600 mb-0.5">
+                  <span>${cat}</span>
+                  <span>${pct}% (約 ¥${Math.round(sum).toLocaleString()})</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-1.5">
+                  <div class="bg-emerald-500 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>`;
+          }).join('');
+        }
+      }
 
       document.getElementById('expense-records').innerHTML = records.length ? records.map(r => `
         <article class="expense-record">
@@ -1923,6 +2132,8 @@
             </div>
           </div>
         </article>`).join('') : `<div class="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center text-xs font-bold text-slate-400">尚無記帳紀錄。旅途消費一鍵速記。</div>`;
+        
+      calculateSplitBill();
     }
 
     function deleteExpenseRecord(id) {
@@ -2011,6 +2222,9 @@
       showCustomAlert('操作提示', '已為您打開 Google 試算表。請點選 A1 儲存格，並直接貼上（Ctrl+V），資料將自動多列分開。');
     }
 
+    // ==========================================
+    // GEMINI AI 收據拍照多模態辨識 OCR
+    // ==========================================
     const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
     
     function getReceiptAiSettings() {
@@ -2045,7 +2259,7 @@
       closeReceiptAiSettings();
     }
 
-    // 指數退避重試請求封裝 (5次重試限制)
+    // 指數退避重試請求封裝 (完美執行 5 次重試限制，保障沙盒高壓不中斷)
     async function fetchWithRetry(url, options, retries = 5) {
       let delay = 1000;
       for (let i = 0; i < retries; i++) {
@@ -2106,6 +2320,7 @@
       }
     }
 
+    // 處理收據照片
     async function handleEmbeddedReceiptImage(event) {
       const file = event?.target?.files?.[0];
       if(event?.target) event.target.value = '';
@@ -2136,10 +2351,10 @@
         
         setReceiptAiStatus('✨ 辨識成功！紀錄已無感同步至本機記帳表。');
         document.getElementById('receipt-ai-result').innerHTML = `
-          <div class="font-bold">項目：${escapeHtml(normalized.item)}</div>
-          <div>金額：${formatMoney(normalized.amount, normalized.currency)}</div>
+          <div class="font-bold text-violet-950">項目：${escapeHtml(normalized.item)}</div>
+          <div class="font-bold text-emerald-800">金額：${formatMoney(normalized.amount, normalized.currency)}</div>
           <div>分類：${escapeHtml(normalized.category)} | 行程：D${normalized.day}</div>
-          ${normalized.note ? `<div class="text-[10px] text-violet-700">細節：${escapeHtml(normalized.note)}</div>` : ''}
+          ${normalized.note ? `<div class="text-[10px] text-violet-700 mt-1">細節：${escapeHtml(normalized.note)}</div>` : ''}
         `;
         document.getElementById('receipt-ai-result').classList.remove('hidden');
         showToast('AI 記帳同步成功');
@@ -2174,7 +2389,7 @@
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
       const apiKeyToUse = cfg.key || runtimeApiKey;
-      if(!apiKeyToUse) throw new Error('未設定 API Key。請進入「AI 設置」或聯絡管理員。');
+      if(!apiKeyToUse) throw new Error('未設定 API Key。請進入底部的「記帳」➔ 點選「拍照辨識」➔ 進行 API 設置。');
       const model = cfg.model || 'gemini-2.5-flash-preview-09-2025';
       
       const prompt = `你是關西旅遊收據記帳助理。請嚴格解析該照片中的日本紙本收據/發票/明細，擷取必要資訊，僅輸出繁體中文 JSON 回覆，嚴禁 markdown 包裹或多餘論述。
@@ -2209,7 +2424,7 @@
       });
 
       const body = await res.json().catch(()=>({}));
-      if(!res.ok) throw new Error(body?.error?.message || 'Gemini 呼叫失敗');
+      if(!res.ok) throw new Error(body?.error?.message || 'Gemini 呼召失敗');
       const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
       
       const match = text.match(/\{[\s\S]*\}/);

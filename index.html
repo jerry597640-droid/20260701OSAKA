@@ -228,6 +228,7 @@
     .route-step-title { margin: 0; font-size: 11.5px; line-height: 1.4; color: #0f172a; font-weight: 900; }
     .route-step-addr { margin: 2px 0 0; font-size: 10px; color: #64748b; }
     .route-step-arrow { text-align: center; color: #0284c7; font-size: 15px; font-weight: 900; margin: 2px 0; }
+    .route-step:hover { transform: translateY(-2px); border-color: #cbd5e1; }
     .route-action-card { border-radius: 16px; border: 1px solid #bae6fd; background: #f0f9ff; padding: 10px; }
 
     .expense-hero {
@@ -251,7 +252,8 @@
     .expense-total-card { border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; padding: 8px; text-align: center; }
     .expense-total-card .k { font-size: 9.5px; color: #64748b; font-weight: 800; }
     .expense-total-card .v { margin-top: 2px; font-size: 12.5px; color: #0f172a; font-weight: 900; }
-    .expense-record { border-radius: 16px; border: 1px solid #e2e8f0; background: #ffffff; padding: 10px; }
+    .expense-record { border-radius: 16px; border: 1px solid #e2e8f0; background: #ffffff; padding: 10px; transition: all 0.2s; }
+    .expense-record:hover { transform: translateY(-2px); border-color: #cbd5e1; }
     .expense-record-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
     .expense-record-name { font-size: 12.5px; font-weight: 900; color: #0f172a; }
     .expense-record-meta { margin-top: 2px; font-size: 10px; color: #64748b; }
@@ -334,19 +336,26 @@
     .receipt-ai-modal.show { display: flex; }
     .receipt-ai-sheet { width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; border-radius: 24px; background: #ffffff; padding: 16px; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3); }
     .receipt-ai-preview { width: 100%; max-height: 220px; object-fit: contain; border-radius: 14px; background: #0f172a; border: 1px solid #1e293b; }
-    .receipt-ai-status { border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; color: #475569; font-size: 11px; line-height: 1.5; }
+    .receipt-ai-status { border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; color: #475569; font-size: 11px; line-height: 1.5; font-weight: bold; }
     .receipt-ai-result { border-radius: 16px; background: #f5f3ff; border: 1px solid #ddd6fe; padding: 10px; font-size: 11.5px; line-height: 1.55; color: #312e81; }
     .ai-key-help { border-radius: 16px; border: 1px solid #dbeafe; background: linear-gradient(135deg, #eff6ff, #fbf7ff); padding: 10px; }
     .ai-key-actions { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
     .ai-key-actions a { border-radius: 12px; padding: 8px; font-size: 11px; font-weight: 900; text-align: center; text-decoration: none; }
     .ai-key-input-wrap { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
     .ai-key-input-wrap input { flex: 1; border: 1px solid #cbd5e1; border-radius: 12px; padding: 9px 12px; font-size: 11.5px; font-weight: 700; color: #0f172a; background: white; outline: none; }
-    .ai-test-status { margin-top: 8px; border-radius: 12px; padding: 8px; font-size: 11px; font-weight: 800; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+    .ai-test-status { margin-top: 8px; border-radius: 12px; padding: 10px; font-size: 11px; font-weight: 800; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; line-height: 1.5; }
 
     /* 自製對話框與對話層 (取代 alert / confirm) */
     .custom-dialog-backdrop { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); padding: 16px; }
     .custom-dialog-box { width: 100%; max-width: 340px; border-radius: 24px; background: #ffffff; padding: 20px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15); animation: scale-up 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
     @keyframes scale-up { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* 沉浸式大圖檢視燈箱彈出層 (Lightbox) */
+    .modal-backdrop { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); transition: all 0.2s; }
+    #lightbox-modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 16px; }
+    .lightbox-box { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .lightbox-img-wrap { width: 100%; max-height: 70vh; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000; display: flex; align-items: center; justify-content: center; }
+    .lightbox-img { max-width: 100%; max-height: 70vh; object-fit: contain; }
 
     /* 匯率小工具卡片 */
     .rate-card { border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; margin-top: 8px; }
@@ -364,7 +373,7 @@
   <!-- APP 整體外殼 -->
   <div id="app" class="app-shell flex flex-col">
     
-    <!-- 頂部磨砂玻璃控制列 -->
+    <!-- 頂部控制列 -->
     <header class="soft-glass sticky top-0 z-40 border-b border-slate-100 shrink-0">
       <div class="px-4 pt-4 pb-3">
         <div class="flex items-start justify-between gap-3">
@@ -386,7 +395,7 @@
           </div>
         </div>
 
-        <!-- 氣象實體小看板 -->
+        <!-- 氣象看板 -->
         <section class="mt-3 rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50/50 to-white p-3 card-shadow">
           <div class="flex items-center justify-between gap-2 mb-1.5">
             <div class="flex items-center gap-1">
@@ -488,7 +497,7 @@
       <section id="expense-view" class="hidden space-y-4"></section>
     </main>
 
-    <!-- 底部導航導航列 (磨砂玻璃貼底) -->
+    <!-- 底部導航欄 -->
     <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-6 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
       <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-xl py-1 text-[9px] font-black text-sky-600"><span class="block text-lg"><i data-lucide="calendar" class="w-5 h-5 mx-auto mb-0.5"></i></span>行程</button>
       <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="luggage" class="w-5 h-5 mx-auto mb-0.5"></i></span>打包</button>
@@ -509,7 +518,7 @@
     <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl animate-scale-up">
       <div class="flex items-start justify-between gap-3">
         <div>
-          <p class="text-[9px] font-black text-rose-600">🚕 給司機/路人看的大字卡</p>
+          <p class="text-[9px] font-black text-rose-600">🚕 给司機/路人看的大字卡</p>
           <h3 id="modal-name" class="mt-0.5 text-sm font-black text-slate-950"></h3>
         </div>
         <button onclick="closeModal()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
@@ -590,6 +599,23 @@
     </div>
   </div>
 
+  <!-- 沉浸式大圖檢視燈箱彈出層 (Lightbox) -->
+  <div id="lightbox-modal" class="no-print">
+    <div class="lightbox-box animate-scale-up">
+      <div class="w-full flex justify-between items-center text-white px-2">
+        <div>
+          <h4 id="lightbox-title" class="text-sm font-black">收據/發票影像</h4>
+          <p id="lightbox-meta" class="text-[9px] text-slate-400 mt-0.5">即時關聯大圖備查</p>
+        </div>
+        <button onclick="closeLightbox()" class="tap rounded-full bg-white/10 hover:bg-white/20 w-8 h-8 flex items-center justify-center font-black text-white">✕</button>
+      </div>
+      <div class="lightbox-img-wrap">
+        <img id="lightbox-image" class="lightbox-img" src="" alt="收據原圖">
+      </div>
+      <button onclick="closeLightbox()" class="tap w-full rounded-xl bg-slate-900/50 hover:bg-slate-900 text-white border border-white/10 py-2.5 text-xs font-black">返回手冊</button>
+    </div>
+  </div>
+
   <!-- Toast 訊息通知 -->
   <div id="toast" class="pointer-events-none fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-slate-950/90 px-4 py-2 text-[11px] font-black text-white opacity-0 shadow-lg transition-opacity">完成</div>
 
@@ -627,15 +653,15 @@
     </div>
   </div>
 
-  <!-- AI 設置彈出層 -->
+  <!-- AI 設置彈出層 (已升級：預設值精確清洗、診斷功能) -->
   <div id="receipt-ai-settings-modal" class="receipt-ai-modal">
     <div class="receipt-ai-sheet animate-scale-up">
       <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
           <p class="text-[9px] font-black tracking-widest text-blue-600 flex items-center gap-1">
-            <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-500"></i> GEMINI API CONFIG
+            <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-500"></i> GEMINI API DIAGNOSTICS
           </p>
-          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 拍照辨識設置</h3>
+          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 拍照辨識與容錯設置</h3>
         </div>
         <button onclick="closeReceiptAiSettings()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
       </div>
@@ -643,11 +669,11 @@
       <div class="mt-3 space-y-3">
         <div class="ai-key-help">
           <p class="text-[11px] leading-relaxed text-slate-700 font-bold">
-            本工具使用 Gemini 2.5 Flash 進行多模態辨識。請輸入您的 API 金鑰（ApiKey）：
+            請貼上您的 Gemini API 金鑰。系統已啟用「自動清洗模組」，會自動為您修正複製時產生的格式雜訊：
           </p>
           <div class="ai-key-actions">
             <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white block rounded-xl py-2 text-xs font-black text-center flex items-center justify-center gap-1">
-              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> 免費取得個人 Gemini API Key
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> 點此免費申請 Gemini 金鑰 (10秒完成)
             </a>
           </div>
         </div>
@@ -655,17 +681,29 @@
         <div>
           <label class="block text-[10px] font-black text-slate-500">您的 Gemini API Key</label>
           <div class="ai-key-input-wrap">
-            <input id="receipt-ai-key-input" type="password" placeholder="請在此貼上您的 AI 金鑰 (AIzaSy...)" autocomplete="off">
+            <input id="receipt-ai-key-input" type="password" placeholder="請在此貼上您的金鑰 (通常以 AIzaSy 開頭)" autocomplete="off" oninput="sanitizeKeyFieldImmediately()">
             <button id="receipt-ai-key-eye" onclick="toggleReceiptAiKeyVisibility()" class="tap rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">👁</button>
           </div>
         </div>
 
         <div>
-          <label class="block text-[10px] font-black text-slate-500">AI 辨識模型 (推薦 2.5-flash-preview)</label>
-          <input id="receipt-ai-model-input" type="text" class="mt-1 w-full border border-slate-200 rounded-xl p-2 text-xs font-bold" value="gemini-2.5-flash-preview-09-2025" autocomplete="off">
+          <label class="block text-[10px] font-black text-slate-500">模型選擇 (如果您的 Key 提示找不到 Preview 模型，請切換至穩定版)</label>
+          <select id="receipt-ai-model-select" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
+            <option value="gemini-2.5-flash-preview-09-2025" selected>gemini-2.5-flash-preview-09-2025 (環境預設推薦)</option>
+            <option value="gemini-2.5-flash">gemini-2.5-flash (穩定新一代正式版)</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash (相容性最高、最不容易報錯)</option>
+          </select>
         </div>
 
-        <div id="receipt-ai-test-status" class="ai-test-status">準備就緒</div>
+        <div>
+          <label class="block text-[10px] font-black text-slate-500">API 請求版本</label>
+          <select id="receipt-ai-endpoint-version" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
+            <option value="v1beta" selected>v1beta (支援多模態 JSON Schema 輸出)</option>
+            <option value="v1">v1 (部分企業/受限帳戶指定穩定端點)</option>
+          </select>
+        </div>
+
+        <div id="receipt-ai-test-status" class="ai-test-status">準備就緒，等候測試連線。</div>
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-2">
@@ -681,7 +719,6 @@
   </div>
 
   <script>
-    // 執行期 API Key，平台會自動在運行時注入。
     const runtimeApiKey = ""; 
 
     // 極詳細京阪奈自由行 Day 1 ~ Day 6
@@ -823,13 +860,13 @@
       4: {
         headline: '奈良日請上午先完成奈良公園與東大寺；若午後雨勢變強，就轉往商店街、奈良町與咖啡店。',
         stamina: { level: '高', cls: 'stamina-high', reason: '奈良公園腹地大、春日大社參道長，戶外與步行時間多。' },
-        rainBackup: '鹿公園雨後容易泥濘濕滑，鹿也會靠近討食；雨天避免白鞋與長裙，午後可改東向商店街、中谷堂或奈良町。',
+        rainBackup: '鹿公園雨後容易泥濘濕滑，鹿也會靠近討食；雨天避免白鞋與長裙，午後可改東向商店街、中谷堂或奈良町',
         transport: '大阪難波搭近鐵奈良線最省力；集合點建議設定在近鐵奈良站或東向商店街入口，避免鹿公園走散。',
         checklist: ['著好清洗、不怕髒衣物（鹿口水防禦）','防鹿便便之防滑深色鞋底跑鞋','防鹿口水與泥污的濕紙巾','近鐵難波站平行轉乘指引','小鹿仙貝放置包（避免外露）']
       },
       5: {
         headline: '大阪港與船班日要先換票、再逛室內；若風雨偏強，聖瑪麗亞號需保留替代方案。',
-        stamina: { level: '中高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣和風勢影響。' },
+        stamina: { level: '中高', cls: 'stamina-high', reason: '上午室內較多，但大阪港、摩天輪與船班受天氣 and 風勢影響。' },
         rainBackup: '雨天可拉長大阪生活今昔館、天神橋筋商店街與天保山 Market Place；港邊風雨大時減少甲板停留。',
         transport: '天六到大阪港建議堺筋線到堺筋本町，再平行轉中央線；到港後先換聖瑪麗亞號船票。',
         checklist: ['周遊券掃描碼與出入憑證','防港灣強風的海風防風外套','提前兌換聖瑪麗亞號船票','天神橋筋商店街美食清單截圖','港口導航動線地圖下載']
@@ -843,8 +880,80 @@
       }
     };
 
+    const dbName = "KansaiTravelDB";
+    const dbVersion = 2; // 版本 2：整合記帳影像大容量儲存
+
+    function initDb() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("photoMemos")) {
+            db.createObjectStore("photoMemos", { keyPath: "id", autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains("expenses")) {
+            db.createObjectStore("expenses", { keyPath: "id" });
+          }
+        };
+        request.onsuccess = (e) => {
+          window.__db = e.target.result;
+          resolve(window.__db);
+        };
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    // 載入所有 IndexedDB 記帳明細
+    function loadExpensesFromDb() {
+      return new Promise((resolve) => {
+        if (!window.__db) { resolve([]); return; }
+        const transaction = window.__db.transaction(["expenses"], "readonly");
+        const store = transaction.objectStore("expenses");
+        const request = store.getAll();
+        request.onsuccess = (e) => {
+          const list = e.target.result || [];
+          list.sort((a,b) => b.id - a.id); // 降序
+          resolve(list);
+        };
+        request.onerror = () => resolve([]);
+      });
+    }
+
+    function saveExpenseToDb(record) {
+      return new Promise((resolve) => {
+        if (!window.__db) { resolve(); return; }
+        const transaction = window.__db.transaction(["expenses"], "readwrite");
+        const store = transaction.objectStore("expenses");
+        const request = store.put(record);
+        request.onsuccess = () => resolve();
+        request.onerror = () => resolve();
+      });
+    }
+
+    function deleteExpenseFromDb(id) {
+      return new Promise((resolve) => {
+        if (!window.__db) { resolve(); return; }
+        const transaction = window.__db.transaction(["expenses"], "readwrite");
+        const store = transaction.objectStore("expenses");
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => resolve();
+      });
+    }
+
+    function clearAllExpensesFromDb() {
+      return new Promise((resolve) => {
+        if (!window.__db) { resolve(); return; }
+        const transaction = window.__db.transaction(["expenses"], "readwrite");
+        const store = transaction.objectStore("expenses");
+        const request = store.clear();
+        request.onsuccess = () => resolve();
+        request.onerror = () => resolve();
+      });
+    }
+
     // 初始化與加載
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       renderDayTabs();
       renderStaticPanels();
       switchDay(1);
@@ -852,7 +961,20 @@
       bindUiHelpers();
       bindExpenseAutoSave();
       
-      // 初始化 Lucide 圖標
+      // 初始化 IndexedDB & 記憶快取載入
+      try {
+        await initDb();
+        window.__allExpenses = await loadExpensesFromDb();
+      } catch(e) {
+        console.error("DB 啟動失敗，降級至 LocalStorage", e);
+        try {
+          window.__allExpenses = JSON.parse(localStorage.getItem(expenseStorageKey) || '[]');
+        } catch(err) {
+          window.__allExpenses = [];
+        }
+      }
+
+      renderExpenseRecords();
       lucide.createIcons();
     });
 
@@ -1677,7 +1799,7 @@
       if (success) {
         showToast(msg);
       } else {
-        // Fallback to Clipboard API as secondary option
+        // Fallback to Clipboard API
         navigator.clipboard.writeText(text)
           .then(() => showToast(msg))
           .catch(() => showToast('複製失敗，請手動複製！'));
@@ -1848,7 +1970,6 @@
       copyText(text, '今日所有景點地址已複製，可用於日本計程車或地圖搜尋！');
     }
 
-    // 關閉地圖動線
     function closeRouteMap() {
       const modal = document.getElementById('route-map-modal');
       modal.classList.add('hidden'); modal.classList.remove('flex');
@@ -1857,10 +1978,9 @@
 
     // 記帳本體
     function getExpenseRecords() {
-      try { return JSON.parse(localStorage.getItem(expenseStorageKey) || '[]'); }
+      try { return window.__allExpenses || []; }
       catch(e) { return []; }
     }
-    function saveExpenseRecords(records) { localStorage.setItem(expenseStorageKey, JSON.stringify(records)); }
     function getLocalDateString(date=new Date()) {
       const y = date.getFullYear();
       const m = String(date.getMonth()+1).padStart(2, '0');
@@ -1921,10 +2041,10 @@
             <h2 class="mt-0.5 text-sm font-black">💰 隨行即時記帳 & 拍照 AI</h2>
             <!-- 記帳頁面設定 API 金鑰的快捷入口 -->
             <button onclick="openReceiptAiSettings()" class="tap rounded-lg bg-emerald-800 border border-emerald-600 px-2 py-1 text-[9px] font-black text-white flex items-center gap-1 shadow-xs">
-              <i data-lucide="key" class="w-2.5 h-2.5"></i> API 金鑰設定
+              <i data-lucide="key" class="w-2.5 h-2.5"></i> API 金鑰與診斷
             </button>
           </div>
-          <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機 LocalStorage。支援拍攝日本收據由 AI 自動辨識拆分。</p>
+          <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機儲存區。支援拍攝日本收據由 AI 自動辨識關聯相片儲存。</p>
         </div>
 
         <!-- 匯率轉換與分帳工具 -->
@@ -1993,7 +2113,28 @@
               <label>支付方式/付款人</label>
               <input id="expense-payer" placeholder="公費、刷卡、現金" value="${escapeHtml(draft.payer)}">
             </div>
+            <div class="expense-field">
+              <label>附加收據照片</label>
+              <button type="button" onclick="triggerManualReceiptCamera()" class="w-full text-[10.5px] border border-emerald-300 rounded-xl py-2 px-1 bg-white hover:bg-emerald-50 text-emerald-800 font-black flex items-center justify-center gap-1">
+                <i data-lucide="image-plus" class="w-3.5 h-3.5"></i> 手動拍照/附加
+              </button>
+            </div>
           </div>
+
+          <!-- 已拍照附加收據之預覽塊 -->
+          <div id="attached-receipt-preview-wrap" class="hidden mt-3 rounded-xl bg-violet-50 border border-violet-100 p-2.5 flex items-center justify-between gap-3 animate-scale-up">
+            <div class="flex items-center gap-2 min-w-0">
+              <img id="attached-receipt-thumbnail" src="" class="w-10 h-10 object-cover rounded-lg border border-violet-200" alt="已附加收據">
+              <div class="min-w-0">
+                <p class="text-[10px] font-black text-violet-950 flex items-center gap-0.5"><i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> 已附加收據照片</p>
+                <p class="text-[9px] text-slate-500 truncate">將隨記帳明細一同儲存</p>
+              </div>
+            </div>
+            <button type="button" onclick="clearTempReceiptImage()" class="tap text-[10px] font-black bg-rose-50 text-rose-600 rounded-lg px-2.5 py-1.5 flex items-center gap-0.5">
+              移除
+            </button>
+          </div>
+
           <div class="expense-field mt-2">
             <label>記帳備註</label>
             <textarea id="expense-note" placeholder="四人分攤、退稅明細">${escapeHtml(draft.note)}</textarea>
@@ -2051,7 +2192,7 @@
       lucide.createIcons();
     }
 
-    function addExpenseRecord() {
+    async function addExpenseRecord() {
       const amountInput = document.getElementById('expense-amount');
       const itemInput = document.getElementById('expense-item');
       const noteInput = document.getElementById('expense-note');
@@ -2069,20 +2210,27 @@
         item, amount,
         currency: document.getElementById('expense-currency').value,
         payer: (document.getElementById('expense-payer').value || '').trim(),
-        note: (noteInput?.value || '').trim()
+        note: (noteInput?.value || '').trim(),
+        imageStr: window.__tempReceiptImage || '' // 直接關聯附加照片儲存
       };
-      const records = getExpenseRecords();
-      records.unshift(record);
-      saveExpenseRecords(records);
+      
+      window.__allExpenses.unshift(record);
+      
+      if (window.__db) {
+        await saveExpenseToDb(record);
+      } else {
+        localStorage.setItem(expenseStorageKey, JSON.stringify(window.__allExpenses));
+      }
 
-      // 記帳成功後，清除輸入欄位
+      // 記帳成功後，清空輸入欄位
       if (itemInput) itemInput.value = '';
       if (amountInput) amountInput.value = '';
       if (noteInput) noteInput.value = '';
+      clearTempReceiptImage(); // 重置照片附屬暫存
 
       saveExpenseDraft(); // 同步重設草稿暫存
       renderExpenseRecords();
-      showToast('記帳成功');
+      showToast('記帳成功，收據照片已完成歸檔！');
     }
 
     function formatMoney(amount, currency) {
@@ -2105,10 +2253,10 @@
           <div id="split-total-${c.toLowerCase()}" class="v font-bold">${formatMoney(summary[c]||0, c)}</div>
         </div>`).join('');
 
-      // 計算分類佔比 (日幣計，假設台幣折算匯率、美金折算匯率進行估算)
+      // 計算分類佔比
       const jpyEx = 1;
-      const twdEx = 1 / 0.210; // 台幣轉日幣約除以 0.210
-      const usdEx = 150; // 美金轉日幣
+      const twdEx = 1 / 0.210; 
+      const usdEx = 150; 
       
       const categorySum = {};
       let grandTotalJpy = 0;
@@ -2144,32 +2292,52 @@
       }
 
       document.getElementById('expense-records').innerHTML = records.length ? records.map(r => `
-        <article class="expense-record">
-          <div class="expense-record-top">
-            <div class="min-w-0 flex-1">
-              <div class="expense-record-name font-bold text-slate-900">${escapeHtml(r.item)}</div>
-              <div class="expense-record-meta">D${escapeHtml(r.day)}｜${escapeHtml(r.category)} ${r.payer ? '｜' + escapeHtml(r.payer) : ''}</div>
-              ${r.note ? `<div class="text-[10px] text-slate-500 mt-0.5">備註：${escapeHtml(r.note)}</div>` : ''}
+        <article class="expense-record flex items-center gap-3">
+          ${r.imageStr ? `
+            <div onclick="openLightbox('${r.imageStr}', '${escapeHtml(r.item)}', '分類：${escapeHtml(r.category)} | 金額：${formatMoney(r.amount, r.currency)}')" class="cursor-pointer shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 bg-slate-900 relative group aspect-square shadow-sm flex items-center justify-center">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="${r.imageStr}">
+              <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-white"></i>
+              </div>
             </div>
-            <div class="text-right shrink-0">
-              <div class="expense-record-amount">${formatMoney(r.amount, r.currency)}</div>
-              <button type="button" onclick="deleteExpenseRecord(${Number(r.id)})" class="expense-delete mt-2">刪除</button>
+          ` : ''}
+          <div class="min-w-0 flex-1">
+            <div class="expense-record-name font-bold text-slate-900 flex items-center gap-1.5">
+              <span>${escapeHtml(r.item)}</span>
+              ${r.imageStr ? '<span class="rounded bg-violet-100 px-1 py-0.5 text-[8.5px] font-black text-violet-700 flex items-center gap-0.5"><i data-lucide="image" class="w-2.5 h-2.5"></i>已附圖</span>' : ''}
             </div>
+            <div class="expense-record-meta">D${escapeHtml(r.day)}｜${escapeHtml(r.category)} ${r.payer ? '｜' + escapeHtml(r.payer) : ''}</div>
+            ${r.note ? `<div class="text-[10px] text-slate-500 mt-0.5">備註：${escapeHtml(r.note)}</div>` : ''}
+          </div>
+          <div class="text-right shrink-0">
+            <div class="expense-record-amount">${formatMoney(r.amount, r.currency)}</div>
+            <button type="button" onclick="deleteExpenseRecord(${Number(r.id)})" class="expense-delete mt-2">刪除</button>
           </div>
         </article>`).join('') : `<div class="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center text-xs font-bold text-slate-400">尚無記帳紀錄。旅途消費一鍵速記。</div>`;
-        
+      
       calculateSplitBill();
+      lucide.createIcons();
     }
 
-    function deleteExpenseRecord(id) {
-      saveExpenseRecords(getExpenseRecords().filter(r => Number(r.id) !== Number(id)));
+    async function deleteExpenseRecord(id) {
+      window.__allExpenses = window.__allExpenses.filter(r => Number(r.id) !== Number(id));
+      if (window.__db) {
+        await deleteExpenseFromDb(id);
+      } else {
+        localStorage.setItem(expenseStorageKey, JSON.stringify(window.__allExpenses));
+      }
       renderExpenseRecords();
       showToast('已刪除支出紀錄');
     }
 
-    function clearAllExpenses() {
-      showCustomConfirm('清除確認', '您確定要刪除所有本機記帳明細嗎？此操作不可逆。', () => {
-        saveExpenseRecords([]);
+    async function clearAllExpenses() {
+      showCustomConfirm('清除確認', '您確定要刪除所有本機記帳明細嗎？此操作不可逆。', async () => {
+        window.__allExpenses = [];
+        if (window.__db) {
+          await clearAllExpensesFromDb();
+        } else {
+          localStorage.removeItem(expenseStorageKey);
+        }
         renderExpenseRecords();
         showToast('記帳本已重設');
       });
@@ -2248,27 +2416,52 @@
     }
 
     // ==========================================
-    // GEMINI AI 收據拍照多模態辨識 OCR
+    // GEMINI AI 收據拍照多模態辨識 OCR 與智慧金鑰清洗診斷系統
     // ==========================================
-    const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
     
+    // 清洗過濾輸入的金鑰，自動去除引號、前後空白、不小心複製到的前綴
+    function sanitizeApiKey(key) {
+      if (!key) return '';
+      let clean = key.trim();
+      clean = clean.replace(/^['"]|['"]$/g, '');
+      clean = clean.replace(/^(api\s*key|key|bearer)\s*:\s*/i, '');
+      return clean.trim();
+    }
+
+    // 當使用者在金鑰設定框輸入時，立刻在前景清洗格式
+    function sanitizeKeyFieldImmediately() {
+      const input = document.getElementById('receipt-ai-key-input');
+      if (input) {
+        const originalVal = input.value;
+        const cleanedVal = sanitizeApiKey(originalVal);
+        if (originalVal !== cleanedVal) {
+          input.value = cleanedVal;
+        }
+      }
+    }
+
     function getReceiptAiSettings() {
       try { return JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}'); }
       catch(e) { return {}; }
     }
+    
     function saveReceiptAiSettings(settings) {
       localStorage.setItem(embeddedReceiptAiKey, JSON.stringify(settings || {}));
     }
+    
     function openReceiptAiSettings() {
       const cfg = getReceiptAiSettings();
       const modal = document.getElementById('receipt-ai-settings-modal');
       document.getElementById('receipt-ai-key-input').value = cfg.key || '';
-      document.getElementById('receipt-ai-model-input').value = cfg.model || 'gemini-2.5-flash-preview-09-2025';
+      document.getElementById('receipt-ai-model-select').value = cfg.model || 'gemini-2.5-flash-preview-09-2025';
+      document.getElementById('receipt-ai-endpoint-version').value = cfg.apiVersion || 'v1beta';
       modal.classList.add('show');
     }
+    
     function closeReceiptAiSettings() {
       document.getElementById('receipt-ai-settings-modal').classList.remove('show');
     }
+    
     function toggleReceiptAiKeyVisibility() {
       const input = document.getElementById('receipt-ai-key-input');
       const btn = document.getElementById('receipt-ai-key-eye');
@@ -2277,21 +2470,21 @@
     }
 
     function saveReceiptAiSettingsFromModal() {
-      const key = (document.getElementById('receipt-ai-key-input')?.value || '').trim();
-      const model = (document.getElementById('receipt-ai-model-input')?.value || 'gemini-2.5-flash-preview-09-2025').trim();
-      saveReceiptAiSettings({key, model});
-      showToast('個人 AI 設置已儲存');
+      const key = sanitizeApiKey(document.getElementById('receipt-ai-key-input')?.value || '');
+      const model = document.getElementById('receipt-ai-model-select')?.value || 'gemini-2.5-flash-preview-09-2025';
+      const apiVersion = document.getElementById('receipt-ai-endpoint-version')?.value || 'v1beta';
+      saveReceiptAiSettings({key, model, apiVersion});
+      showToast('金鑰與模型診斷配置已儲存');
       closeReceiptAiSettings();
     }
 
-    // 指數退避重試請求封裝 (完美執行 5 次重試限制，保障沙盒高壓不中斷)
+    // 指數退避重試請求封裝 (5次重試限制，防範 429 頻率限制)
     async function fetchWithRetry(url, options, retries = 5) {
       let delay = 1000;
       for (let i = 0; i < retries; i++) {
         try {
           const res = await fetch(url, options);
           if (res.ok) return res;
-          // 若為 API 頻率限制 (429) 或伺服器錯誤 (5xx)，觸發指數退避
           if (res.status === 429 || res.status >= 500) {
             await new Promise(r => setTimeout(r, delay));
             delay *= 2;
@@ -2304,40 +2497,66 @@
           delay *= 2;
         }
       }
-      throw new Error("API 連線失敗，已達重試上限。");
+      throw new Error("網路連線超時，請檢查本機網路或代理伺服器。");
     }
 
+    // 測試金鑰與模型相容性 (全新升級：包含 Google 官方錯誤代碼解讀功能)
     async function testReceiptAiKey() {
-      const customKey = (document.getElementById('receipt-ai-key-input')?.value || '').trim();
-      const model = (document.getElementById('receipt-ai-model-input')?.value || 'gemini-2.5-flash-preview-09-2025').trim();
+      const customKey = sanitizeApiKey(document.getElementById('receipt-ai-key-input')?.value || '');
+      const model = document.getElementById('receipt-ai-model-select')?.value || 'gemini-2.5-flash-preview-09-2025';
+      const apiVer = document.getElementById('receipt-ai-endpoint-version')?.value || 'v1beta';
       const status = document.getElementById('receipt-ai-test-status');
       
       const keyToUse = customKey || runtimeApiKey;
       if (!keyToUse) {
-        status.textContent = '❌ 請貼上 Gemini API Key。'; return;
+        status.innerHTML = '<span class="text-red-600 font-bold">❌ 請先貼上 Gemini API Key。</span>'; 
+        return;
       }
-      status.textContent = '🧪 正嘗試連線檢驗 API...';
+      status.innerHTML = '🧪 <span class="text-amber-600 font-bold">正在連線至 Google 伺服器進行握手測試...</span>';
+      
       try {
-        const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(keyToUse)}`, {
+        const endpoint = `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(keyToUse)}`;
+        
+        const res = await fetchWithRetry(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: 'Reply with OK only.' }] }], generationConfig: { temperature: 0, maxOutputTokens: 8 } })
+          body: JSON.stringify({ 
+            contents: [{ parts: [{ text: 'Reply with OK only.' }] }], 
+            generationConfig: { temperature: 0, maxOutputTokens: 8 } 
+          })
         });
+        
         const body = await res.json().catch(()=>({}));
-        if(!res.ok) throw new Error(body?.error?.message || `HTTP ${res.status}`);
-        status.textContent = '✅ Gemini API 連線通暢，功能完美啟用。';
+        
+        if(!res.ok) {
+          const errCode = body?.error?.status || 'UNKNOWN';
+          const errMsg = body?.error?.message || '無詳細訊息';
+          let diagnosticAdvice = '';
+          
+          if (errMsg.includes('API key not valid')) {
+            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：這代表您的金鑰格式不正確。請重新前往 Google AI Studio 複製金鑰，並確認您貼上的字串是以 <code>AIzaSy</code> 開頭，且中間無多餘字元。';
+          } else if (errCode === 'PERMISSION_DENIED' || errMsg.includes('API_KEY_INVALID')) {
+            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：金鑰可能已失效，或您未在 Google Cloud 中開啟 <i>Generative Language API</i>。如果您設定了來源 IP/網域限制，請暫時移除。';
+          } else if (errMsg.includes('not found') || errCode === 'NOT_FOUND') {
+            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：找不到此模型。這通常是因為您的金鑰是全新註冊或屬於不支援 Preview 版模型的區域帳戶。<b>請嘗試將模型切換為穩定版的 <code>gemini-1.5-flash</code> 或 <code>gemini-2.5-flash</code> 再測試一次！</b>';
+          } else {
+            diagnosticAdvice = `<br>💡 <b>診斷提示</b>：Google 端點回報錯誤 (${errCode})，請檢查帳戶配額與金鑰限制。`;
+          }
+          throw new Error(`[${errCode}] ${errMsg}${diagnosticAdvice}`);
+        }
+        
+        status.innerHTML = '✅ <span class="text-emerald-600 font-bold">連線成功！金鑰正確無誤，且完美支援此模型與 API 版本。</span>';
       } catch (err) {
-        status.textContent = '❌ 異常，請確認 API Key 權限：' + err.message;
+        status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常！</span><br><span class="text-xs text-slate-500">${err.message}</span>`;
       }
     }
 
-    // 觸發相機 - 新增一鍵自動防呆金鑰偵測機制
+    // 觸發收據相機 (AI OCR 專屬)
     function triggerEmbeddedReceiptCamera() {
       const cfg = getReceiptAiSettings();
       const apiKeyToUse = cfg.key || runtimeApiKey;
       
       if (!apiKeyToUse) {
-        // 如果未偵測到任何 API Key，溫馨提示並引導直接打開設定
         showCustomConfirm(
           '需要設定 API 金鑰', 
           '拍照辨識發票需要使用您的 Gemini API Key (完全免費)。是否立即去設定您的專屬 Key？', 
@@ -2347,6 +2566,13 @@
         );
         return;
       }
+      window.__manualAttachmentOnly = false; // 標示為 AI 解析模式
+      document.getElementById('embedded-receipt-camera').click();
+    }
+
+    // 觸發手動相機附加 (不經過 AI 辨識，僅儲存附加影像)
+    function triggerManualReceiptCamera() {
+      window.__manualAttachmentOnly = true; // 標示為手動純附件模式
       document.getElementById('embedded-receipt-camera').click();
     }
     
@@ -2357,16 +2583,40 @@
       const el = document.getElementById('receipt-ai-status');
       if(el) {
         el.textContent = text;
-        el.className = isError ? "receipt-ai-status text-red-600 bg-red-50 border border-red-200 p-2.5 rounded-xl" : "receipt-ai-status text-slate-600 bg-slate-50 border border-slate-200 p-2.5 rounded-xl";
+        el.className = isError ? "receipt-ai-status text-red-600 bg-red-50 border border-red-200 p-2.5 rounded-xl animate-pulse" : "receipt-ai-status text-slate-600 bg-slate-50 border border-slate-200 p-2.5 rounded-xl";
       }
     }
 
-    // 處理收據照片
+    // 處理收據照片並附加
     async function handleEmbeddedReceiptImage(event) {
       const file = event?.target?.files?.[0];
       if(event?.target) event.target.value = '';
       if(!file) return;
 
+      const isManual = window.__manualAttachmentOnly === true;
+
+      if (isManual) {
+        showToast('正在壓縮並附加收據相片...');
+        try {
+          const image = await compressReceiptImage(file, 800, 0.7);
+          window.__tempReceiptImage = image.dataUrl;
+          
+          // 顯示附加收據縮圖
+          const previewWrap = document.getElementById('attached-receipt-preview-wrap');
+          const previewThumb = document.getElementById('attached-receipt-thumbnail');
+          if (previewWrap && previewThumb) {
+            previewThumb.src = image.dataUrl;
+            previewWrap.classList.remove('hidden');
+          }
+          showToast('收據照片已成功附加至表單中！');
+        } catch(e) {
+          showCustomAlert('錯誤', '相片附加失敗，請重試！');
+        }
+        window.__manualAttachmentOnly = false; // 重置
+        return;
+      }
+
+      // 以下為 AI 拍照辨識解析軌跡
       openReceiptAiModal();
       document.getElementById('receipt-ai-result').classList.add('hidden');
       setReceiptAiStatus('正在進行高壓縮比例處理，防止高解析傳輸斷線...');
@@ -2387,10 +2637,13 @@
           throw new Error('未能識別出足夠的消費項目或金額欄位。');
         }
         
-        applyReceiptToExpenseForm(normalized);
-        addExpenseRecord();
+        // 將辨識用的照片快取為表單預備附加圖
+        window.__tempReceiptImage = image.dataUrl;
         
-        setReceiptAiStatus('✨ 辨識成功！紀錄已無感同步至本機記帳表。');
+        applyReceiptToExpenseForm(normalized);
+        addExpenseRecord(); // 自動新增明細
+        
+        setReceiptAiStatus('✨ 辨識成功！紀錄與收據原圖已無感同步至本機記帳表。');
         document.getElementById('receipt-ai-result').innerHTML = `
           <div class="font-bold text-violet-950">項目：${escapeHtml(normalized.item)}</div>
           <div class="font-bold text-emerald-800">金額：${formatMoney(normalized.amount, normalized.currency)}</div>
@@ -2398,10 +2651,19 @@
           ${normalized.note ? `<div class="text-[10px] text-violet-700 mt-1">細節：${escapeHtml(normalized.note)}</div>` : ''}
         `;
         document.getElementById('receipt-ai-result').classList.remove('hidden');
-        showToast('AI 記帳同步成功');
+        showToast('AI 記帳與收據影像歸檔成功！');
       } catch(err) {
         setReceiptAiStatus('❌ 辨識失敗：' + err.message, true);
       }
+    }
+
+    function clearTempReceiptImage() {
+      window.__tempReceiptImage = '';
+      const previewWrap = document.getElementById('attached-receipt-preview-wrap');
+      if (previewWrap) {
+        previewWrap.classList.add('hidden');
+      }
+      showToast('已移除附加照片');
     }
 
     function compressReceiptImage(file, maxWidth=1200, quality=0.75) {
@@ -2429,9 +2691,10 @@
 
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
-      const apiKeyToUse = cfg.key || runtimeApiKey;
+      const apiKeyToUse = sanitizeApiKey(cfg.key || runtimeApiKey);
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
       const model = cfg.model || 'gemini-2.5-flash-preview-09-2025';
+      const apiVer = cfg.apiVersion || 'v1beta';
       
       const prompt = `你是關西旅遊收據記帳助理。請嚴格解析該照片中的日本紙本收據/發票/明細，擷取必要資訊，僅輸出繁體中文 JSON 回覆，嚴禁 markdown 包裹或多餘論述。
       JSON Schema 要求:
@@ -2444,7 +2707,6 @@
         "note": "簡短品項列出"
       }`;
 
-      // 使用 camelCase inlineData 修正傳入格式，確保 Gemini Vision API 完全相容。
       const payload = {
         contents: [{
           parts: [
@@ -2458,16 +2720,19 @@
         }
       };
 
-      const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`, {
+      const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
       const body = await res.json().catch(()=>({}));
-      if(!res.ok) throw new Error(body?.error?.message || 'Gemini 呼召失敗');
-      const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+      if(!res.ok) {
+        const errMsg = body?.error?.message || `HTTP ${res.status}`;
+        throw new Error(errMsg);
+      }
       
+      const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
       const match = text.match(/\{[\s\S]*\}/);
       if(!match) throw new Error('AI 未回傳正確 JSON 結構。');
       return JSON.parse(match[0]);
@@ -2502,7 +2767,38 @@
       document.getElementById('expense-amount').value = data.amount;
       document.getElementById('expense-currency').value = data.currency;
       document.getElementById('expense-note').value = data.note;
+      
+      // 顯示附加收據縮圖
+      const previewWrap = document.getElementById('attached-receipt-preview-wrap');
+      const previewThumb = document.getElementById('attached-receipt-thumbnail');
+      if (previewWrap && previewThumb && window.__tempReceiptImage) {
+        previewThumb.src = window.__tempReceiptImage;
+        previewWrap.classList.remove('hidden');
+      }
+      
       saveExpenseDraft();
+    }
+
+    // 燈箱大圖控制器 (Lightbox)
+    function openLightbox(imgSrc, title, meta) {
+      const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-image');
+      const titleNode = document.getElementById('lightbox-title');
+      const metaNode = document.getElementById('lightbox-meta');
+
+      if (!modal || !img) return;
+      img.src = imgSrc;
+      if (titleNode) titleNode.textContent = title;
+      if (metaNode) metaNode.textContent = meta;
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal) modal.style.display = 'none';
+      document.body.style.overflow = '';
     }
 
     // UI 通用綁定與事件監聽
@@ -2517,9 +2813,19 @@
           }
         });
       });
+      // 綁定 Lightbox 背景點擊關閉
+      const lightbox = document.getElementById('lightbox-modal');
+      if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox || e.target.closest('.lightbox-box') === null) {
+            closeLightbox();
+          }
+        });
+      }
+
       document.addEventListener('keydown', (e) => {
         if(e.key === 'Escape') {
-          closeModal(); closeWeatherDetail(); closePdfPreview(); closeRouteMap(); closeCustomDialog();
+          closeModal(); closeWeatherDetail(); closePdfPreview(); closeRouteMap(); closeCustomDialog(); closeLightbox();
         }
       });
     }

@@ -444,6 +444,18 @@
     .v135-stat { border-radius:16px; background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.14); padding:10px; min-height:64px; }
     .v135-stat .k { font-size:9.5px; color:#bfdbfe; font-weight:900; letter-spacing:.04em; }
     .v135-stat .v { margin-top:3px; font-size:13px; line-height:1.3; color:#fff; font-weight:950; }
+    .v151-budget-card { grid-column: span 2; border-radius:18px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); padding:12px; min-height:92px; }
+    .v151-budget-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .v151-budget-head .k { font-size:9.5px; color:#bfdbfe; font-weight:900; letter-spacing:.04em; }
+    .v151-budget-head .pct { border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.16); padding:3px 8px; font-size:10px; font-weight:950; color:#fff; }
+    .v151-budget-main { margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .v151-budget-main .label { font-size:9px; color:#dbeafe; font-weight:850; }
+    .v151-budget-main .value { margin-top:1px; font-size:13px; color:#fff; font-weight:950; line-height:1.25; }
+    .v151-budget-progress { margin-top:10px; height:8px; border-radius:999px; background:rgba(15,23,42,.32); overflow:hidden; }
+    .v151-budget-progress > i { display:block; height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,#22c55e,#facc15,#ef4444); transition:width .3s ease; }
+    .v151-budget-foot { margin-top:7px; font-size:9.5px; line-height:1.45; color:#e0f2fe; font-weight:800; }
+    .v151-overbudget { color:#fecdd3 !important; }
+    @media (orientation: landscape) and (min-width:700px){ .v151-budget-card{grid-column: span 2;} }
     .v135-action-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:10px; }
     .v135-action { border-radius:15px; background:#fff; border:1px solid #e2e8f0; padding:9px 3px; min-height:58px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:9.5px; line-height:1.2; color:#0f172a; font-weight:950; box-shadow:0 8px 18px -14px rgba(15,23,42,.35); }
     .v135-panel { border-radius:20px; border:1px solid #dbeafe; background:linear-gradient(135deg,#eff6ff,#fff); padding:12px; box-shadow:0 12px 28px -20px rgba(37,99,235,.45); }
@@ -4659,6 +4671,39 @@
     }
     function v135MoneyJpy(v){ return '¥' + Math.round(v||0).toLocaleString('zh-TW'); }
     function v135MoneyTwdFromJpy(v){ return 'NT$' + Math.round((v||0) * V135_RATE).toLocaleString('zh-TW'); }
+    function v151BudgetStats(exp) {
+      const spentTwd = Math.round((exp?.allJpy || 0) * V135_RATE);
+      const dayTwd = Math.round((exp?.dayJpy || 0) * V135_RATE);
+      const budgetTwd = V135_BUDGET_TWD;
+      const remainingTwd = Math.max(0, budgetTwd - spentTwd);
+      const rawPct = budgetTwd > 0 ? (spentTwd / budgetTwd) * 100 : 0;
+      const pct = Math.min(100, Math.max(0, rawPct));
+      const pctText = rawPct >= 10 ? Math.round(rawPct) + '%' : (Math.round(rawPct * 10) / 10) + '%';
+      const remainingDays = Math.max(1, 6 - (Number(currentDay || 1)) + 1);
+      const avgPerDayTwd = Math.round(remainingTwd / remainingDays);
+      return { spentTwd, dayTwd, budgetTwd, remainingTwd, rawPct, pct, pctText, avgPerDayTwd, over: spentTwd > budgetTwd };
+    }
+    function v151MoneyTwd(v){ return 'NT$' + Math.round(v || 0).toLocaleString('zh-TW'); }
+    function v151BudgetCardHtml(exp) {
+      const b = v151BudgetStats(exp);
+      const pctWidth = Math.min(100, Math.max(0, b.rawPct));
+      const status = b.over ? '已超出預算，建議檢查購物支出' : `剩餘可用 ${v151MoneyTwd(b.remainingTwd)}｜平均每日約 ${v151MoneyTwd(b.avgPerDayTwd)}`;
+      return `
+        <div class="v151-budget-card">
+          <div class="v151-budget-head">
+            <div class="k">總預算</div>
+            <div class="pct ${b.over ? 'v151-overbudget' : ''}">${b.pctText} 已用</div>
+          </div>
+          <div class="v151-budget-main">
+            <div><div class="label">已花費</div><div class="value ${b.over ? 'v151-overbudget' : ''}">${v151MoneyTwd(b.spentTwd)}</div></div>
+            <div><div class="label">總預算</div><div class="value">${v151MoneyTwd(b.budgetTwd)}</div></div>
+            <div><div class="label">剩餘預算</div><div class="value">${v151MoneyTwd(b.remainingTwd)}</div></div>
+            <div><div class="label">今日花費</div><div class="value">${v151MoneyTwd(b.dayTwd)}</div></div>
+          </div>
+          <div class="v151-budget-progress"><i style="width:${pctWidth}%"></i></div>
+          <div class="v151-budget-foot">${status}</div>
+        </div>`;
+    }
     function v135NextStop(day=currentDay) {
       const data = travelData[day];
       if(!data || !data.items?.length) return null;
@@ -4678,12 +4723,11 @@
       const cityKey = primaryWeatherCityByDay[day] || 'osaka';
       const cityName = (localWeatherLinks[cityKey] || localWeatherLinks.osaka).label;
       const night = new Date().getHours() >= 21;
-      const budgetUsedPct = Math.min(100, Math.round((exp.allJpy * V135_RATE / V135_BUDGET_TWD) * 100));
       el.innerHTML = `
         <section class="v135-hero">
           <div class="v135-topline">
             <div>
-              <div class="text-[9px] font-black tracking-[0.18em] text-cyan-100">AI TRAVEL OS｜V13.6 WEATHER ENGINE</div>
+              <div class="text-[9px] font-black tracking-[0.18em] text-cyan-100">AI TRAVEL OS｜V15.1 BUDGET DASHBOARD</div>
               <h2 class="mt-1 text-base font-black leading-snug">今日旅行儀表板：D${day} ${tripDateLabels[day]}</h2>
               <p class="mt-1 text-[11px] text-slate-100 leading-relaxed">${escapeHtml(data.title)}</p>
             </div>
@@ -4693,7 +4737,7 @@
             <div class="v135-stat"><div class="k">今日天氣</div><div class="v">${cityName}<br>${w ? `${w.min}-${w.max}°C｜雨${rain}%` : '可點天氣'}</div></div>
             <div class="v135-stat"><div class="k">下一行程</div><div class="v">${next ? `${next.time}<br>${escapeHtml(next.name)}` : '尚無'}</div></div>
             <div class="v135-stat"><div class="k">今日花費</div><div class="v">${v135MoneyJpy(exp.dayJpy)}<br>${v135MoneyTwdFromJpy(exp.dayJpy)}</div></div>
-            <div class="v135-stat"><div class="k">總預算</div><div class="v">${budgetUsedPct}% 已用<br>NT$${V135_BUDGET_TWD.toLocaleString('zh-TW')}</div></div>
+            ${v151BudgetCardHtml(exp)}
           </div>
           <div class="v135-action-grid">
             <button onclick="openPrimaryLocalWeather()" class="tap v135-action">🌤<span>今日天氣</span></button>
@@ -4788,7 +4832,7 @@ SOS：日本警察110、救護消防119`;
       if(type === 'umbrella') ans = `☔ 今日帶傘建議：${w ? `${w.city.name} 降雨機率 ${w.rain}%` : '天氣仍在載入'}。若降雨率超過 30%，請攜帶晴雨兩用傘；京都與奈良石板路雨天較滑，鞋底防滑優先。`;
       if(type === 'hotel') ans = `🏠 回民宿建議：目的地 ${HOTEL_ADDRESS_EN}。晚上建議搭到天下茶屋站或花園町站，沿大馬路回民宿。導航可用座標 ${HOTEL_COORDS}。`;
       if(type === 'safety') ans = `🛡 夜間安全：21:00 後請走主要道路、不戴耳機、不邊走邊滑手機。若超過 22:30、下雨、帶長輩或購物袋很多，請改搭 Uber 或計程車。`;
-      if(type === 'budget') ans = `💴 今日花費：${v135MoneyJpy(exp.dayJpy)}，約 ${v135MoneyTwdFromJpy(exp.dayJpy)}。今日已有 ${exp.dayRecords.length} 張收據。全旅程目前約 ${v135MoneyTwdFromJpy(exp.allJpy)}。`;
+      if(type === 'budget') { const b = v151BudgetStats(exp); ans = `💴 今日花費：${v135MoneyJpy(exp.dayJpy)}，約 ${v135MoneyTwdFromJpy(exp.dayJpy)}。今日已有 ${exp.dayRecords.length} 張收據。全旅程已花費 ${v151MoneyTwd(b.spentTwd)}，總預算 ${v151MoneyTwd(b.budgetTwd)}，剩餘 ${v151MoneyTwd(b.remainingTwd)}，目前 ${b.pctText} 已用。`; }
       if(type === 'flight') ans = `✈️ 航班提醒：去程 ${V135_FLIGHTS.outbound.no} ${V135_FLIGHTS.outbound.date} ${V135_FLIGHTS.outbound.time}；回程 ${V135_FLIGHTS.inbound.no} ${V135_FLIGHTS.inbound.date} ${V135_FLIGHTS.inbound.time}。回程日請以準時抵達 KIX 為優先。`;
       if(type === 'tax') ans = `💴 退稅提醒：藥妝、電器、購物類收據請保留原始照片與商品明細。若同店消費金額高，建議將收據集中，離境前確認退稅文件與未拆封規定。`;
       if(next) ans += `

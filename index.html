@@ -2706,10 +2706,13 @@
     // 清洗過濾輸入的金鑰，自動去除引號、前後空白、不小心複製到的前綴
     function sanitizeApiKey(key) {
       if (!key) return '';
-      let clean = key.trim();
-      clean = clean.replace(/^['"]|['"]$/g, '');
-      clean = clean.replace(/^(api\s*key|key|bearer)\s*:\s*/i, '');
-      return clean.trim();
+      let clean = String(key).trim();
+      clean = clean.replace(/^[\'"]|[\'"]$/g, '');
+      clean = clean.replace(/^(api\s*key|key|bearer)\s*:?\s*/i, '');
+      clean = clean.replace(/[​-‍﻿]/g, '');
+      clean = clean.replace(/\s+/g, '');
+      const match = clean.match(/AIza[0-9A-Za-z_\-]{20,}/);
+      return match ? match[0] : clean.trim();
     }
 
     // 當使用者在金鑰設定框輸入時，立刻在前景清洗格式
@@ -2861,16 +2864,21 @@
 
 
 
-    // 穩定版 Fetch 重試器：修正「fetchWithRetry is not defined」導致 API 測試永遠失敗
-    async function fetchWithRetry(url, options = {}, retries = 3, baseDelayMs = 900) {
+    // 穩定版 Fetch 重試器：修正 API 測試誤判，並支援 AbortController 逾時
+    async function fetchWithRetry(url, options = {}, retries = 2, baseDelayMs = 650, timeoutMs = 14000) {
       let lastError = null;
       for (let attempt = 0; attempt <= retries; attempt++) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), timeoutMs);
         try {
-          const res = await fetch(url, options);
+          const mergedOptions = Object.assign({}, options, { signal: controller.signal });
+          const res = await fetch(url, mergedOptions);
+          clearTimeout(timeout);
           // 429 / 5xx 通常是暫時性錯誤，等一下再試；4xx 直接回傳給診斷器判讀。
           if (res.ok || (res.status < 500 && res.status !== 429)) return res;
           lastError = new Error(`HTTP ${res.status}`);
         } catch (err) {
+          clearTimeout(timeout);
           lastError = err;
         }
         if (attempt < retries) {
@@ -2881,58 +2889,168 @@
       throw lastError || new Error('網路連線失敗，請確認瀏覽器可連到 Google Gemini API。');
     }
 
-    // 測試金鑰與模型相容性 (連線成功時，自動執行背景同步儲存)
+    // 更強 API Key 清洗：可處理多餘空白、換行、JSON、網址參數、Bearer 前綴
+    function sanitizeApiKeyStrict(key) {
+      let clean = sanitizeApiKey(key || '');
+      clean = clean.replace(/[\u200B-\u200D\uFEFF]/g, '');
+      clean = clean.replace(/\s+/g, '');
+      clean = clean.replace(/^Bearer/i, '').replace(/^AIzaSyAIzaSy/i, 'AIzaSy');
+      const match = clean.match(/AIza[0-9A-Za-z_\-]{20,}/);
+      return match ? match[0] : clean;
+    }
+
+    function geminiEndpoint(apiVer, model, apiKey) {
+      return `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    }
+
+    async function tryGeminiConnection(apiKey, model, apiVer) {
+      const payload = {
+        contents: [{ parts: [{ text: 'Reply OK only.' }] }],
+        generationConfig: { temperature: 0, maxOutputTokens: 8 }
+      };
+      const res = await fetchWithRetry(geminiEndpoint(apiVer, model, apiKey), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const body = await res.json().catch(() => ({}));
+      return { ok: res.ok, status: res.status, body, model, apiVer };
+    }
+
+    function getGeminiErrorInfo(resultOrError) {
+      if (resultOrError instanceof Error) {
+        const msg = String(resultOrError.message || resultOrError);
+        if (msg.includes('AbortError') || msg.includes('aborted')) {
+          return {
+            code: 'TIMEOUT',
+            message: '連線逾時，可能是網路、防火牆或瀏覽器外掛阻擋。',
+            advice: 'API Key 可能沒有錯。請改用 Chrome、關閉廣告阻擋器，或換網路後再測試。'
+          };
+        }
+        if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Load failed')) {
+          return {
+            code: 'NETWORK_BLOCKED',
+            message: '瀏覽器無法送出請求，尚未真正測到 Google。',
+            advice: '這通常不是 API Key 錯誤，而是網路、CORS/外掛、公司防火牆或檔案本機環境限制。請用 https 網頁環境開啟，或換瀏覽器測試。'
+          };
+        }
+        return { code: 'NETWORK_ERROR', message: msg, advice: '請確認目前網路可連到 Google Gemini API。' };
+      }
+      const body = resultOrError?.body || {};
+      const err = body?.error || {};
+      const code = err.status || `HTTP_${resultOrError?.status || 'UNKNOWN'}`;
+      const message = err.message || 'Google 端點沒有提供詳細錯誤。';
+      let advice = '請檢查帳戶配額、API 是否啟用，以及模型名稱是否支援。';
+      if (/API key not valid|API_KEY_INVALID|invalid api key/i.test(message) || code === 'INVALID_ARGUMENT') {
+        advice = '請重新到 Google AI Studio 複製 API Key。Key 通常以 AIza 開頭，中間不可有空白、換行或中文標點。';
+      } else if (code === 'PERMISSION_DENIED') {
+        advice = '金鑰可能受網域/IP 限制，或該 Google 專案未允許 Generative Language API。請先移除金鑰限制後再測。';
+      } else if (code === 'NOT_FOUND' || /not found|not supported|model/i.test(message)) {
+        advice = '目前選擇的模型在此 API Key 或端點不可用。系統會自動嘗試可用的 Flash 模型。';
+      } else if (code === 'RESOURCE_EXHAUSTED' || resultOrError?.status === 429) {
+        advice = '配額或頻率限制已達上限，請稍後再試，或換另一組 API Key。';
+      }
+      return { code, message, advice };
+    }
+
+    async function findAvailableGeminiModel(apiKey, preferredApiVer) {
+      const versions = [preferredApiVer, 'v1beta', 'v1'].filter((v, i, arr) => v && arr.indexOf(v) === i);
+      const preferredModels = [
+        'gemini-2.5-flash',
+        'gemini-2.0-flash',
+        'gemini-1.5-flash',
+        'gemini-1.5-flash-latest'
+      ];
+      for (const apiVer of versions) {
+        // 先用常見模型快速測，不必每次都列 models，速度比較快。
+        for (const model of preferredModels) {
+          try {
+            const result = await tryGeminiConnection(apiKey, model, apiVer);
+            if (result.ok) return { model, apiVer, result, source: 'quick-probe' };
+          } catch(e) {}
+        }
+        // 若常見模型都失敗，再列出該 Key 可用模型。
+        try {
+          const listUrl = `https://generativelanguage.googleapis.com/${apiVer}/models?key=${encodeURIComponent(apiKey)}`;
+          const listRes = await fetchWithRetry(listUrl, { method: 'GET' }, 1, 500, 12000);
+          const listBody = await listRes.json().catch(() => ({}));
+          if (listRes.ok && Array.isArray(listBody.models)) {
+            const candidates = listBody.models
+              .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+              .map(m => String(m.name || '').replace(/^models\//, ''))
+              .filter(Boolean)
+              .sort((a, b) => {
+                const score = name => (name.includes('flash') ? 100 : 0) + (name.includes('2.5') ? 30 : 0) + (name.includes('2.0') ? 20 : 0) + (name.includes('1.5') ? 10 : 0);
+                return score(b) - score(a);
+              });
+            for (const model of candidates) {
+              try {
+                const result = await tryGeminiConnection(apiKey, model, apiVer);
+                if (result.ok) return { model, apiVer, result, source: 'models-list' };
+              } catch(e) {}
+            }
+          }
+        } catch(e) {}
+      }
+      return null;
+    }
+
+    // 測試金鑰與模型相容性：先保存，再連線；若模型不支援，自動找可用 Flash 模型
     async function testReceiptAiKey() {
-      const customKey = sanitizeApiKey(document.getElementById('receipt-ai-key-input')?.value || '');
-      const model = document.getElementById('receipt-ai-model-select')?.value || defaultReceiptAiModel;
-      const apiVer = document.getElementById('receipt-ai-endpoint-version')?.value || defaultReceiptAiApiVersion;
+      const keyInput = document.getElementById('receipt-ai-key-input');
+      const modelSelect = document.getElementById('receipt-ai-model-select');
+      const versionSelect = document.getElementById('receipt-ai-endpoint-version');
       const status = document.getElementById('receipt-ai-test-status');
-      
-      const keyToUse = customKey || runtimeApiKey;
+
+      const customKey = sanitizeApiKeyStrict(keyInput?.value || '');
+      const model = modelSelect?.value || defaultReceiptAiModel;
+      const apiVer = versionSelect?.value || defaultReceiptAiApiVersion;
+      const keyToUse = customKey || sanitizeApiKeyStrict(runtimeApiKey);
+
+      if (keyInput) keyInput.value = customKey;
       if (!keyToUse) {
-        status.innerHTML = '<span class="text-red-600 font-bold">❌ 請先貼上 Gemini API Key。</span>'; 
+        if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ 請先貼上 Gemini API Key。</span>';
         return;
       }
-      status.innerHTML = '🧪 <span class="text-amber-600 font-bold">正在連線至 Google 伺服器進行握手測試...</span>';
-      
+
+      // 先保存，避免使用者測試中途關閉導致 Key 消失。
+      await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer });
+      if (status) {
+        status.innerHTML = `💾 <span class="text-emerald-700 font-bold">API Key 已先保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span><br>🧪 <span class="text-amber-600 font-bold">正在測試 ${model} / ${apiVer}...</span>`;
+      }
+
       try {
-        const endpoint = `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(keyToUse)}`;
-        
-        const res = await fetchWithRetry(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            contents: [{ parts: [{ text: 'Reply with OK only.' }] }], 
-            generationConfig: { temperature: 0, maxOutputTokens: 8 } 
-          })
-        });
-        
-        const body = await res.json().catch(()=>({}));
-        
-        if(!res.ok) {
-          const errCode = body?.error?.status || 'UNKNOWN';
-          const errMsg = body?.error?.message || '無詳細訊息';
-          let diagnosticAdvice = '';
-          
-          if (errMsg.includes('API key not valid')) {
-            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：這代表您的金鑰格式不正確。請重新前往 Google AI Studio 複製金鑰，並確認您貼上的字串是以 <code>AIzaSy</code> 開頭，且中間無多餘字元。';
-          } else if (errCode === 'PERMISSION_DENIED' || errMsg.includes('API_KEY_INVALID')) {
-            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：金鑰可能已失效，或您未在 Google Cloud 中開啟 <i>Generative Language API</i>。如果您設定了來源 IP/網域限制，請暫時移除。';
-          } else if (errMsg.includes('not found') || errCode === 'NOT_FOUND') {
-            diagnosticAdvice = '<br>💡 <b>診斷提示</b>：找不到此模型。這通常是因為您的金鑰是全新註冊或屬於不支援 Preview 版模型的區域帳戶。<b>請嘗試將模型切換為穩定版的 <code>gemini-1.5-flash</code> 或 <code>gemini-2.5-flash</code> 再測試一次！</b>';
-          } else {
-            diagnosticAdvice = `<br>💡 <b>診斷提示</b>：Google 端點回報錯誤 (${errCode})，請檢查帳戶配額與金鑰限制。`;
+        let result = await tryGeminiConnection(keyToUse, model, apiVer);
+        if (!result.ok) {
+          const info = getGeminiErrorInfo(result);
+          const canAutoFallback = info.code === 'NOT_FOUND' || /model|not found|not supported/i.test(info.message);
+          if (!canAutoFallback) {
+            throw Object.assign(new Error(info.message), { geminiInfo: info });
           }
-          throw new Error(`[${errCode}] ${errMsg}${diagnosticAdvice}`);
+          if (status) status.innerHTML += '<br>🔁 <span class="text-sky-700 font-bold">目前模型不可用，正在自動尋找可用模型...</span>';
+          const found = await findAvailableGeminiModel(keyToUse, apiVer);
+          if (!found) throw Object.assign(new Error(info.message), { geminiInfo: info });
+          result = found.result;
+          if (modelSelect) modelSelect.value = found.model;
+          if (versionSelect) versionSelect.value = found.apiVer;
+          await saveReceiptAiSettings({ key: keyToUse, model: found.model, apiVersion: found.apiVer });
+          if (status) {
+            status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！已自動切換到可用模型。</span><br><span class="text-xs text-slate-500">模型：${found.model}｜版本：${found.apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+          }
+          showToast('API Key 測試成功');
+          return;
         }
-        
-        // 連線成功時，自動幫使用者進行背景儲存，實現極致防呆
-        const settingsToSave = { key: keyToUse, model, apiVersion: apiVer };
-        await saveReceiptAiSettings(settingsToSave);
-        
-        status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！金鑰正確無誤，且已自動保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+
+        await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer });
+        if (status) {
+          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！API Key 正常，且已保存。</span><br><span class="text-xs text-slate-500">模型：${model}｜版本：${apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+        }
+        showToast('API Key 測試成功');
       } catch (err) {
-        status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常！</span><br><span class="text-xs text-slate-500">${err.message}</span>`;
+        const info = err?.geminiInfo || getGeminiErrorInfo(err);
+        if (status) {
+          status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常</span><br><span class="text-xs text-slate-500">${info.code}：${escapeHtml(info.message)}</span><br><span class="text-xs text-slate-500">${escapeHtml(info.advice)}</span><br><span class="text-xs text-emerald-700 font-bold">※ API Key 已先保存，不會因測試失敗而消失。</span>`;
+        }
       }
     }
 
@@ -3141,7 +3259,7 @@
 
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
-      const apiKeyToUse = sanitizeApiKey(cfg.key || runtimeApiKey);
+      const apiKeyToUse = sanitizeApiKeyStrict(cfg.key || runtimeApiKey);
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
       const model = cfg.model || defaultReceiptAiModel;
       const apiVer = cfg.apiVersion || defaultReceiptAiApiVersion;

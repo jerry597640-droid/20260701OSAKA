@@ -811,7 +811,7 @@
           <p class="text-[9px] font-black tracking-widest text-blue-600 flex items-center gap-1">
             <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-500"></i> GEMINI API DIAGNOSTICS
           </p>
-          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 拍照辨識與容錯設置</h3>
+          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 🤖 V14 自動 AI 引擎設定</h3>
         </div>
         <button onclick="closeReceiptAiSettings()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
       </div>
@@ -819,7 +819,7 @@
       <div class="mt-3 space-y-3">
         <div class="ai-key-help">
           <p class="text-[11px] leading-relaxed text-slate-700 font-bold">
-            請貼上您的 Gemini API 金鑰。系統已啟用「自動清洗模組」，會自動為您修正複製時產生的格式雜訊：
+            請貼上您的 Gemini API 金鑰一次即可。V14 會自動清洗、保存、測試、選擇可用模型與 API 版本，不需要手動選擇。
           </p>
           <div class="ai-key-actions">
             <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white block rounded-xl py-2 text-xs font-black text-center flex items-center justify-center gap-1">
@@ -831,7 +831,7 @@
         <div>
           <label class="block text-[10px] font-black text-slate-500">您的 Gemini API Key</label>
           <div class="ai-key-input-wrap">
-            <input id="receipt-ai-key-input" type="password" placeholder="請在此貼上您的金鑰 (通常以 AIzaSy 開頭)" autocomplete="off" oninput="sanitizeKeyFieldImmediately()">
+            <input id="receipt-ai-key-input" type="password" placeholder="請貼上 Gemini API Key，系統會自動處理" autocomplete="off" oninput="sanitizeKeyFieldImmediately()">
             <button id="receipt-ai-key-eye" onclick="toggleReceiptAiKeyVisibility()" class="tap rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">👁</button>
           </div>
         </div>
@@ -846,16 +846,16 @@
           </select>
         </div>
 
-        <div>
-          <label class="block text-[10px] font-black text-slate-500">API 請求版本（建議保持自動預設 v1beta）</label>
+        <div style="display:none">
+          <label class="block text-[10px] font-black text-slate-500">API 請求版本（V14 自動選擇）</label>
           <select id="receipt-ai-endpoint-version" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="v1beta" selected>v1beta (支援多模態 JSON Schema 輸出)</option>
             <option value="v1">v1 (部分企業/受限帳戶指定穩定端點)</option>
           </select>
         </div>
 
-        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
-          <label class="block text-[10px] font-black text-emerald-700">V13 Enterprise API 模式</label>
+        <div style="display:none" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+          <label class="block text-[10px] font-black text-emerald-700">V14 Enterprise API 模式（自動）</label>
           <select id="receipt-ai-mode-select" class="mt-1 w-full border border-emerald-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none" onchange="toggleEnterpriseProxyHint()">
             <option value="direct">前端直連 Gemini（免架站，可立即使用）</option>
             <option value="proxy">Cloudflare Worker Proxy（最穩定／正式推薦）</option>
@@ -865,17 +865,17 @@
           <p id="enterprise-proxy-hint" class="mt-2 text-[10px] leading-relaxed text-emerald-800 font-bold">正式穩定版建議使用 Worker Proxy：API Key 不放在 HTML，429 / Timeout / 模型切換由後端統一處理。</p>
         </div>
 
-        <div id="receipt-ai-test-status" class="ai-test-status">準備就緒，等候測試連線。</div>
+        <div id="receipt-ai-test-status" class="ai-test-status">V14 自動模式就緒：貼上 Key 後按「自動測試並儲存」，系統會自動挑選最穩定模型。</div>
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-2">
         <button onclick="testReceiptAiKey()" class="tap rounded-xl bg-indigo-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 測試連線
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 自動測試
         </button>
         <button onclick="saveReceiptAiSettingsFromModal()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
-          <i data-lucide="save" class="w-3.5 h-3.5"></i> 保存設置
+          <i data-lucide="save" class="w-3.5 h-3.5"></i> 儲存
         </button>
-        <button onclick="copyEnterpriseWorkerTemplate()" class="tap col-span-2 rounded-xl bg-slate-100 py-2.5 text-xs font-black text-slate-700">複製 Cloudflare Worker 範本</button>
+        
         <button onclick="closeReceiptAiSettings()" class="tap col-span-2 rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">關閉</button>
       </div>
     </div>
@@ -3097,7 +3097,7 @@
 
     // 儲存設定 (四軌防護：Memory -> LocalStorage -> IndexedDB -> 即時驗證)
     async function saveReceiptAiSettings(settings) {
-      // V13.7.4 API Key Auto Stable：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
+      // V14 Enterprise Auto AI Engine：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
       let previous = {};
       try { previous = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}') || {}; } catch(e) { previous = {}; }
       previous = Object.assign({}, previous, window.__receiptAiSettingsMemCache || {});
@@ -3487,13 +3487,15 @@
     }
 
     function looksLikeGeminiApiKey(key) {
-      return /^AIza[0-9A-Za-z_\-]{20,}$/.test(sanitizeApiKeyStrict(key || ''));
+      // V14：不再用前端規則判斷 API Key 格式。
+      // 只要不是空字串就允許送到 Google 端點，由 Google 回傳 401/403/429 等正式狀態。
+      return !!sanitizeApiKeyStrict(key || '');
     }
 
     async function autoStabilizeGeminiSettings(apiKey, preferredModel, preferredApiVer, silent=false) {
       const key = sanitizeApiKeyStrict(apiKey || '');
-      if (!looksLikeGeminiApiKey(key)) {
-        throw new Error('API Key 格式看起來不完整，請重新複製 Google AI Studio 的完整 Key。');
+      if (!key) {
+        throw new Error('請先貼上 Gemini API Key。');
       }
       if (!silent) {
         const status = document.getElementById('receipt-ai-test-status');
@@ -3653,7 +3655,7 @@
       // 先保存，避免使用者測試中途關閉導致 Key 消失。
       await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer, apiMode, proxyUrl });
       if (status) {
-        status.innerHTML = `💾 <span class="text-emerald-700 font-bold">API Key 已先保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span><br>🧪 <span class="text-amber-600 font-bold">正在測試 ${model} / ${apiVer}...</span>`;
+        status.innerHTML = `💾 <span class="text-emerald-700 font-bold">API Key 已先保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span><br>🧪 <span class="text-amber-600 font-bold">正在自動偵測可用 Gemini 模型與 API 版本...</span>`;
       }
 
       try {
@@ -3662,13 +3664,13 @@
         if (modelSelect && [...modelSelect.options].some(o => o.value === found.model)) modelSelect.value = found.model;
         if (versionSelect) versionSelect.value = found.apiVer;
         if (status) {
-          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">API Key 穩定化成功！系統已自動選定可用模型並保存。</span><br><span class="text-xs text-slate-500">穩定模型：${found.model}｜版本：${found.apiVer}｜來源：${found.source || 'auto'}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">V14 自動 AI 引擎設定完成！系統已自動選定可用模型並保存。</span><br><span class="text-xs text-slate-500">穩定模型：${found.model}｜版本：${found.apiVer}｜來源：${found.source || 'auto'}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
         }
-        showToast('API Key 已自動穩定化');
+        showToast('V14 自動 AI 引擎已完成設定');
       } catch (err) {
         const info = err?.geminiInfo || getGeminiErrorInfo(err);
         if (status) {
-          status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常</span><br><span class="text-xs text-slate-500">${info.code}：${escapeHtml(info.message)}</span><br><span class="text-xs text-slate-500">${escapeHtml(info.advice)}</span><br><span class="text-xs text-emerald-700 font-bold">※ API Key 已先保存，不會因測試失敗而消失。</span>`;
+          status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常</span><br><span class="text-xs text-slate-500">${info.code}：${escapeHtml(info.message)}</span><br><span class="text-xs text-slate-500">${escapeHtml(info.advice)}</span><br><span class="text-xs text-emerald-700 font-bold">※ API Key 已先保存；若失敗，系統下次會再自動嘗試，不需手動選模型。</span>`;
         }
       }
     }
@@ -3980,7 +3982,7 @@
       ]);
     }
 
-    // V13.7.4 API Key Auto Stable：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
+    // V14 Enterprise Auto AI Engine：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
     // 流程：優先使用已儲存/預設穩定模型 -> 若模型不可用才快速 fallback -> 全流程硬性逾時。
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
@@ -3997,7 +3999,7 @@
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
 
       const payload = buildGeminiGeneratePayload(image);
-      if (!looksLikeGeminiApiKey(apiKeyToUse)) throw new Error('API Key 格式不完整。請到 API 設定重新貼上完整 Key，系統會自動清洗與穩定化。');
+      // V14：不在前端阻擋 Key 格式，避免新版 Key 或複製格式被誤判。由 Google API 正式驗證。
       const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-1.5-flash';
       const preferredApiVer = cfg.apiVersion || defaultReceiptAiApiVersion || 'v1beta';
       const candidates = [

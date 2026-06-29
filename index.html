@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<!-- V13.5 Ultimate AI: 旅行儀表板 + 航班中心 + 匯率退稅 + AI日誌 + 家庭共享 + AI助理 -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -362,6 +363,15 @@
     .rate-card { border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; margin-top: 8px; }
 
 
+
+    /* V13.7 Enterprise AI Translation Engine：OCR 原文 / 繁中雙語商品欄位 */
+    .translation-toggle-row { display:flex; gap:6px; align-items:center; justify-content:flex-end; margin: 6px 0 0; }
+    .translation-toggle-row button { border:1px solid #dbeafe; background:#eff6ff; color:#0369a1; border-radius:999px; padding:4px 8px; font-size:9.5px; font-weight:900; }
+    .receipt-line-original { margin-top:2px; font-size:9.5px; line-height:1.35; color:#64748b; font-weight:800; }
+    .receipt-line-zh { margin-top:2px; font-size:10.5px; line-height:1.35; color:#0f172a; font-weight:900; }
+    .receipt-line-lang { display:inline-flex; align-items:center; gap:3px; margin-left:4px; border-radius:999px; background:#f1f5f9; color:#475569; padding:1px 5px; font-size:8.5px; font-weight:900; }
+    .receipt-translation-badge { display:inline-flex; align-items:center; gap:3px; border-radius:999px; background:#ecfeff; color:#0e7490; border:1px solid #a5f3fc; padding:2px 6px; font-size:8.5px; font-weight:900; }
+
     /* AI 收據管理系統：商品明細展開卡 */
     .receipt-items-box { margin-top: 8px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 14px; overflow: hidden; }
     .receipt-items-box summary { list-style: none; cursor: pointer; padding: 8px 10px; font-size: 10.5px; font-weight: 900; color: #334155; display: flex; align-items: center; justify-content: space-between; }
@@ -403,6 +413,54 @@
     .offline-pack-preview { border-radius: 16px; background: #f8fafc; border: 1px dashed #cbd5e1; padding: 10px; font-size: 10.5px; color: #475569; line-height: 1.6; }
     .lightbox-tools { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
 
+
+
+    /* V13 Enterprise Plus Pro：安全返程中心 */
+    .plus-pro-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg, #111827 0%, #1e3a8a 48%, #7f1d1d 100%); color: #fff; box-shadow: 0 18px 38px -22px rgba(15,23,42,.55); }
+    .safe-return-card { border-radius: 20px; border: 1px solid #bfdbfe; background: linear-gradient(135deg,#eff6ff,#fff); padding: 12px; box-shadow: 0 10px 25px -12px rgba(2,132,199,.18); }
+    .safe-guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .safe-guide-item { border-radius: 16px; border: 1px solid #e2e8f0; background: #fff; padding: 10px; display: flex; gap: 9px; align-items: flex-start; }
+    .safe-guide-icon { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: #dbeafe; color: #1d4ed8; font-weight: 900; font-size: 12px; }
+    .safe-guide-title { font-size: 11.5px; font-weight: 900; color: #0f172a; margin: 0; }
+    .safe-guide-text { font-size: 10.5px; line-height: 1.55; color: #475569; margin: 3px 0 0; font-weight: 700; }
+    .safe-action-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .safe-action-btn { border-radius: 14px; padding: 10px 6px; text-align: center; font-size: 10.5px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 42px; }
+    .night-warning-card { border-radius: 18px; border: 1px solid #fed7aa; background: linear-gradient(135deg,#fff7ed,#fff); padding: 12px; }
+    .module-dashboard { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .module-tile { border-radius: 16px; border: 1px solid #e2e8f0; background: #fff; padding: 10px; min-height: 68px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .module-tile .k { font-size: 10px; font-weight: 900; color: #64748b; }
+    .module-tile .v { font-size: 13px; font-weight: 900; color: #0f172a; }
+    @media (orientation: landscape) and (min-width: 700px) {
+      .safe-guide-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .module-dashboard { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    }
+
+
+    /* V13.5 Ultimate AI：旅行儀表板、航班、退稅、AI助理 */
+    .v135-hero { border-radius: 24px; padding: 14px; background: linear-gradient(135deg,#020617 0%,#0f766e 45%,#2563eb 100%); color:#fff; box-shadow:0 18px 40px -24px rgba(15,23,42,.7); }
+    .v135-topline { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .v135-badge { border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.18); padding:4px 8px; font-size:10px; font-weight:900; color:#e0f2fe; white-space:nowrap; }
+    .v135-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
+    .v135-stat { border-radius:16px; background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.14); padding:10px; min-height:64px; }
+    .v135-stat .k { font-size:9.5px; color:#bfdbfe; font-weight:900; letter-spacing:.04em; }
+    .v135-stat .v { margin-top:3px; font-size:13px; line-height:1.3; color:#fff; font-weight:950; }
+    .v135-action-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:10px; }
+    .v135-action { border-radius:15px; background:#fff; border:1px solid #e2e8f0; padding:9px 3px; min-height:58px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:9.5px; line-height:1.2; color:#0f172a; font-weight:950; box-shadow:0 8px 18px -14px rgba(15,23,42,.35); }
+    .v135-panel { border-radius:20px; border:1px solid #dbeafe; background:linear-gradient(135deg,#eff6ff,#fff); padding:12px; box-shadow:0 12px 28px -20px rgba(37,99,235,.45); }
+    .v135-panel-title { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+    .v135-panel-title h4 { margin:0; font-size:12.5px; color:#0f172a; font-weight:950; }
+    .v135-chip-row { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
+    .v135-chip { flex:0 0 auto; border-radius:999px; border:1px solid #bfdbfe; background:#fff; color:#0369a1; padding:6px 9px; font-size:10.5px; font-weight:950; }
+    .v135-warning { border-radius:18px; border:1px solid #fed7aa; background:#fff7ed; padding:11px; color:#9a3412; font-size:11px; line-height:1.55; font-weight:850; }
+    .v135-flight-card { border-radius:17px; border:1px solid #e2e8f0; background:#fff; padding:10px; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .v135-flight-card .route { font-size:12px; font-weight:950; color:#0f172a; }
+    .v135-flight-card .time { font-family:ui-monospace,monospace; font-size:12px; font-weight:950; color:#0f766e; }
+    .v135-ai-float { position:fixed; right:calc(50% - 226px); bottom:calc(142px + var(--safe-bottom)); z-index:39; width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 28px rgba(37,99,235,.28); font-size:20px; }
+    @media(max-width:520px){ .v135-ai-float{ right:16px; } }
+    .v135-modal-sheet { width:100%; max-width:480px; max-height:88vh; overflow-y:auto; border-radius:24px; background:#fff; padding:16px; box-shadow:0 24px 60px rgba(15,23,42,.35); }
+    .v135-qa { border-radius:16px; border:1px solid #e2e8f0; background:#f8fafc; padding:10px; font-size:11.5px; line-height:1.55; color:#334155; font-weight:800; }
+    @media (orientation: landscape) and (min-width:700px){ .v135-grid{grid-template-columns:repeat(4,minmax(0,1fr));} .v135-action-grid{grid-template-columns:repeat(8,minmax(0,1fr));} }
+
     @media print {
       @page { size: A4; margin: 12mm; }
       body { background: white !important; color: #000000 !important; }
@@ -424,8 +482,8 @@
             <p class="text-[10px] font-black tracking-[0.2em] text-sky-600 flex items-center gap-1">
               <i data-lucide="plane-takeoff" class="w-3.5 h-3.5"></i> KANSAI 2026
             </p>
-            <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊 <span class="text-[10px] rounded-full bg-violet-100 text-violet-700 px-1.5 py-0.5 align-middle">V12</span></h1>
-            <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜領隊隨身極客版｜API Enterprise 穩定架構</p>
+            <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊 <span class="text-[10px] rounded-full bg-violet-100 text-violet-700 px-1.5 py-0.5 align-middle">V13.5 Ultimate AI</span></h1>
+            <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜AI Travel OS｜Enterprise Weather Engine</p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <!-- 頂部 API 金鑰設定捷徑 -->
@@ -474,6 +532,9 @@
       
       <!-- 行程視野 (Itinerary Tab) -->
       <section id="itinerary-view" class="space-y-4">
+
+        <!-- V13.5 Ultimate AI 旅行儀表板 -->
+        <div id="v135-dashboard" class="space-y-3"></div>
         
         <!-- 今日快速面板 -->
         <div class="flex items-center justify-between">
@@ -675,6 +736,38 @@
 
   <!-- Toast 訊息通知 -->
   <div id="toast" class="pointer-events-none fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-slate-950/90 px-4 py-2 text-[11px] font-black text-white opacity-0 shadow-lg transition-opacity">完成</div>
+
+
+
+  <!-- V13.5 AI 旅遊助理浮動按鈕 -->
+  <button type="button" onclick="openV135AiAssistant()" class="tap v135-ai-float" aria-label="AI 旅遊助理">🤖</button>
+
+  <!-- V13.5 AI 旅遊助理 -->
+  <div id="v135-ai-modal" class="receipt-ai-modal">
+    <div class="v135-modal-sheet animate-scale-up">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+        <div>
+          <p class="text-[9px] font-black tracking-widest text-violet-600 flex items-center gap-1"><i data-lucide="bot" class="w-3.5 h-3.5"></i> V13.5 ULTIMATE AI</p>
+          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 旅遊助理</h3>
+          <p class="text-[10px] text-slate-500 mt-1">離線可用：依目前行程、民宿、安全與收據資料提供快速建議。</p>
+        </div>
+        <button onclick="closeV135AiAssistant()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <button onclick="v135Ask('umbrella')" class="tap rounded-xl bg-sky-600 text-white py-2 text-xs font-black">今天要帶傘嗎</button>
+        <button onclick="v135Ask('hotel')" class="tap rounded-xl bg-slate-900 text-white py-2 text-xs font-black">回民宿最快</button>
+        <button onclick="v135Ask('safety')" class="tap rounded-xl bg-rose-600 text-white py-2 text-xs font-black">夜間安全</button>
+        <button onclick="v135Ask('budget')" class="tap rounded-xl bg-emerald-600 text-white py-2 text-xs font-black">今日花費</button>
+        <button onclick="v135Ask('flight')" class="tap rounded-xl bg-indigo-600 text-white py-2 text-xs font-black">航班提醒</button>
+        <button onclick="v135Ask('tax')" class="tap rounded-xl bg-amber-500 text-white py-2 text-xs font-black">退稅提醒</button>
+      </div>
+      <div id="v135-ai-answer" class="v135-qa mt-3">請點選上方快捷問題。真正像領隊的回答，正在待命。</div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <button onclick="copyText(document.getElementById('v135-ai-answer').innerText, 'AI 建議已複製')" class="tap rounded-xl bg-slate-100 text-slate-700 py-2 text-xs font-black">複製建議</button>
+        <button onclick="closeV135AiAssistant()" class="tap rounded-xl bg-slate-900 text-white py-2 text-xs font-black">關閉</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 隱藏列印區域 -->
   <div id="print-area" aria-hidden="true" class="hidden"></div>
@@ -890,10 +983,19 @@
     const tripDateLabels = { 1: '7/1（三）', 2: '7/2（四）', 3: '7/3（五）', 4: '7/4（六）', 5: '7/5（日）', 6: '7/6（一）' };
     const primaryWeatherCityByDay = { 1: 'osaka', 2: 'osaka', 3: 'kyoto', 4: 'nara', 5: 'osaka', 6: 'osaka' };
     const localWeatherLinks = {
-      osaka: { label: '大阪', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=270000' },
-      kyoto: { label: '京都', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=260000' },
-      nara: { label: '奈良', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=290000' }
+      osaka: { label: '大阪', url: 'https://tenki.jp/forecast/6/30/6200/27100/' },
+      kyoto: { label: '京都', url: 'https://tenki.jp/forecast/6/29/6110/26100/' },
+      nara: { label: '奈良', url: 'https://tenki.jp/forecast/6/31/6410/29201/' },
+      radar: { label: '雨雲雷達', url: 'https://tenki.jp/radar/' },
+      typhoon: { label: '颱風資訊', url: 'https://tenki.jp/bousai/typhoon/' },
+      top: { label: '日本氣象協會', url: 'https://tenki.jp/' }
     };
+    const HOTEL_NAME = 'JS曉宅・靜谷';
+    const HOTEL_ADDRESS_JP = '〒557-0031 大阪府大阪市西成区鶴見橋1-15-21';
+    const HOTEL_ADDRESS_EN = '1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031 日本';
+    const HOTEL_LAT = 34.645591234407185;
+    const HOTEL_LON = 135.49395738685791;
+    const HOTEL_COORDS = `${HOTEL_LAT},${HOTEL_LON}`;
 
     let currentDay = 1;
     let activeMainTab = 'itinerary';
@@ -1067,6 +1169,7 @@
       renderDayTabs();
       renderStaticPanels();
       switchDay(1);
+      renderV135Dashboard();
       refreshWeather(false);
       bindUiHelpers();
       bindExpenseAutoSave();
@@ -1171,7 +1274,70 @@
       dialog.classList.remove('flex');
     }
 
-    // 氣象資訊刷取
+    // V13.7 Enterprise AI Translation Engine：Open-Meteo 主資料源 + tenki.jp 官方備援入口
+    const WEATHER_CACHE_KEY = 'kansai2026_enterprise_weather_cache_v136';
+    const WEATHER_TIMEOUT_MS = 6500;
+
+    function fetchWithTimeout(url, timeoutMs = WEATHER_TIMEOUT_MS) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { signal: controller.signal, cache: 'no-store' })
+        .finally(() => clearTimeout(timer));
+    }
+
+    async function fetchWeatherCity(city, retry = 2) {
+      let lastErr;
+      for (let attempt = 0; attempt <= retry; attempt++) {
+        try {
+          const res = await fetchWithTimeout(weatherApiUrl(city));
+          if (!res.ok) throw new Error('Open-Meteo HTTP ' + res.status);
+          const data = await res.json();
+          data.__updatedAt = new Date().toISOString();
+          return { city, data };
+        } catch (err) {
+          lastErr = err;
+          if (attempt < retry) await new Promise(r => setTimeout(r, 700 * (attempt + 1)));
+        }
+      }
+      throw lastErr;
+    }
+
+    function saveWeatherCache() {
+      try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), weatherCache })); } catch(e) {}
+    }
+
+    function loadWeatherCache() {
+      try {
+        const obj = JSON.parse(localStorage.getItem(WEATHER_CACHE_KEY) || '{}');
+        if (obj && obj.weatherCache) {
+          weatherCache = obj.weatherCache;
+          return obj.savedAt || null;
+        }
+      } catch(e) {}
+      return null;
+    }
+
+    function renderWeatherFallback(reason='未連線') {
+      const grid = document.getElementById('weather-grid');
+      const cachedAt = loadWeatherCache();
+      if (cachedAt && Object.keys(weatherCache).length) {
+        renderTripWeatherCards(true);
+        document.getElementById('weather-updated').textContent = '快取 ' + new Date(cachedAt).toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
+        if (typeof renderItinerary === 'function') renderItinerary(currentDay);
+        if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+        return;
+      }
+      grid.innerHTML = cities.map(c => {
+        const official = localWeatherLinks[c.key]?.url || 'https://tenki.jp/';
+        return `
+          <a href="${official}" target="_blank" rel="noopener noreferrer" class="tap rounded-xl border border-amber-100 bg-amber-50 p-2 text-center">
+            <div class="text-sm">🌦️</div><div class="text-[11px] font-black text-amber-900">${c.name}</div><div class="text-[9px] text-amber-600">tenki.jp</div>
+          </a>`;
+      }).join('');
+      document.getElementById('weather-updated').textContent = reason;
+      if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+    }
+
     async function refreshWeather(manual) {
       const grid = document.getElementById('weather-grid');
       grid.innerHTML = cities.map(c => `
@@ -1181,30 +1347,25 @@
           <div class="weather-skeleton h-3 rounded-full"></div>
         </div>
       `).join('');
+      document.getElementById('weather-updated').textContent = 'Open-Meteo 讀取中';
       try {
-        const results = await Promise.all(cities.map(async city => {
-          const url = weatherApiUrl(city);
-          const res = await fetch(url);
-          if(!res.ok) throw new Error('weather error');
-          const data = await res.json();
-          return { city, data };
-        }));
-        weatherCache = Object.fromEntries(results.map(({city, data}) => [city.key, data]));
-        renderTripWeatherCards();
-        renderItinerary(currentDay);
-        if(manual) showToast('關西旅遊日氣候預報已更新');
+        const results = await Promise.allSettled(cities.map(city => fetchWeatherCity(city, 2)));
+        const ok = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+        if (!ok.length) throw new Error('all weather requests failed');
+        ok.forEach(({city, data}) => { weatherCache[city.key] = data; });
+        saveWeatherCache();
+        renderTripWeatherCards(false);
+        if (typeof renderItinerary === 'function') renderItinerary(currentDay);
+        if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+        if(manual) showToast('V13.6 天氣已更新：Open-Meteo 即時資料');
       } catch(err) {
-        grid.innerHTML = cities.map(c => `
-          <a href="https://www.google.com/search?q=${encodeURIComponent(c.name+' 2026/7 天氣')}" target="_blank" class="tap rounded-xl border border-amber-100 bg-amber-50 p-2 text-center">
-            <div class="text-sm">🌦️</div><div class="text-[11px] font-black text-amber-900">${c.name}</div><div class="text-[9px] text-amber-600">查預報</div>
-          </a>
-        `).join('');
-        document.getElementById('weather-updated').textContent = '未連線';
+        renderWeatherFallback(navigator.onLine ? '使用快取/官方' : '離線模式');
+        if(manual) showToast('即時天氣暫時無法取得，已切換快取或 tenki.jp');
       }
     }
 
     // 渲染氣象預報卡
-    function renderTripWeatherCards() {
+    function renderTripWeatherCards(fromCache=false) {
       const grid = document.getElementById('weather-grid');
       const targetDate = tripDates[currentDay];
       grid.innerHTML = cities.map(city => {
@@ -1225,7 +1386,7 @@
             </div>
           </article>`;
       }).join('');
-      document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
+      document.getElementById('weather-updated').textContent = `${fromCache ? '快取' : '更新'} D${currentDay} ${tripDateLabels[currentDay]}`;
     }
 
     // 氣象細節 analysis 模型
@@ -1592,7 +1753,7 @@
       if(!label) return;
       const cityKey = primaryWeatherCityByDay[currentDay] || 'osaka';
       const city = localWeatherLinks[cityKey] || localWeatherLinks.osaka;
-      label.textContent = `開啟 D${currentDay} 💡 ${city.label} 氣象廳即時報`;
+      label.textContent = `開啟 D${currentDay} 🌤 日本氣象協會（${city.label}）`;
     }
 
     function openPrimaryLocalWeather() {
@@ -1602,7 +1763,14 @@
     }
 
     function weatherApiUrl(city) {
-      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
+      const today = new Date();
+      const tripStart = new Date('2026-07-01T00:00:00+09:00');
+      const tripEnd = new Date('2026-07-06T00:00:00+09:00');
+      const fmt = d => d.toISOString().slice(0,10);
+      // Open-Meteo 可查未來預報；旅行前/旅行中以行程日為主，若已過旅行期則顯示目前近期天氣，避免永遠卡在讀取中。
+      const startDate = today <= tripEnd ? '2026-07-01' : fmt(today);
+      const endDate = today <= tripEnd ? '2026-07-06' : fmt(new Date(today.getTime() + 6*86400000));
+      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation,temperature_2m&current=temperature_2m,weather_code,precipitation,wind_speed_10m&timezone=Asia%2FTokyo&start_date=${startDate}&end_date=${endDate}`;
     }
 
     async function openWeatherDetail(key) {
@@ -1666,6 +1834,7 @@
       
       switchMainTab('itinerary', false);
       renderItinerary(day);
+      renderV135Dashboard();
       updatePrimaryLocalWeatherButton();
       updateFootprintProgressBar(day);
       renderOfflinePanel();
@@ -1814,14 +1983,23 @@
           <p class="text-[9px] font-black text-slate-400">日本地址（大字導航）</p>
           <p class="mt-0.5 select-all text-sm font-black text-slate-900">〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
           <hr class="my-3 border-slate-100">
-          <p class="text-[9px] font-black text-slate-400">英文地址（給機場或入境申報）</p>
-          <p class="mt-0.5">1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031, Japan</p>
+          <p class="text-[9px] font-black text-slate-400">英文地址（給機場、入境申報與叫車）</p>
+          <p class="mt-0.5 select-all text-sm font-black text-slate-900">1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031 日本</p>
+          <div class="mt-3 rounded-xl bg-sky-50 p-3 text-sky-900 text-[11px]">
+            <p class="text-[9px] font-black text-sky-500">Google Maps 精準座標</p>
+            <p class="mt-0.5 select-all font-mono font-black">34.645591234407185, 135.49395738685791</p>
+          </div>
+          <div class="mt-2 grid grid-cols-2 gap-2">
+            <button type="button" onclick="copyText(HOTEL_ADDRESS_EN, '英文民宿地址已複製')" class="tap rounded-xl bg-slate-100 px-3 py-2 text-[11px] font-black text-slate-700">📋 複製英文地址</button>
+            <button type="button" onclick="copyText(HOTEL_COORDS, '民宿座標已複製')" class="tap rounded-xl bg-sky-100 px-3 py-2 text-[11px] font-black text-sky-700">📍 複製座標</button>
+          </div>
           <div class="mt-3 rounded-xl bg-amber-50 p-3 text-amber-900 text-[11px]">退房日 11:00 前完成。沿途有遮雨棚商店街步行10分到天下茶屋站，拖行李防雨不暴曬。</div>
           <div class="mt-4 grid grid-cols-2 gap-2">
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}" target="_blank" class="tap rounded-xl bg-sky-600 py-2.5 text-center text-xs font-black text-white">🗺️ 導航地圖</a>
-            <button type="button" onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分、鶴見橋商店街の中です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}')" class="tap rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">🚕 司機大字卡</button>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}" target="_blank" class="tap rounded-xl bg-sky-600 py-2.5 text-center text-xs font-black text-white">🗺️ 導航地圖</a>
+            <button type="button" onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分、鶴見橋商店街の中です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}')" class="tap rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">🚕 司機大字卡</button>
           </div>
-        </div>`;
+        </div>
+        ${buildSafetyReturnGuideHtml('hotel')}`;
 
       renderExpensePanel();
       renderOfflinePanel();
@@ -2176,6 +2354,13 @@
             </button>
           </div>
           <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機儲存區。支援拍攝日本收據由 AI 自動辨識關聯相片儲存。</p>
+        </div>
+
+        <div class="module-dashboard mt-3">
+          <button onclick="switchMainTab('expense')" class="tap module-tile"><span class="k">📸 收據中心</span><span class="v">OCR / 重複偵測</span></button>
+          <button onclick="switchMainTab('itinerary')" class="tap module-tile"><span class="k">🗺 行程中心</span><span class="v">每日時間軸</span></button>
+          <button onclick="switchMainTab('offline')" class="tap module-tile"><span class="k">📦 離線備援</span><span class="v">一鍵保存</span></button>
+          <button onclick="switchMainTab('emergency')" class="tap module-tile"><span class="k">🛡 安全中心</span><span class="v">返程 / SOS</span></button>
         </div>
 
         <!-- 匯率轉換與分帳工具 -->
@@ -2544,16 +2729,25 @@
 
     function normalizeReceiptItemLine(line, fallbackCurrency='JPY') {
       if(!line || typeof line !== 'object') return null;
-      const name = String(line.name || line.itemName || line.product || line.description || '').trim();
-      if(!name) return null;
+      const originalName = String(line.originalName || line.original_name || line.ocrName || line.rawName || line.raw || line.name || line.itemName || line.product || line.description || '').trim();
+      const translatedName = String(line.translatedName || line.translated_name || line.zhName || line.zh || line.nameZh || '').trim();
+      const normalizedName = String(line.normalizedName || line.normalized_name || line.standardName || line.standardizedName || '').trim();
+      const primaryName = String(translatedName || normalizedName || line.name || line.itemName || line.product || line.description || originalName || '').trim();
+      if(!primaryName && !originalName) return null;
       const qtyRaw = Number(line.qty ?? line.quantity ?? line.count ?? 1);
       const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
       const unitRaw = Number(line.unitPrice ?? line.unit_price ?? line.price ?? 0);
       const subtotalRaw = Number(line.subtotal ?? line.total ?? line.amount ?? 0);
       const unitPrice = Number.isFinite(unitRaw) && unitRaw > 0 ? unitRaw : (subtotalRaw > 0 ? subtotalRaw / qty : 0);
       const subtotal = Number.isFinite(subtotalRaw) && subtotalRaw > 0 ? subtotalRaw : Math.round(unitPrice * qty);
+      const language = String(line.language || detectItemLanguage(originalName || primaryName)).toLowerCase();
+      const normalized = normalizedName || localNormalizeProductName(translatedName || primaryName || originalName);
       return {
-        name,
+        name: primaryName,
+        originalName: originalName || primaryName,
+        translatedName: translatedName || (language === 'zh' ? primaryName : localTranslateProductName(primaryName || originalName)),
+        normalizedName: normalized,
+        language,
         qty,
         unitPrice: Math.round(unitPrice * 100) / 100,
         subtotal: Math.round(subtotal * 100) / 100,
@@ -2561,6 +2755,43 @@
         note: String(line.note || '').trim(),
         currency: String(line.currency || fallbackCurrency || 'JPY').toUpperCase()
       };
+    }
+
+    function detectItemLanguage(text) {
+      const s = String(text || '');
+      if(/[ぁ-んァ-ン一-龯]/.test(s) && /[A-Za-z]/.test(s)) return 'mixed';
+      if(/[ぁ-んァ-ン]/.test(s)) return 'ja';
+      if(/[一-龯]/.test(s)) return 'zh';
+      if(/[A-Za-z]/.test(s)) return 'en';
+      return 'unknown';
+    }
+
+    function localTranslateProductName(text) {
+      let out = String(text || '').trim();
+      const dict = [
+        [/USB\s*(メモリ|memory|flash\s*drive|stick)/ig, 'USB 隨身碟'],
+        [/ノート\s*PC\s*用\s*メモリ/ig, '筆記型電腦記憶體'],
+        [/液晶\s*(クリーナー|清潔|螢幕清潔)/ig, '液晶螢幕清潔組'],
+        [/wireless\s*mouse/ig, '無線滑鼠'], [/gaming\s*headset/ig, '電競耳機'],
+        [/keyboard/ig, '鍵盤'], [/mouse/ig, '滑鼠'], [/monitor/ig, '螢幕'],
+        [/portable\s*SSD/ig, '可攜式固態硬碟'], [/SSD/ig, 'SSD 固態硬碟'], [/RAM|メモリ/ig, '記憶體'],
+        [/HDD/ig, '硬碟'], [/SDXC|microSD|SD\s*Card/ig, '記憶卡'], [/ケーブル|Cable/ig, '傳輸線'],
+        [/イヤホン|Earphone/ig, '耳機'], [/ヘッドホン|Headphone/ig, '耳罩式耳機']
+      ];
+      dict.forEach(([re, zh]) => { out = out.replace(re, zh); });
+      return out;
+    }
+
+    function localNormalizeProductName(text) {
+      const s = localTranslateProductName(text).replace(/\s+/g, ' ').trim();
+      if(/USB.*隨身碟|USB.*メモリ|USB.*Memory|USB.*Flash/i.test(s)) return 'USB 隨身碟';
+      if(/SSD|固態硬碟/i.test(s)) return '固態硬碟';
+      if(/RAM|記憶體|メモリ/i.test(s)) return '記憶體';
+      if(/滑鼠|mouse/i.test(s)) return '滑鼠';
+      if(/鍵盤|keyboard/i.test(s)) return '鍵盤';
+      if(/耳機|headset|earphone|headphone/i.test(s)) return '耳機';
+      if(/記憶卡|SDXC|microSD/i.test(s)) return '記憶卡';
+      return s;
     }
 
     function normalizeReceiptItemLines(lines, fallbackCurrency='JPY') {
@@ -2580,17 +2811,24 @@
       const itemCount = getReceiptItemCount(record);
       const subtotal = lines.reduce((sum, x) => sum + Number(x.subtotal || 0), 0);
       const diff = Math.round((Number(record.amount || 0) - subtotal) * 100) / 100;
-      const rows = lines.map((x, idx) => `
+      const rows = lines.map((x, idx) => {
+        const original = x.originalName && x.originalName !== x.name ? x.originalName : '';
+        const translated = x.translatedName || x.name;
+        const langLabel = ({ja:'日文', en:'英文', zh:'中文', mixed:'混合', unknown:'未判定'})[x.language] || x.language || '未判定';
+        return `
         <div class="receipt-line-item">
           <div>
-            <div class="receipt-line-name">${idx + 1}. ${escapeHtml(x.name)}</div>
+            <div class="receipt-line-name">${idx + 1}. ${escapeHtml(translated || x.name)} <span class="receipt-line-lang">${escapeHtml(langLabel)}</span></div>
+            ${original ? `<div class="receipt-line-original">OCR 原文：${escapeHtml(original)}</div>` : ''}
+            ${x.normalizedName && x.normalizedName !== translated ? `<div class="receipt-line-zh">標準化：${escapeHtml(x.normalizedName)}</div>` : ''}
             <div class="receipt-line-meta">數量：${escapeHtml(x.qty)}｜單價：${formatMoney(x.unitPrice, x.currency || record.currency)}${x.note ? '｜' + escapeHtml(x.note) : ''}</div>
           </div>
           <div class="receipt-line-amount">${formatMoney(x.subtotal, x.currency || record.currency)}</div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       return `
         <details class="receipt-items-box">
-          <summary><span>📦 商品明細｜${lines.length} 項 / ${itemCount} 件</span><span>${formatMoney(subtotal, record.currency)}</span></summary>
+          <summary><span>📦 商品明細｜${lines.length} 項 / ${itemCount} 件 <span class="receipt-translation-badge">🌐 已繁中化</span></span><span>${formatMoney(subtotal, record.currency)}</span></summary>
           <div class="receipt-line-list">${rows}</div>
           ${Math.abs(diff) > 0.5 ? `<div class="px-2.5 py-2 text-[10px] font-bold text-amber-700 bg-amber-50 border-t border-amber-100">提示：商品小計與收據總額差 ${formatMoney(diff, record.currency)}，可能包含稅額、折扣或 AI 辨識誤差。</div>` : ''}
         </details>`;
@@ -2600,7 +2838,7 @@
       if(!keyword) return true;
       const k = keyword.toLowerCase().trim();
       if(!k) return true;
-      const lineText = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY').map(x => [x.name, x.note, x.category].join(' ')).join(' ');
+      const lineText = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY').map(x => [x.name, x.originalName, x.translatedName, x.normalizedName, x.note, x.category, x.language].join(' ')).join(' ');
       const all = [record.item, record.category, record.payer, record.note, record.day, lineText].join(' ').toLowerCase();
       return all.includes(k);
     }
@@ -3633,9 +3871,14 @@
     }
 
     function buildGeminiGeneratePayload(image) {
-      const prompt = `請快速辨識日本收據。只回傳 JSON，不要 markdown。
-格式：{"storeName":"店名","date":"YYYY-MM-DD","totalAmount":總額數字,"currency":"JPY","category":"餐飲|交通|門票|購物|住宿|伴手禮|其他","note":"簡短備註","items":[{"name":"商品名","qty":數量,"unitPrice":單價,"subtotal":小計,"category":"","note":""}]}
-規則：每一個可辨識商品都要保留名稱、數量、單價、小計；看不清楚可留空或用 1 推定，勿捏造不存在商品。`;
+      const prompt = `請快速辨識日本收據、英文/日文/中文商品清單。只回傳 JSON，不要 markdown。
+格式：{"storeName":"店名","date":"YYYY-MM-DD","totalAmount":總額數字,"currency":"JPY|TWD|USD","category":"餐飲|交通|門票|購物|住宿|伴手禮|其他","note":"簡短備註","items":[{"name":"商品標準名稱或繁中名稱","originalName":"OCR原文","translatedName":"繁體中文翻譯","language":"ja|en|zh|mixed|unknown","normalizedName":"標準化繁中商品名","qty":數量,"unitPrice":單價,"subtotal":小計,"category":"分類","note":"備註"}]}
+規則：
+1. 每一個可辨識商品都要保留名稱、數量、單價、小計；看不清楚可留空或用 1 推定，勿捏造不存在商品。
+2. 商品可能是日文、英文、中文或混合語言；請自動判斷 language。
+3. translatedName 必須是繁體中文，品牌/型號/容量/規格需保留原文，例如 MSI、Micron、USB3.2、PCIe、SSD、RAM、1TB、64GB。
+4. normalizedName 請用利於搜尋與重複比對的繁體中文標準名稱，例如 USBメモリ/USB Memory/USB Flash Drive 統一為「USB 隨身碟」，SSD 統一為「固態硬碟」。
+5. name 優先填入 translatedName；originalName 保留 OCR 原文。`;
       return {
         contents: [{
           parts: [
@@ -3645,7 +3888,7 @@
         }],
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 1280,
+          maxOutputTokens: 1800,
           responseMimeType: "application/json"
         }
       };
@@ -3821,7 +4064,7 @@
       const data = travelData[currentDay] || travelData[1];
       target.innerHTML = `
         <div class="ultimate-hero">
-          <p class="text-[9px] font-black tracking-widest text-sky-200 flex items-center gap-1"><i data-lucide="archive" class="w-3.5 h-3.5"></i> V12 ULTIMATE OFFLINE PACK</p>
+          <p class="text-[9px] font-black tracking-widest text-sky-200 flex items-center gap-1"><i data-lucide="archive" class="w-3.5 h-3.5"></i> V13 PLUS PRO OFFLINE PACK</p>
           <h2 class="mt-1 text-sm font-black">離線備援包</h2>
           <p class="mt-1 text-[11px] leading-relaxed text-slate-100">一鍵產生可離線開啟的 HTML 備援資料，包含今日行程、住宿地址、緊急電話、日文求助句、Google Map 文字連結與當日收據摘要。</p>
         </div>
@@ -3858,7 +4101,7 @@
       const data = travelData[day] || travelData[1];
       const records = getExpenseRecords().filter(r => String(r.day) === String(day));
       let text = `2026 京阪奈自由行 離線備援包\nD${day}｜${tripDateLabels[day] || ''}\n${data.title}\n\n`;
-      text += `【住宿】\nJS暁宅・靜谷\n〒557-0031 大阪府大阪市西成区鶴見橋1-15-21\nGoogle Map: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}\n\n`;
+      text += `【住宿】\nJS暁宅・靜谷\n〒557-0031 大阪府大阪市西成区鶴見橋1-15-21\nGoogle Map: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}\n\n`;
       text += `【今日行程】\n`;
       data.items.forEach((item, idx) => {
         text += `${idx+1}. ${item.time}｜${item.name}\n地址：${item.addr}\n備註：${item.note}\nMap: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}\n\n`;
@@ -3876,7 +4119,7 @@
       const records = getExpenseRecords().filter(r => String(r.day) === String(day));
       const itemRows = data.items.map((item, idx) => `<article><h3>${idx+1}. ${escapeHtml(item.time)}｜${escapeHtml(item.name)}</h3><p>${escapeHtml(item.note)}</p><p><b>地址：</b>${escapeHtml(item.addr)}</p><p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}">Google Map</a></p></article>`).join('');
       const receiptRows = records.length ? records.map(r => `<li>${escapeHtml(r.item)}｜${formatMoney(r.amount, r.currency)}｜${escapeHtml(r.category)}</li>`).join('') : '<li>尚無今日收據。</li>';
-      return `<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D${day} 離線備援包</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.6}.wrap{max-width:760px;margin:auto;padding:18px}h1{font-size:22px}h2{font-size:17px;margin-top:22px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}article{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}a{color:#0369a1;font-weight:800}.sos{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px}.big{font-size:22px;font-weight:900;color:#7f1d1d}@media print{body{background:white}.wrap{max-width:none}}</style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main></body></html>`;
+      return `<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D${day} 離線備援包</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.6}.wrap{max-width:760px;margin:auto;padding:18px}h1{font-size:22px}h2{font-size:17px;margin-top:22px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}article{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}a{color:#0369a1;font-weight:800}.sos{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px}.big{font-size:22px;font-weight:900;color:#7f1d1d}@media print{body{background:white}.wrap{max-width:none}}</style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main></body></html>`;
     }
 
     function downloadBlob(filename, content, type='text/plain;charset=utf-8') {
@@ -3898,20 +4141,80 @@
       copyText(getOfflinePackText(currentDay), '今日離線備援文字已複製');
     }
 
+
     // ================================
-    // V12 Ultimate：緊急模式
+    // V13 Enterprise Plus Pro：安全返程中心
+    // ================================
+    function buildSafetyReturnGuideHtml(mode='default') {
+      const compact = mode === 'compact';
+      return `
+        <div class="plus-pro-hero card-shadow">
+          <p class="text-[9px] font-black tracking-widest text-blue-100 flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> V13 ENTERPRISE PLUS PRO</p>
+          <h2 class="mt-1 text-sm font-black">🛡 安全民宿返程中心</h2>
+          <p class="mt-1 text-[11px] leading-relaxed text-blue-50">晚上返程以「大馬路、明亮、結伴、必要時搭車」為原則。這不是恐慌模式，是自由行的安全帽。</p>
+        </div>
+        <section class="safe-return-card">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <h3 class="text-xs font-black text-slate-950 flex items-center gap-1"><i data-lucide="route" class="w-4 h-4 text-sky-600"></i> 4 個安全民宿舍指南</h3>
+            <span class="pill bg-sky-50 text-sky-700">重要</span>
+          </div>
+          <div class="safe-guide-grid">
+            ${safeGuideItem('1', '最推路線：走主要道路回宿舍', '不論從哪裡回程，建議搭到「天下茶屋站」或「花園町站」。出站後先沿主要大馬路或國道26號方向行走，接近民宿後再轉入巷口。大馬路車流與照明較好，也較容易找到便利商店求助。')}
+            ${safeGuideItem('2', '避免邊走邊滑手機或戴耳機', '晚上 21:00–22:00 進入住宅區巷弄時，請收起手機、拿下耳機，注意前後方與單車動向。保持警覺，就能提早避開讓人不舒服的狀況。')}
+            ${safeGuideItem('3', '結伴同行，不要落單', '家人或朋友同行時，請一起回民宿。若需要一個人回去，建議走明亮主路、不要停留暗巷，步伐穩定直接返回住宿地點。')}
+            ${safeGuideItem('4', '晚了或很累就善用計程車', '若超過 22:30、下雨、帶長輩小孩、提很多購物袋或行李，建議從難波、心齋橋或梅田直接搭 Uber／計程車回民宿，直達門口最省心。')}
+          </div>
+          <div class="night-warning-card mt-3">
+            <p class="text-[11px] font-black text-orange-900 flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 晚間總結</p>
+            <p class="mt-1 text-[10.5px] leading-relaxed text-orange-800 font-bold">晚上 21:00–22:30 只要走明亮大馬路、不走暗巷小路、不單獨落單，通常不需要過度恐慌。若身體疲累或購物太多，搭車回去就是最好的風險管理。</p>
+          </div>
+          <div class="safe-action-grid mt-3">
+            <button onclick="openSafeRoute('tengachaya')" class="tap safe-action-btn bg-sky-600 text-white"><i data-lucide="train" class="w-3.5 h-3.5"></i>天下茶屋返程</button>
+            <button onclick="openSafeRoute('hanazonocho')" class="tap safe-action-btn bg-blue-700 text-white"><i data-lucide="train-front" class="w-3.5 h-3.5"></i>花園町返程</button>
+            <button onclick="copyHotelTaxiCard()" class="tap safe-action-btn bg-slate-900 text-white"><i data-lucide="car-taxi-front" class="w-3.5 h-3.5"></i>計程車大字卡</button>
+            <button onclick="openUberToHotel()" class="tap safe-action-btn bg-emerald-600 text-white"><i data-lucide="navigation" class="w-3.5 h-3.5"></i>Uber 到民宿</button>
+          </div>
+          <button onclick="copySafeReturnGuide()" class="tap mt-2 w-full rounded-xl bg-white border border-slate-200 py-2 text-[11px] font-black text-slate-700">📋 複製安全返程指南</button>
+        </section>`;
+    }
+
+    function safeGuideItem(num, title, text) {
+      return `<div class="safe-guide-item"><div class="safe-guide-icon">${num}</div><div><p class="safe-guide-title">${escapeHtml(title)}</p><p class="safe-guide-text">${escapeHtml(text)}</p></div></div>`;
+    }
+
+    function openSafeRoute(type) {
+      const hotel = HOTEL_COORDS;
+      const origin = type === 'tengachaya' ? '天下茶屋駅' : '花園町駅';
+      const mode = type === 'tengachaya' ? 'walking' : 'walking';
+      window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(hotel)}&travelmode=${mode}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function openUberToHotel() {
+      const hotel = `${HOTEL_NAME} ${HOTEL_ADDRESS_EN}`;
+      const uberUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[formatted_address]=${encodeURIComponent(hotel)}&dropoff[latitude]=${encodeURIComponent(HOTEL_LAT)}&dropoff[longitude]=${encodeURIComponent(HOTEL_LON)}`;
+      window.open(uberUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function copySafeReturnGuide() {
+      const text = `🛡 民宿安全返程指南\n\n1. 最推路線：晚上回民宿建議搭到「天下茶屋站」或「花園町站」，出站後先走主要大馬路或國道26號方向，接近民宿後再轉巷口。\n\n2. 避免邊走邊滑手機或戴耳機：21:00–22:00 進入住宅區時，請收起手機、拿下耳機，注意前後方與單車動向。\n\n3. 結伴同行，不要落單：家人朋友一起回最安心；若單獨返回，請走明亮主路並直接回住宿。\n\n4. 善用計程車：超過 22:30、下雨、帶長輩小孩、提行李或購物太多時，建議從難波、心齋橋或梅田搭 Uber／計程車直達民宿。\n\n總結：走明亮大馬路、不走暗巷、不落單；疲累或太晚就搭車。`;
+      copyText(text, '安全返程指南已複製');
+    }
+
+    // ================================
+    // V13 Enterprise Plus Pro：緊急模式
     // ================================
     function renderEmergencyPanel() {
       const target = document.getElementById('emergency-view');
       if(!target) return;
       target.innerHTML = `
         <div class="emergency-hero">
-          <p class="text-[9px] font-black tracking-widest text-rose-100 flex items-center gap-1"><i data-lucide="siren" class="w-3.5 h-3.5"></i> V12 ULTIMATE EMERGENCY</p>
+          <p class="text-[9px] font-black tracking-widest text-rose-100 flex items-center gap-1"><i data-lucide="siren" class="w-3.5 h-3.5"></i> V13 PLUS PRO EMERGENCY</p>
           <h2 class="mt-1 text-sm font-black">緊急模式</h2>
           <p class="mt-1 text-[11px] leading-relaxed text-rose-50">迷路、叫車、回飯店、去機場、找醫院/警察局、日文求助大字卡，一頁完成。旅遊工具箱裡的安全帽。</p>
         </div>
+        ${buildSafetyReturnGuideHtml('compact')}
         <div class="emergency-grid">
-          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}" target="_blank" class="tap emergency-btn bg-slate-900 text-white"><i data-lucide="home" class="w-5 h-5"></i>我要回飯店</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}" target="_blank" class="tap emergency-btn bg-slate-900 text-white"><i data-lucide="home" class="w-5 h-5"></i>我要回飯店</a>
           <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Kansai International Airport')}&travelmode=transit" target="_blank" class="tap emergency-btn bg-sky-600 text-white"><i data-lucide="plane" class="w-5 h-5"></i>我要去機場</a>
           <button onclick="openNearestEmergency('hospital')" class="tap emergency-btn bg-white border border-rose-200 text-rose-700"><i data-lucide="hospital" class="w-5 h-5"></i>最近醫院</button>
           <button onclick="openNearestEmergency('police')" class="tap emergency-btn bg-white border border-blue-200 text-blue-700"><i data-lucide="shield" class="w-5 h-5"></i>最近警察局</button>
@@ -3935,7 +4238,7 @@
           <p class="mt-2 select-all rounded-xl bg-slate-950 p-3 text-white text-sm font-black leading-relaxed">〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
           <div class="mt-2 grid grid-cols-2 gap-2">
             <button onclick="copyText('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21', '飯店地址已複製')" class="tap rounded-xl bg-slate-100 py-2 text-[11px] font-black text-slate-700">複製地址</button>
-            <button onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}')" class="tap rounded-xl bg-slate-900 py-2 text-[11px] font-black text-white">大字卡</button>
+            <button onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}')" class="tap rounded-xl bg-slate-900 py-2 text-[11px] font-black text-white">大字卡</button>
           </div>
         </div>`;
       lucide.createIcons();
@@ -4010,6 +4313,174 @@
       const modal = document.getElementById('lightbox-modal');
       if (modal) modal.style.display = 'none';
       document.body.style.overflow = '';
+    }
+
+
+    // =============================
+    // V13.5 Ultimate AI：旅行儀表板、航班中心、退稅中心、AI日誌、家庭共享
+    // =============================
+    const V135_FLIGHTS = {
+      outbound: { no:'JX820', from:'TPE 桃園', to:'KIX 關西', date:'2026-07-01', time:'08:30', note:'建議 05:30–06:00 抵達機場，保留行李託運與安檢時間。' },
+      inbound: { no:'JX823', from:'KIX 關西', to:'TPE 桃園', date:'2026-07-06', time:'15:10', note:'建議 12:00 前抵達關西機場，回程日以準時為最高原則。' }
+    };
+    const V135_BUDGET_TWD = 80000;
+    const V135_RATE = 0.21;
+
+    function v135TodayDay() {
+      const today = getLocalDateString ? getLocalDateString() : new Date().toISOString().slice(0,10);
+      const found = Object.keys(tripDates).find(d => tripDates[d] === today);
+      return Number(found || currentDay || 1);
+    }
+    function v135ExpenseSummary(day=currentDay) {
+      const records = typeof getExpenseRecords === 'function' ? getExpenseRecords() : [];
+      const dayRecords = records.filter(r => String(r.day) === String(day));
+      const allJpy = records.reduce((sum,r)=> sum + v135ToJpy(Number(r.amount||0), r.currency), 0);
+      const dayJpy = dayRecords.reduce((sum,r)=> sum + v135ToJpy(Number(r.amount||0), r.currency), 0);
+      return { records, dayRecords, allJpy: Math.round(allJpy), dayJpy: Math.round(dayJpy) };
+    }
+    function v135ToJpy(amount, currency) {
+      if(currency === 'TWD') return amount / V135_RATE;
+      if(currency === 'USD') return amount * 150;
+      return amount || 0;
+    }
+    function v135MoneyJpy(v){ return '¥' + Math.round(v||0).toLocaleString('zh-TW'); }
+    function v135MoneyTwdFromJpy(v){ return 'NT$' + Math.round((v||0) * V135_RATE).toLocaleString('zh-TW'); }
+    function v135NextStop(day=currentDay) {
+      const data = travelData[day];
+      if(!data || !data.items?.length) return null;
+      const now = new Date();
+      const hhmm = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      return data.items.find(i => i.time >= hhmm) || data.items[data.items.length - 1];
+    }
+    function renderV135Dashboard() {
+      const el = document.getElementById('v135-dashboard');
+      if(!el) return;
+      const day = currentDay || v135TodayDay();
+      const data = travelData[day] || travelData[1];
+      const exp = v135ExpenseSummary(day);
+      const next = v135NextStop(day);
+      const w = getTripWeatherSnapshot(day);
+      const rain = w?.rain ?? '-';
+      const cityKey = primaryWeatherCityByDay[day] || 'osaka';
+      const cityName = (localWeatherLinks[cityKey] || localWeatherLinks.osaka).label;
+      const night = new Date().getHours() >= 21;
+      const budgetUsedPct = Math.min(100, Math.round((exp.allJpy * V135_RATE / V135_BUDGET_TWD) * 100));
+      el.innerHTML = `
+        <section class="v135-hero">
+          <div class="v135-topline">
+            <div>
+              <div class="text-[9px] font-black tracking-[0.18em] text-cyan-100">AI TRAVEL OS｜V13.6 WEATHER ENGINE</div>
+              <h2 class="mt-1 text-base font-black leading-snug">今日旅行儀表板：D${day} ${tripDateLabels[day]}</h2>
+              <p class="mt-1 text-[11px] text-slate-100 leading-relaxed">${escapeHtml(data.title)}</p>
+            </div>
+            <span class="v135-badge">${night ? '🌙 夜間模式' : '🟢 白天模式'}</span>
+          </div>
+          <div class="v135-grid">
+            <div class="v135-stat"><div class="k">今日天氣</div><div class="v">${cityName}<br>${w ? `${w.min}-${w.max}°C｜雨${rain}%` : '可點天氣'}</div></div>
+            <div class="v135-stat"><div class="k">下一行程</div><div class="v">${next ? `${next.time}<br>${escapeHtml(next.name)}` : '尚無'}</div></div>
+            <div class="v135-stat"><div class="k">今日花費</div><div class="v">${v135MoneyJpy(exp.dayJpy)}<br>${v135MoneyTwdFromJpy(exp.dayJpy)}</div></div>
+            <div class="v135-stat"><div class="k">總預算</div><div class="v">${budgetUsedPct}% 已用<br>NT$${V135_BUDGET_TWD.toLocaleString('zh-TW')}</div></div>
+          </div>
+          <div class="v135-action-grid">
+            <button onclick="openPrimaryLocalWeather()" class="tap v135-action">🌤<span>今日天氣</span></button>
+            <button onclick="openTenkiRadar()" class="tap v135-action">☔<span>雨雲雷達</span></button>
+            <button onclick="switchMainTab('hotel')" class="tap v135-action">🏠<span>回民宿</span></button>
+            <button onclick="switchMainTab('emergency')" class="tap v135-action">🆘<span>SOS</span></button>
+            <button onclick="openV135FlightCenter()" class="tap v135-action">✈️<span>航班</span></button>
+            <button onclick="openV135TaxCenter()" class="tap v135-action">💴<span>匯率退稅</span></button>
+            <button onclick="generateV135DailyJournal()" class="tap v135-action">📖<span>旅遊日誌</span></button>
+            <button onclick="copyV135FamilyShare()" class="tap v135-action">👨‍👩‍👧‍👦<span>家庭共享</span></button>
+          </div>
+        </section>
+        <section class="v135-panel">
+          <div class="v135-panel-title"><h4>🌤 日本氣象協會 tenki.jp</h4><span class="pill bg-sky-50 text-sky-700">官方連結</span></div>
+          <div class="v135-chip-row no-scrollbar">
+            <button onclick="openTenkiCity('osaka')" class="v135-chip">大阪</button>
+            <button onclick="openTenkiCity('kyoto')" class="v135-chip">京都</button>
+            <button onclick="openTenkiCity('nara')" class="v135-chip">奈良</button>
+            <button onclick="openTenkiRadar()" class="v135-chip">雨雲雷達</button>
+            <button onclick="openTenkiTyphoon()" class="v135-chip">颱風</button>
+          </div>
+          ${night ? `<div class="v135-warning mt-2">🌙 夜間返程提醒：建議走大馬路、不要戴耳機、不邊走邊滑手機。若超過 22:30 或帶長輩/行李，建議直接搭 Uber 或計程車回民宿。</div>` : ``}
+        </section>`;
+      if(window.lucide) lucide.createIcons();
+    }
+
+    function openTenkiCity(key){ const x = localWeatherLinks[key] || localWeatherLinks.osaka; window.open(x.url, '_blank', 'noopener,noreferrer'); }
+    function openTenkiRadar(){ window.open(localWeatherLinks.radar.url, '_blank', 'noopener,noreferrer'); }
+    function openTenkiTyphoon(){ window.open(localWeatherLinks.typhoon.url, '_blank', 'noopener,noreferrer'); }
+
+    function openV135FlightCenter() {
+      const msg = `✈️ 航班中心
+
+去程：${V135_FLIGHTS.outbound.no}｜${V135_FLIGHTS.outbound.from} → ${V135_FLIGHTS.outbound.to}
+${V135_FLIGHTS.outbound.date} ${V135_FLIGHTS.outbound.time}
+${V135_FLIGHTS.outbound.note}
+
+回程：${V135_FLIGHTS.inbound.no}｜${V135_FLIGHTS.inbound.from} → ${V135_FLIGHTS.inbound.to}
+${V135_FLIGHTS.inbound.date} ${V135_FLIGHTS.inbound.time}
+${V135_FLIGHTS.inbound.note}`;
+      showCustomAlert('✈️ 智慧航班中心', msg);
+    }
+    function openV135TaxCenter() {
+      const exp = v135ExpenseSummary(currentDay);
+      const twd = Math.round(exp.allJpy * V135_RATE);
+      const msg = `💴 匯率與退稅中心
+
+目前估算匯率：¥1 ≈ NT$${V135_RATE}
+全旅程已記錄：${v135MoneyJpy(exp.allJpy)} ≈ NT$${twd.toLocaleString('zh-TW')}
+
+退稅提醒：購物、電器、藥妝類收據請保留原圖。離境前請確認商品未拆封規定與店家退稅文件。`;
+      showCustomAlert('💴 匯率與退稅中心', msg);
+    }
+    function generateV135DailyJournal() {
+      const day = currentDay;
+      const data = travelData[day];
+      const exp = v135ExpenseSummary(day);
+      const visited = getVisitedState()[`D${day}`] || {};
+      const visitedNames = data.items.filter((_,i)=>visited[i]).map(i=>i.name);
+      const text = `📖 Day ${day} 旅遊日誌
+${data.title}
+
+今日造訪：${visitedNames.length ? visitedNames.join('、') : '尚未勾選足跡'}
+今日收據：${exp.dayRecords.length} 張
+今日花費：${v135MoneyJpy(exp.dayJpy)}（約 ${v135MoneyTwdFromJpy(exp.dayJpy)}）
+
+AI 小結：今天行程主軸為${getDayTripProfile(day).theme}。請記得備份收據照片，並於晚上返回民宿時走主要道路。`;
+      copyText(text, '今日旅遊日誌已複製');
+      showCustomAlert('📖 AI 每日旅遊日誌', text);
+    }
+    function copyV135FamilyShare() {
+      const day = currentDay;
+      const data = travelData[day];
+      const next = v135NextStop(day);
+      const text = `👨‍👩‍👧‍👦 家庭共享資訊
+
+今日：D${day} ${tripDateLabels[day]}
+行程：${data.title}
+下一站：${next ? next.time + ' ' + next.name : '尚無'}
+民宿：${HOTEL_NAME}
+地址：${HOTEL_ADDRESS_EN}
+座標：${HOTEL_COORDS}
+Google導航：https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(HOTEL_COORDS)}
+SOS：日本警察110、救護消防119`;
+      copyText(text, '家庭共享資訊已複製，可貼到 LINE 群組');
+    }
+    function openV135AiAssistant(){ document.getElementById('v135-ai-modal')?.classList.add('show'); if(window.lucide) lucide.createIcons(); }
+    function closeV135AiAssistant(){ document.getElementById('v135-ai-modal')?.classList.remove('show'); }
+    function v135Ask(type) {
+      const day = currentDay; const w = getTripWeatherSnapshot(day); const exp = v135ExpenseSummary(day); const next = v135NextStop(day);
+      let ans = '';
+      if(type === 'umbrella') ans = `☔ 今日帶傘建議：${w ? `${w.city.name} 降雨機率 ${w.rain}%` : '天氣仍在載入'}。若降雨率超過 30%，請攜帶晴雨兩用傘；京都與奈良石板路雨天較滑，鞋底防滑優先。`;
+      if(type === 'hotel') ans = `🏠 回民宿建議：目的地 ${HOTEL_ADDRESS_EN}。晚上建議搭到天下茶屋站或花園町站，沿大馬路回民宿。導航可用座標 ${HOTEL_COORDS}。`;
+      if(type === 'safety') ans = `🛡 夜間安全：21:00 後請走主要道路、不戴耳機、不邊走邊滑手機。若超過 22:30、下雨、帶長輩或購物袋很多，請改搭 Uber 或計程車。`;
+      if(type === 'budget') ans = `💴 今日花費：${v135MoneyJpy(exp.dayJpy)}，約 ${v135MoneyTwdFromJpy(exp.dayJpy)}。今日已有 ${exp.dayRecords.length} 張收據。全旅程目前約 ${v135MoneyTwdFromJpy(exp.allJpy)}。`;
+      if(type === 'flight') ans = `✈️ 航班提醒：去程 ${V135_FLIGHTS.outbound.no} ${V135_FLIGHTS.outbound.date} ${V135_FLIGHTS.outbound.time}；回程 ${V135_FLIGHTS.inbound.no} ${V135_FLIGHTS.inbound.date} ${V135_FLIGHTS.inbound.time}。回程日請以準時抵達 KIX 為優先。`;
+      if(type === 'tax') ans = `💴 退稅提醒：藥妝、電器、購物類收據請保留原始照片與商品明細。若同店消費金額高，建議將收據集中，離境前確認退稅文件與未拆封規定。`;
+      if(next) ans += `
+
+下一個行程：${next.time}｜${next.name}`;
+      const el = document.getElementById('v135-ai-answer'); if(el) el.innerText = ans;
     }
 
     // UI 通用綁定與事件監聽

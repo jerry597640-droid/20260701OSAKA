@@ -3742,7 +3742,7 @@
           preview.src = image.dataUrl;
           preview.classList.remove('hidden');
         }
-        setReceiptAiStatus(`⚡ 圖片已輕量化（${image.width}×${image.height}，${image.compressMs || 0}ms），正在啟動 Gemini 快速收據解析...`);
+        setReceiptAiStatus(`⚡ 圖片已輕量化（${image.width}×${image.height}，${image.compressMs || 0}ms），正在啟動 Gemini 穩定辨識；若網路卡住會自動逾時停止...`);
         
         const parsed = await recognizeReceiptWithGemini(image);
         const normalized = normalizeReceiptResult(parsed);
@@ -3886,7 +3886,7 @@
             { inlineData: { mimeType: image.mime, data: image.base64 } }
           ]
         }],
-        // V13.7.1.1 修正：部分 Gemini API 端點/模型不支援 responseMimeType，
+        // V13.7.2 修正：部分 Gemini API 端點/模型不支援 responseMimeType，
         // 若送出 responseMimeType 會回報：Unknown name "responseMimeType" at generation_config。
         // 因此改由 Prompt 強制 JSON，並在回傳端做 JSON 清洗與解析。
         generationConfig: {
@@ -3951,63 +3951,80 @@
       }
     }
 
+    function withTimeoutPromise(promise, timeoutMs, timeoutMessage) {
+      let timer;
+      return Promise.race([
+        promise.finally(() => clearTimeout(timer)),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error(timeoutMessage || 'Gemini 辨識逾時，請重新拍攝或稍後再試。')), timeoutMs);
+        })
+      ]);
+    }
+
+    // V13.7.2 穩定版：拍照 OCR 不再先掃描大量模型，避免畫面卡在「正在啟動 Gemini」。
+    // 流程：優先使用已儲存/預設穩定模型 -> 若模型不可用才快速 fallback -> 全流程硬性逾時。
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
       if ((cfg.apiMode || 'direct') === 'proxy') {
         if (!cfg.proxyUrl) throw new Error('已選 Enterprise Proxy 模式，但尚未設定 Worker URL。');
-        return await recognizeReceiptWithEnterpriseProxy(image, cfg);
+        return await withTimeoutPromise(
+          recognizeReceiptWithEnterpriseProxy(image, cfg),
+          45000,
+          'Enterprise Proxy 辨識逾時，請確認 Worker 可正常連線。'
+        );
       }
+
       const apiKeyToUse = sanitizeApiKeyStrict(cfg.key || runtimeApiKey);
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
 
       const payload = buildGeminiGeneratePayload(image);
-      let model = cfg.model || defaultReceiptAiModel;
-      let apiVer = cfg.apiVersion || defaultReceiptAiApiVersion;
+      const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-1.5-flash';
+      const preferredApiVer = cfg.apiVersion || defaultReceiptAiApiVersion || 'v1beta';
+      const candidates = [
+        { model: preferredModel, apiVer: preferredApiVer },
+        { model: 'gemini-1.5-flash', apiVer: 'v1beta' },
+        { model: 'gemini-1.5-flash-latest', apiVer: 'v1beta' },
+        { model: 'gemini-2.0-flash', apiVer: 'v1beta' },
+        { model: 'gemini-2.5-flash', apiVer: 'v1beta' }
+      ].filter((v, i, arr) => v.model && v.apiVer && arr.findIndex(x => x.model === v.model && x.apiVer === v.apiVer) === i);
 
-      const resolved = await resolveStableGeminiModel(apiKeyToUse, model, apiVer);
-      if (resolved) {
-        model = resolved.model;
-        apiVer = resolved.apiVer;
-        setReceiptAiStatus(`✅ 已自動採用穩定模型：${model} / ${apiVer}，正在辨識收據...`);
-      } else {
-        setReceiptAiStatus(`⚠️ 無法預先偵測模型，改用預設穩定端點 ${model} / ${apiVer} 嘗試辨識...`);
-      }
-
-      let endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
-      let result = await fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-        maxRetries: 4,
-        baseDelayMs: 1800,
-        timeoutMs: 28000
-      });
-
-      let res = result.response;
-      let body = result.body;
-
-      // V13 Enterprise：若收據辨識階段才發現模型不可用，自動重新找可用穩定模型並重送一次。
-      if (!res.ok && shouldAutoFallbackGemini(res.status, body)) {
-        setReceiptAiStatus('🔁 目前模型不可用，V13 正在自動切換至可用穩定模型後重試...');
-        window.__receiptAiResolvedRuntime = null;
-        const fallback = await resolveStableGeminiModel(apiKeyToUse, defaultReceiptAiModel, defaultReceiptAiApiVersion);
-        if (fallback) {
-          model = fallback.model;
-          apiVer = fallback.apiVer;
-          endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
-          setReceiptAiStatus(`✅ 已切換：${model} / ${apiVer}，正在重新辨識...`);
-          result = await fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-            maxRetries: 4,
-            baseDelayMs: 1800,
-            timeoutMs: 28000
-          });
-          res = result.response;
-          body = result.body;
+      let lastErrText = '';
+      for (let i = 0; i < candidates.length; i++) {
+        const { model, apiVer } = candidates[i];
+        setReceiptAiStatus(`⚡ Gemini 穩定辨識中：${model} / ${apiVer}（第 ${i + 1}/${candidates.length} 組）...`);
+        const endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
+        let result;
+        try {
+          result = await withTimeoutPromise(
+            fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
+              maxRetries: 1,
+              baseDelayMs: 1200,
+              timeoutMs: 22000
+            }),
+            32000,
+            '本次 Gemini 請求逾時。系統已停止等待，避免畫面卡住。'
+          );
+        } catch (err) {
+          lastErrText = err?.message || String(err);
+          if (i < candidates.length - 1) continue;
+          throw new Error(lastErrText);
         }
-      }
 
-      if(!res.ok) {
+        const res = result.response;
+        const body = result.body || {};
+        if (res.ok) {
+          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer }); } catch(e) {}
+          const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+          if (!text) throw new Error('Gemini 沒有回傳文字內容，請重新拍攝較清楚的收據。');
+          return parseGeminiJsonText(text);
+        }
+
         const code = body?.error?.status || `HTTP_${res.status}`;
         const rawMsg = body?.error?.message || `HTTP ${res.status}`;
+        lastErrText = rawMsg;
+
         if (res.status === 429 || code === 'RESOURCE_EXHAUSTED') {
-          throw new Error('Gemini 目前回報 429 頻率/配額限制。系統已自動重試仍未成功，請等待 1–3 分鐘再拍下一張；若仍連續發生，請稍後再用同一組 API Key 測試。');
+          throw new Error('Gemini 目前回報 429 頻率/配額限制。請等待 1–3 分鐘再拍下一張；系統已避免長時間卡住。');
         }
         if (res.status === 401 || code === 'UNAUTHENTICATED') {
           throw new Error('API Key 驗證失敗：請重新貼上 Google AI Studio 產生的 Key，確認沒有空白、換行或多餘文字。');
@@ -4015,14 +4032,14 @@
         if (res.status === 403 || code === 'PERMISSION_DENIED') {
           throw new Error('Gemini 權限被拒絕：請確認 API Key 沒有網域/IP 限制，並已啟用 Generative Language API。');
         }
-        if (res.status === 404 || code === 'NOT_FOUND') {
-          throw new Error('目前 Google 回報所有嘗試模型都不可用。請按 API 設定中的「測試連線」，讓系統重新掃描此 Key 可用模型。');
+        // 模型不存在/不支援才換下一組；其他錯誤直接回報，避免無意義等待。
+        if (shouldAutoFallbackGemini(res.status, body) && i < candidates.length - 1) {
+          setReceiptAiStatus('🔁 目前模型不可用，正在快速切換下一組穩定模型...');
+          continue;
         }
         throw new Error(rawMsg);
       }
-      
-      const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
-      return parseGeminiJsonText(text);
+      throw new Error(lastErrText || 'Gemini 辨識失敗，請稍後再試。');
     }
 
     function normalizeReceiptResult(raw) {

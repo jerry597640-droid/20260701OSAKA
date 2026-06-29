@@ -2702,6 +2702,8 @@
     const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
     const defaultReceiptAiModel = 'gemini-1.5-flash';
     const defaultReceiptAiApiVersion = 'v1beta';
+    const geminiQuotaCooldownKey = 'kansai_gemini_quota_cooldown_until_v1';
+    window.__receiptAiRecognitionLock = false;
     
     // 清洗過濾輸入的金鑰，自動去除引號、前後空白、不小心複製到的前綴
     function sanitizeApiKey(key) {
@@ -2887,6 +2889,96 @@
         }
       }
       throw lastError || new Error('網路連線失敗，請確認瀏覽器可連到 Google Gemini API。');
+    }
+
+    function getRetryAfterMsFromResponse(res, fallbackMs) {
+      const value = res?.headers?.get?.('retry-after');
+      if (!value) return fallbackMs;
+      const asNumber = Number(value);
+      if (Number.isFinite(asNumber)) return Math.max(0, asNumber * 1000);
+      const asDate = Date.parse(value);
+      if (Number.isFinite(asDate)) return Math.max(0, asDate - Date.now());
+      return fallbackMs;
+    }
+
+    function setGeminiQuotaCooldown(ms) {
+      const until = Date.now() + Math.max(0, Number(ms || 0));
+      try { localStorage.setItem(geminiQuotaCooldownKey, String(until)); } catch(e) {}
+      window.__geminiQuotaCooldownUntil = until;
+    }
+
+    function getGeminiQuotaCooldownLeftMs() {
+      const mem = Number(window.__geminiQuotaCooldownUntil || 0);
+      let saved = 0;
+      try { saved = Number(localStorage.getItem(geminiQuotaCooldownKey) || 0); } catch(e) {}
+      const until = Math.max(mem, saved);
+      return Math.max(0, until - Date.now());
+    }
+
+    function formatWaitSeconds(ms) {
+      return `${Math.ceil(Math.max(0, ms) / 1000)} 秒`;
+    }
+
+    async function fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, options = {}) {
+      const maxRetries = options.maxRetries ?? 4;
+      const baseDelayMs = options.baseDelayMs ?? 1800;
+      const timeoutMs = options.timeoutMs ?? 28000;
+      let lastResponse = null;
+      let lastBody = null;
+      let lastError = null;
+
+      const cooldownLeft = getGeminiQuotaCooldownLeftMs();
+      if (cooldownLeft > 0) {
+        setReceiptAiStatus(`⏳ Gemini 剛剛回報頻率限制，先等待 ${formatWaitSeconds(cooldownLeft)} 再自動重試。`);
+        await new Promise(resolve => setTimeout(resolve, Math.min(cooldownLeft, 45000)));
+      }
+
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          clearTimeout(timeout);
+          lastResponse = res;
+          lastBody = await res.clone().json().catch(() => ({}));
+          if (res.ok) return { response: res, body: lastBody };
+
+          if (res.status === 429) {
+            const fallback = baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 650);
+            const delay = Math.min(getRetryAfterMsFromResponse(res, fallback), 45000);
+            setGeminiQuotaCooldown(delay);
+            if (attempt < maxRetries) {
+              setReceiptAiStatus(`⏳ Gemini 回報頻率限制 429，正在退避等待 ${formatWaitSeconds(delay)} 後第 ${attempt + 2} 次重試。請勿連續按拍照，讓它喘口氣。`);
+              await new Promise(resolve => setTimeout(resolve, delay));
+              continue;
+            }
+          }
+
+          if (res.status >= 500 && attempt < maxRetries) {
+            const delay = baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 650);
+            setReceiptAiStatus(`🌐 Google 伺服器暫時忙碌，${formatWaitSeconds(delay)} 後自動重試。`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          return { response: res, body: lastBody };
+        } catch (err) {
+          clearTimeout(timeout);
+          lastError = err;
+          if (attempt < maxRetries) {
+            const delay = baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 650);
+            setReceiptAiStatus(`🌐 網路暫時不穩，${formatWaitSeconds(delay)} 後自動重試。`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+        }
+      }
+      if (lastResponse) return { response: lastResponse, body: lastBody || {} };
+      throw lastError || new Error('Gemini 連線失敗，請稍後再試。');
     }
 
     // 更強 API Key 清洗：可處理多餘空白、換行、JSON、網址參數、Bearer 前綴
@@ -3120,13 +3212,18 @@
       }
 
       // 以下為 AI 拍照辨識解析軌跡
+      if (window.__receiptAiRecognitionLock) {
+        showCustomAlert('辨識進行中', '上一張收據還在辨識中，請等完成後再拍下一張，避免觸發 Gemini 429 頻率限制。');
+        return;
+      }
+      window.__receiptAiRecognitionLock = true;
       openReceiptAiModal();
       document.getElementById('receipt-ai-result').classList.add('hidden');
       setReceiptAiStatus('⚡ 快速模式：正在壓縮圖片至高速辨識尺寸...');
       
       const aiStartedAt = performance.now();
       try {
-        const image = await compressReceiptImage(file, 900, 0.62);
+        const image = await compressReceiptImage(file, 720, 0.55);
         const preview = document.getElementById('receipt-ai-preview');
         if(preview) {
           preview.src = image.dataUrl;
@@ -3185,6 +3282,8 @@
         showToast('AI 記帳與收據影像歸檔成功！');
       } catch(err) {
         setReceiptAiStatus('❌ 辨識失敗：' + err.message, true);
+      } finally {
+        window.__receiptAiRecognitionLock = false;
       }
     }
 
@@ -3277,21 +3376,31 @@
         }],
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 2048,
+          maxOutputTokens: 1280,
           responseMimeType: "application/json"
         }
       };
 
-      const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }, 1, 300);
+      const endpoint = `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`;
+      const { response: res, body } = await fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
+        maxRetries: 4,
+        baseDelayMs: 1800,
+        timeoutMs: 28000
+      });
 
-      const body = await res.json().catch(()=>({}));
       if(!res.ok) {
-        const errMsg = body?.error?.message || `HTTP ${res.status}`;
-        throw new Error(errMsg);
+        const code = body?.error?.status || `HTTP_${res.status}`;
+        const rawMsg = body?.error?.message || `HTTP ${res.status}`;
+        if (res.status === 429 || code === 'RESOURCE_EXHAUSTED') {
+          throw new Error('Gemini 目前回報 429 頻率/配額限制。系統已自動重試仍未成功，請等待 1–3 分鐘再拍下一張；若仍連續發生，請到 API 設定切換模型或更換 API Key。');
+        }
+        if (res.status === 403 || code === 'PERMISSION_DENIED') {
+          throw new Error('Gemini 權限被拒絕：請確認 API Key 沒有網域/IP 限制，並已啟用 Generative Language API。');
+        }
+        if (res.status === 404 || code === 'NOT_FOUND') {
+          throw new Error('目前選擇的 Gemini 模型不可用，請到 API 設定改用 gemini-1.5-flash 或重新按測試連線。');
+        }
+        throw new Error(rawMsg);
       }
       
       const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';

@@ -837,7 +837,7 @@
         </div>
 
         <div>
-          <label class="block text-[10px] font-black text-slate-500">模型模式（V13 Enterprise：會自動降級到可用穩定模型）</label>
+          <label class="block text-[10px] font-black text-slate-500">模型模式（V13.7.4 自動穩定：自動偵測／降級／保存可用模型）</label>
           <select id="receipt-ai-model-select" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="gemini-1.5-flash" selected>gemini-1.5-flash (V10 預設：穩定優先)</option>
             <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (穩定自動更新)</option>
@@ -847,7 +847,7 @@
         </div>
 
         <div>
-          <label class="block text-[10px] font-black text-slate-500">API 請求版本</label>
+          <label class="block text-[10px] font-black text-slate-500">API 請求版本（建議保持自動預設 v1beta）</label>
           <select id="receipt-ai-endpoint-version" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="v1beta" selected>v1beta (支援多模態 JSON Schema 輸出)</option>
             <option value="v1">v1 (部分企業/受限帳戶指定穩定端點)</option>
@@ -3097,13 +3097,21 @@
 
     // 儲存設定 (四軌防護：Memory -> LocalStorage -> IndexedDB -> 即時驗證)
     async function saveReceiptAiSettings(settings) {
+      // V13.7.4 API Key Auto Stable：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
+      let previous = {};
+      try { previous = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}') || {}; } catch(e) { previous = {}; }
+      previous = Object.assign({}, previous, window.__receiptAiSettingsMemCache || {});
+      const rawKey = settings && Object.prototype.hasOwnProperty.call(settings, 'key') ? settings.key : previous.key;
       const normalized = {
-        key: sanitizeApiKey(settings?.key || ''),
-        model: settings?.model || defaultReceiptAiModel,
-        apiVersion: settings?.apiVersion || defaultReceiptAiApiVersion,
-        apiMode: settings?.apiMode || 'direct',
-        proxyUrl: String(settings?.proxyUrl || '').trim().replace(/\/$/, ''),
-        savedAt: new Date().toISOString()
+        key: sanitizeApiKey(rawKey || ''),
+        model: settings?.model || previous.model || defaultReceiptAiModel,
+        apiVersion: settings?.apiVersion || previous.apiVersion || defaultReceiptAiApiVersion,
+        apiMode: settings?.apiMode || previous.apiMode || 'direct',
+        proxyUrl: String(settings?.proxyUrl ?? previous.proxyUrl ?? '').trim().replace(/\/$/, ''),
+        savedAt: new Date().toISOString(),
+        stableMode: true,
+        lastStableCheckAt: settings?.lastStableCheckAt || previous.lastStableCheckAt || '',
+        lastStableModel: settings?.lastStableModel || previous.lastStableModel || ''
       };
 
       const report = { memory: false, localStorage: false, indexedDB: false };
@@ -3145,7 +3153,7 @@
 
     // 讀取設定 (先取記憶體，其次 LocalStorage；IndexedDB 於啟動時已同步進記憶體)
     function getReceiptAiSettings() {
-      const fallback = { key: '', model: defaultReceiptAiModel, apiVersion: defaultReceiptAiApiVersion, apiMode: 'direct', proxyUrl: '' };
+      const fallback = { key: '', model: defaultReceiptAiModel, apiVersion: defaultReceiptAiApiVersion, apiMode: 'direct', proxyUrl: '', stableMode: true, lastStableCheckAt: '', lastStableModel: '' };
 
       let localCfg = {};
       try {
@@ -3182,7 +3190,7 @@
       if (typeof toggleEnterpriseProxyHint === 'function') toggleEnterpriseProxyHint();
       if (status) {
         status.innerHTML = cfg.key
-          ? '✅ 已讀取到已儲存的 API Key。可直接測試連線，或按「保存設置」重新驗證儲存。'
+          ? '✅ 已讀取到已儲存的 API Key。V13.7.4 已啟用自動穩定模式：會自動清洗 Key、偵測可用模型並保存。' 
           : '準備就緒，等候貼上 API Key。';
       }
       
@@ -3241,7 +3249,7 @@
       const success = report.memory || report.localStorage || report.indexedDB;
       if (status) {
         status.innerHTML = success
-          ? `✅ <span class="text-emerald-600 font-bold">API Key 已確認可儲存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(report)}</span>`
+          ? `✅ <span class="text-emerald-600 font-bold">API Key 已確認可儲存，並保留自動穩定模式。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(report)}</span>`
           : '❌ <span class="text-red-600 font-bold">儲存失敗，請檢查瀏覽器是否封鎖本機儲存。</span>';
       }
       showToast(success ? 'API Key 已確認儲存' : '儲存失敗');
@@ -3478,6 +3486,35 @@
       return match ? match[0] : clean;
     }
 
+    function looksLikeGeminiApiKey(key) {
+      return /^AIza[0-9A-Za-z_\-]{20,}$/.test(sanitizeApiKeyStrict(key || ''));
+    }
+
+    async function autoStabilizeGeminiSettings(apiKey, preferredModel, preferredApiVer, silent=false) {
+      const key = sanitizeApiKeyStrict(apiKey || '');
+      if (!looksLikeGeminiApiKey(key)) {
+        throw new Error('API Key 格式看起來不完整，請重新複製 Google AI Studio 的完整 Key。');
+      }
+      if (!silent) {
+        const status = document.getElementById('receipt-ai-test-status');
+        if (status) status.innerHTML = '🛡️ <span class="text-amber-600 font-bold">自動穩定模式啟動：正在尋找此 Key 可用的 Gemini Flash 模型...</span>';
+      }
+      const found = await findAvailableGeminiModel(key, preferredApiVer || defaultReceiptAiApiVersion);
+      if (!found) throw new Error('此 API Key 可連線，但目前找不到可用的 generateContent 模型；請確認 Generative Language API 已啟用，或稍後再試。');
+      await saveReceiptAiSettings({
+        key,
+        model: found.model,
+        apiVersion: found.apiVer,
+        lastStableCheckAt: new Date().toISOString(),
+        lastStableModel: `${found.model}/${found.apiVer}`
+      });
+      const modelSelect = document.getElementById('receipt-ai-model-select');
+      const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      if (modelSelect && [...modelSelect.options].some(o => o.value === found.model)) modelSelect.value = found.model;
+      if (versionSelect) versionSelect.value = found.apiVer;
+      return found;
+    }
+
     function geminiEndpoint(apiVer, model, apiKey) {
       return `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
     }
@@ -3620,32 +3657,14 @@
       }
 
       try {
-        let result = await tryGeminiConnection(keyToUse, model, apiVer);
-        if (!result.ok) {
-          const info = getGeminiErrorInfo(result);
-          const canAutoFallback = info.code === 'NOT_FOUND' || /model|not found|not supported/i.test(info.message);
-          if (!canAutoFallback) {
-            throw Object.assign(new Error(info.message), { geminiInfo: info });
-          }
-          if (status) status.innerHTML += '<br>🔁 <span class="text-sky-700 font-bold">目前模型不可用，正在自動尋找可用模型...</span>';
-          const found = await findAvailableGeminiModel(keyToUse, apiVer);
-          if (!found) throw Object.assign(new Error(info.message), { geminiInfo: info });
-          result = found.result;
-          if (modelSelect) modelSelect.value = found.model;
-          if (versionSelect) versionSelect.value = found.apiVer;
-          await saveReceiptAiSettings({ key: keyToUse, model: found.model, apiVersion: found.apiVer, apiMode, proxyUrl });
-          if (status) {
-            status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！已自動切換到可用模型。</span><br><span class="text-xs text-slate-500">模型：${found.model}｜版本：${found.apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
-          }
-          showToast('API Key 測試成功');
-          return;
-        }
-
-        await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer, apiMode, proxyUrl });
+        const found = await autoStabilizeGeminiSettings(keyToUse, model, apiVer, false);
+        await saveReceiptAiSettings({ key: keyToUse, model: found.model, apiVersion: found.apiVer, apiMode, proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${found.model}/${found.apiVer}` });
+        if (modelSelect && [...modelSelect.options].some(o => o.value === found.model)) modelSelect.value = found.model;
+        if (versionSelect) versionSelect.value = found.apiVer;
         if (status) {
-          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！API Key 正常，且已保存。</span><br><span class="text-xs text-slate-500">模型：${model}｜版本：${apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">API Key 穩定化成功！系統已自動選定可用模型並保存。</span><br><span class="text-xs text-slate-500">穩定模型：${found.model}｜版本：${found.apiVer}｜來源：${found.source || 'auto'}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
         }
-        showToast('API Key 測試成功');
+        showToast('API Key 已自動穩定化');
       } catch (err) {
         const info = err?.geminiInfo || getGeminiErrorInfo(err);
         if (status) {
@@ -3961,7 +3980,7 @@
       ]);
     }
 
-    // V13.7.2 穩定版：拍照 OCR 不再先掃描大量模型，避免畫面卡在「正在啟動 Gemini」。
+    // V13.7.4 API Key Auto Stable：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
     // 流程：優先使用已儲存/預設穩定模型 -> 若模型不可用才快速 fallback -> 全流程硬性逾時。
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
@@ -3978,6 +3997,7 @@
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
 
       const payload = buildGeminiGeneratePayload(image);
+      if (!looksLikeGeminiApiKey(apiKeyToUse)) throw new Error('API Key 格式不完整。請到 API 設定重新貼上完整 Key，系統會自動清洗與穩定化。');
       const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-1.5-flash';
       const preferredApiVer = cfg.apiVersion || defaultReceiptAiApiVersion || 'v1beta';
       const candidates = [
@@ -3997,11 +4017,11 @@
         try {
           result = await withTimeoutPromise(
             fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-              maxRetries: 1,
-              baseDelayMs: 1200,
-              timeoutMs: 22000
+              maxRetries: 4,
+              baseDelayMs: 8000,
+              timeoutMs: 30000
             }),
-            32000,
+            150000,
             '本次 Gemini 請求逾時。系統已停止等待，避免畫面卡住。'
           );
         } catch (err) {
@@ -4013,7 +4033,7 @@
         const res = result.response;
         const body = result.body || {};
         if (res.ok) {
-          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer }); } catch(e) {}
+          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
           const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
           if (!text) throw new Error('Gemini 沒有回傳文字內容，請重新拍攝較清楚的收據。');
           return parseGeminiJsonText(text);
@@ -4024,7 +4044,30 @@
         lastErrText = rawMsg;
 
         if (res.status === 429 || code === 'RESOURCE_EXHAUSTED') {
-          throw new Error('Gemini 目前回報 429 頻率/配額限制。請等待 1–3 分鐘再拍下一張；系統已避免長時間卡住。');
+          const retryMs = getRetryAfterMsFromResponse(res, 90000);
+          setGeminiQuotaCooldown(retryMs);
+          setReceiptAiStatus(`⏳ Gemini 目前忙碌/限流，系統已進入安全等待 ${formatWaitSeconds(retryMs)}。請不要重複按拍照，稍後會自動再試一次。`);
+          await new Promise(resolve => setTimeout(resolve, Math.min(retryMs, 90000)));
+          try {
+            const second = await withTimeoutPromise(
+              fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
+                maxRetries: 2,
+                baseDelayMs: 12000,
+                timeoutMs: 30000
+              }),
+              110000,
+              'Gemini 限流後重試逾時。請稍後重新拍攝，或改用 Enterprise Proxy 模式。'
+            );
+            if (second.response && second.response.ok) {
+              try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
+              const text = second.body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+              if (!text) throw new Error('Gemini 重試成功但沒有回傳文字內容，請重新拍攝較清楚的收據。');
+              return parseGeminiJsonText(text);
+            }
+          } catch(e) {
+            lastErrText = e?.message || String(e);
+          }
+          throw new Error('Gemini 仍在頻率/配額限制中。這通常不是 API Key 壞掉，而是 Google 暫時限流；系統已自動等待與重試。建議等待 3–5 分鐘，或到 API 設定切換 Cloudflare Worker Proxy 模式。');
         }
         if (res.status === 401 || code === 'UNAUTHENTICATED') {
           throw new Error('API Key 驗證失敗：請重新貼上 Google AI Studio 產生的 Key，確認沒有空白、換行或多餘文字。');

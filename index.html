@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>2026 京阪奈盛夏自由行神級手冊</title>
+  <title>2026 京阪奈盛夏自由行手冊</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- 導入高質感 Lucide 向量圖標 -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -443,7 +443,7 @@
         
         <div class="quick-grid">
           <button onclick="showPdfPage()" class="tap quick-btn bg-emerald-600 text-white shadow-md shadow-emerald-500/10">
-            <i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i><span>儲存<br>PDF</span>
+            <i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i><span>顯示<br>PDF</span>
           </button>
           <button onclick="shareTextItinerary()" class="tap quick-btn bg-slate-900 text-white shadow-md">
             <i data-lucide="share-2" class="w-4 h-4 mb-0.5"></i><span>LINE<br>複製</span>
@@ -519,7 +519,7 @@
     <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl animate-scale-up">
       <div class="flex items-start justify-between gap-3">
         <div>
-          <p class="text-[9px] font-black text-rose-600">🚕 给司機/路人看的大字卡</p>
+          <p class="text-[9px] font-black text-rose-600">🚕 給司機/路人看的大字卡</p>
           <h3 id="modal-name" class="mt-0.5 text-sm font-black text-slate-950"></h3>
         </div>
         <button onclick="closeModal()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
@@ -690,9 +690,9 @@
         <div>
           <label class="block text-[10px] font-black text-slate-500">模型選擇 (如果您的 Key 提示找不到 Preview 模型，請切換至穩定版)</label>
           <select id="receipt-ai-model-select" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
-            <option value="gemini-2.5-flash-preview-09-2025" selected>gemini-2.5-flash-preview-09-2025 (環境預設推薦)</option>
+            <option value="gemini-1.5-flash" selected>gemini-1.5-flash (預設：相容性最高、最不容易報錯)</option>
             <option value="gemini-2.5-flash">gemini-2.5-flash (穩定新一代正式版)</option>
-            <option value="gemini-1.5-flash">gemini-1.5-flash (相容性最高、最不容易報錯)</option>
+            <option value="gemini-2.5-flash-preview-09-2025">gemini-2.5-flash-preview-09-2025 (Preview：若帳戶支援再使用)</option>
           </select>
         </div>
 
@@ -772,7 +772,7 @@
           { time: "10:00", name: "奈良公園餵鹿體驗", type: "scene", addr: "〒630-8211 奈良県奈良市雑司町", note: "購買鹿仙貝（¥200），享受被貪吃小鹿包圍的樂趣。注意不要將仙貝高舉逗鹿，以防被鹿頂撞。" },
           { time: "11:10", name: "東大寺大佛殿", type: "scene", addr: "〒630-8211 奈良県奈良市雑司町406-1", note: "參拜世界最大的木造古建築，以及宏偉無比的盧舍那大佛。" },
           { time: "12:30", name: "奈良在地午餐 (志津香釜飯/大佛布丁)", type: "food", addr: "〒630-8213 奈良県奈良市東向中町29", note: "近鐵站周邊品嚐極具特色的釜飯，並在東向商店街大口品嚐香濃的大佛布丁。" },
-          { time: "13:30", name: "春日大社常夜燈參道", type: "scene", addr: "〒630-8212 奈良県奈良市春日野町160", note: "漫步在長滿青苔的常夜燈石板參道上，感受原始森林環抱的神秘莊嚴氣氣。" },
+          { time: "13:30", name: "春日大社常夜燈參道", type: "scene", addr: "〒630-8212 奈良県奈良市春日野町160", note: "漫步在長滿青苔的常夜燈石板參道上，感受原始森林環抱的神秘莊嚴氣氛。" },
           { time: "14:30", name: "中谷堂搗麻糬秀 & 奈良町老街", type: "food", addr: "〒630-8218 奈良県奈良市橋本町29", note: "順路前往中谷堂觀看極速高速搗麻糬表演，買一顆熱騰騰的艾草紅豆麻糬，隨後漫步江戶風情奈良町古街。" },
           { time: "17:00", name: "🏠 返回民宿大本營", type: "home", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "【近鐵奈良站】搭近鐵奈良線回【大阪難波站】，轉地鐵四橋線 ➔ 2站直回【花園町站】。2號出口走回「靜谷」民宿。刷 西瓜卡 扣近鐵 ¥680 + 地鐵 ¥190。" }
         ]
@@ -796,7 +796,7 @@
         title: "Day 6 (7/6 一) ｜ 空手開運朝聖 × 木津市場海鮮大餐 × 完美回程",
         clothing: "✈️ 開運收尾穿搭：穿上最寬鬆舒適的服飾與最輕便的鞋子，準備搭星宇航空完美返台。",
         items: [
-          { time: "08:30", name: "輕裝出門 ⛩️ 難波八阪神社", type: "scene", addr: "〒556-0016 大阪府大阪市浪速区難波中2丁目9-19", note: "💡 超省力神動線: 大行李安心鎖在民宿房間內（先不要搬）。空着雙手搭地鐵1站至大國町站，走路7分鐘拜訪12公尺巨型巨獅子殿，開運吞噬厄運！" },
+          { time: "08:30", name: "輕裝出門 ⛩️ 難波八阪神社", type: "scene", addr: "〒556-0016 大阪府大阪市浪速区難波中2丁目9-19", note: "💡 超省力神動線：大行李安心鎖在民宿房間內（先不要搬）。空着雙手搭地鐵1站至大國町站，走路7分鐘拜訪12公尺巨型巨獅子殿，開運吞噬厄運！" },
           { time: "09:30", name: "木津市場 🍣 大阪廚房極致早餐", type: "food", addr: "〒556-0012 大阪府大阪市浪速区敷津東2丁目2-8", note: "從神社散步過去。在在地人最愛的木津批發市場「魚市食堂」品餚海鮮丼、現剖海膽，或吃三輪壽司、烤鰻魚。" },
           { time: "10:30", name: "返回民宿最後打包行李", type: "hotel", addr: "〒557-0031 大阪府大阪市西成区鶴見橋1-15-21", note: "搭地鐵1站折返民宿，進行戰利品、衣服最終壓縮塞入行李箱，化妝休整。" },
           { time: "11:00", name: "準時 Check-out 退房", type: "metro", addr: "〒557-0014 大阪府大阪市西成区天下茶屋3丁目", note: "拉著箱子沿著鶴見橋平坦、全覆蓋有雨棚的商店街悠閒步行10分鐘，直達【天下茶屋站】。完全不曬太陽、不走碎石路！" },
@@ -852,7 +852,7 @@
         checklist: ['大阪周遊券 QR Code 截圖','手機螢幕亮度調至最高以便掃閘門','各遊船景點預約憑證確認','輕便晴雨兩用傘攜帶','保濕噴霧與迷你風扇準備']
       },
       3: {
-        headline: '京都日請把清水寺與坡道老街放上午完成，午後若下雨就縮短鴨川，改進咖啡店 or 商店街。',
+        headline: '京都日請把清水寺與坡道老街放上午完成，午後若下雨就縮短鴨川，改進咖啡店或商店街。',
         stamina: { level: '極高', cls: 'stamina-extreme', reason: '清水寺、三年坂、二年坂與祇園坡道多，步數與膝蓋負荷最高。' },
         rainBackup: '若 13:00 後降雨升高，石板路與坡道會很滑；建議改祇園町家咖啡、四条河原町商店街，或提早回大阪。',
         transport: '花園町到大國町可平行轉乘，再接御堂筋線到淀屋橋換京阪；祇園四條出站後建議直接計程車到清水寺觀光停車場，省掉上坡。',
@@ -882,7 +882,10 @@
     };
 
     const dbName = "KansaiTravelDB";
-    const dbVersion = 4; // 升級至版本 4：整合獨立 Settings & 行李/證件照片清單歷史庫
+    const dbVersion = 3; // 升級至版本 3：加入 settings 獨立物件儲存區
+
+    // 全域記憶體金鑰快取，做為極致沙盒環境防護 (100% 可用防線)
+    window.__receiptAiSettingsMemCache = { key: "", model: "gemini-1.5-flash", apiVersion: "v1beta" };
 
     function initDb() {
       return new Promise((resolve, reject) => {
@@ -990,44 +993,6 @@
       });
     }
 
-    // 行李/證件照片清單資料庫存取
-    function loadPhotoMemosFromDb() {
-      return new Promise((resolve) => {
-        if (!window.__db) { resolve([]); return; }
-        const transaction = window.__db.transaction(["photoMemos"], "readonly");
-        const store = transaction.objectStore("photoMemos");
-        const request = store.getAll();
-        request.onsuccess = (e) => {
-          const list = e.target.result || [];
-          list.sort((a,b) => b.id - a.id);
-          resolve(list);
-        };
-        request.onerror = () => resolve([]);
-      });
-    }
-
-    function savePhotoMemoToDb(record) {
-      return new Promise((resolve) => {
-        if (!window.__db) { resolve(); return; }
-        const transaction = window.__db.transaction(["photoMemos"], "readwrite");
-        const store = transaction.objectStore("photoMemos");
-        const request = store.put(record);
-        request.onsuccess = () => resolve();
-        request.onerror = () => resolve();
-      });
-    }
-
-    function deletePhotoMemoFromDb(id) {
-      return new Promise((resolve) => {
-        if (!window.__db) { resolve(); return; }
-        const transaction = window.__db.transaction(["photoMemos"], "readwrite");
-        const store = transaction.objectStore("photoMemos");
-        const request = store.delete(id);
-        request.onsuccess = () => resolve();
-        request.onerror = () => resolve();
-      });
-    }
-
     // 初始化與加載
     document.addEventListener('DOMContentLoaded', async () => {
       renderDayTabs();
@@ -1056,13 +1021,24 @@
         }
       }
 
-      // 同步記憶體金鑰與 LS 快取
+      // 如果記憶體無金鑰，且 LocalStorage 有，則進行同步補齊
       const currentSettings = getReceiptAiSettings();
       window.__receiptAiSettingsMemCache = currentSettings;
 
       renderExpenseRecords();
       lucide.createIcons();
     });
+
+    // 渲染 D1~D6 Tabs
+    function renderDayTabs() {
+      const wrap = document.getElementById('day-tabs');
+      wrap.innerHTML = Object.keys(travelData).map(day => `
+        <button id="day-${day}" onclick="switchDay(${day})" class="tap snap-center shrink-0 rounded-xl px-2 py-2 text-xs font-black bg-slate-100 text-slate-500">
+          <span class="block">D${day}</span>
+          <span class="block mt-0.5 text-[9px] opacity-80 font-bold">${tripDateLabels[day].split('（')[0]}</span>
+        </button>
+      `).join('');
+    }
 
     // 安全、相容沙盒的 Dialog 控制系統
     function showCustomAlert(title, message, callback) {
@@ -1183,7 +1159,7 @@
       document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
     }
 
-    // 氣象細節分析
+    // 氣象細節 analysis 模型
     function getTripWeatherSnapshot(day=currentDay) {
       const cityKey = primaryWeatherCityByDay[day] || 'osaka';
       const city = cities.find(c => c.key === cityKey) || cities[0];
@@ -1291,7 +1267,7 @@
         3: { city: '京都', theme: '清水寺、二年坂、祇園', outdoor: '高', indoor: '町家咖啡、四条商店街', rainPlan: '京都石板路雨天易滑，若雨勢過大改為町家咖啡散策，並增加計程車共乘流。', gear: '防滑抓地鞋、輕便雨衣、擦汗手帕。' },
         4: { city: '奈良', theme: '奈良公園、大佛、常夜燈', outdoor: '高', indoor: '東向商店街、奈良町', rainPlan: '奈良公園雨天草皮泥濘，避免白鞋。雨大則提早往東向商店街與奈良町室內。', gear: '大地色防髒衣物、深色慢跑鞋、輕便防潮袋。' },
         5: { city: '大阪', theme: '天神橋筋、大阪港、遊船', outdoor: '中高', indoor: '生活今昔館、商店街、天保山', rainPlan: '天神橋筋商店街與生活今昔館皆在室內，港口景點雨天室內商場好逛。', gear: '防港風薄外套、備用雨傘。' },
-        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套。' }
+        6: { city: '大阪', theme: '難波八阪、木津市場、返台', outdoor: '中', indoor: '木津市場、關西機場', rainPlan: '返程重點是行李防潮與避雨。天下茶屋站有全天棚，一路通順無阻。', gear: '防雨行李套、護照防潮套。' }
       };
       return profiles[day] || profiles[1];
     }
@@ -1493,7 +1469,7 @@
       let gear = profile.gear;
       if(thunder || rain >= 60 || maxHourly >= 60) gear += ' 強烈建議薄雨衣、重要物件防水密封袋。';
       else if(rain >= 30 || maxHourly >= 30) gear += ' 必備極輕量折疊晴雨傘。';
-      if(max >= 32) gear += ' 備好日本鹽糖 or 運動飲料。';
+      if(max >= 32) gear += ' 備好日本鹽糖或運動飲料。';
 
       return {
         ready: true, conclusion, risk,
@@ -1636,10 +1612,6 @@
         if(nav) nav.className = `tap rounded-xl py-1 text-[9px] font-black ${id===tab ? 'text-sky-600 bg-sky-50' : 'text-slate-400'}`;
       });
       if(shouldScroll) window.scrollTo({top:0, behavior:'smooth'});
-      
-      if(tab === 'packing') {
-        renderPackingTabs();
-      }
     }
 
     function scrollToTimeline() {
@@ -1741,7 +1713,15 @@
     }
 
     function renderStaticPanels() {
-      // 周遊券須知
+      document.getElementById('packing-view').innerHTML = panelWrap('🎒 關西極輕量打包避暑行囊', [
+        ['📱', '掛脖式迷你小風扇', '京都上坡二年坂與奈良公園無遮蔽烈日下的救命防暑神器。'],
+        ['🌂', '高係數防 UV 晴雨折疊傘', '高防曬係數一舉兩得，防禦關西突發式午後強雷雨。'],
+        ['🧴', '高防曬乳 & 涼感保濕濕紙巾', '流汗後降溫與補防曬，避免曝曬首日皮膚紅腫過敏。'],
+        ['👟', '防水/高透氣防滑跑鞋', '清水寺上坡、奈良公園及大佛殿、大阪港大步數抗壓鞋。'],
+        ['💳', '數位或實體西瓜卡 (Suica)', '關西地鐵、便利超商、大眾巴士通用，逼卡即走。'],
+        ['🔋', '高效快充行動電源', '數位周遊券檢票、導航、相機即時捕捉皆仰賴手機電量。']
+      ]);
+
       document.getElementById('ticket-view').innerHTML = `
         <div class="rounded-2xl bg-slate-950 p-4 text-white card-shadow">
           <h2 class="text-sm font-black">🎫 大阪周遊卡 e-Pass 極速避坑</h2>
@@ -1754,7 +1734,6 @@
           ${infoBlock('🔋 行動蓄電安全防線', '數位周遊卡最怕手機沒電，同行者可將各團員的 QR Code 截圖交叉儲存，防止單一設備沒電。', 'emerald')}
         </div>`;
 
-      // 民宿資訊
       document.getElementById('hotel-view').innerHTML = `
         <div class="rounded-2xl bg-slate-950 p-4 text-white card-shadow">
           <h2 class="text-sm font-black">🏡 民宿本營：JS曉宅・靜谷</h2>
@@ -1776,180 +1755,45 @@
       renderExpensePanel();
     }
 
-    // 打包與拍照備忘清單
-    function renderPackingTabs() {
-      document.getElementById('packing-view').innerHTML = `
+    function panelWrap(title, items) {
+      return `
         <div class="rounded-2xl bg-slate-950 p-4 text-white card-shadow">
-          <h2 class="text-sm font-black">🎒 打包避暑行囊與拍照清單</h2>
-          <p class="mt-1 text-[11px] text-slate-300">支援文字打包核對，以及拍攝行李箱實況或手寫清單方便隨手查閱。</p>
+          <h2 class="text-sm font-black">${title}</h2>
+          <p class="mt-1 text-[11px] text-slate-300">自動記憶勾選狀態，避免出行漏帶行李。</p>
         </div>
-
-        <div class="flex border-b border-slate-200 mt-2 text-xs font-black">
-          <button id="pack-tab-check" onclick="switchPackingSubTab('check')" class="flex-1 py-2 text-center text-sky-600 border-b-2 border-sky-600">① 打包核對</button>
-          <button id="pack-tab-photo" onclick="switchPackingSubTab('photo')" class="flex-1 py-2 text-center text-slate-400">② 照片備忘清單</button>
-        </div>
-
-        <div id="packing-sub-check" class="space-y-2 mt-3">
-          ${renderChecklistPills()}
-        </div>
-
-        <div id="packing-sub-photo" class="hidden space-y-3 mt-3 animate-scale-up">
-          <div class="rounded-xl border border-violet-100 bg-violet-50/50 p-3 card-shadow space-y-2.5">
-            <h4 class="text-xs font-black text-violet-950 flex items-center gap-1"><i data-lucide="image" class="w-4 h-4"></i> 新增照片備忘錄</h4>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <input id="photo-memo-title" placeholder="備忘標題 (例：登機箱現況)" class="w-full p-2 border border-violet-200 rounded-xl font-bold bg-white text-slate-800 outline-none">
-              <select id="photo-memo-cat" class="w-full p-2 border border-violet-200 rounded-xl font-bold bg-white text-slate-800 outline-none">
-                <option value="行李隨護">💼 行李隨護</option>
-                <option value="重要證件">🎫 重要證件</option>
-                <option value="購物清單">🛍️ 購物清單</option>
-                <option value="備用備忘">📌 備用備忘</option>
-              </select>
-            </div>
-            <textarea id="photo-memo-note" placeholder="可選備忘細節 (例：護照/網卡備份、行李重 19.5kg)" class="w-full p-2 border border-violet-200 rounded-xl font-bold bg-white text-xs text-slate-800 outline-none h-16"></textarea>
-            
-            <button onclick="triggerPhotoMemoUpload()" class="w-full rounded-xl bg-violet-600 hover:bg-violet-700 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1.5 shadow-sm">
-              <i data-lucide="camera" class="w-4 h-4"></i> 拍照 / 上傳備忘影像
-            </button>
-            <input id="photo-memo-file" type="file" accept="image/*" class="hidden" onchange="handlePhotoMemoUpload(event)">
-          </div>
-
-          <div class="flex items-center gap-1.5 py-1 text-xs">
-            <input id="photo-memo-search" oninput="renderPhotoMemos()" placeholder="🔍 關鍵字搜尋相片備忘..." class="flex-1 p-2 border border-slate-200 bg-white rounded-xl font-semibold outline-none text-slate-800">
-          </div>
-
-          <div id="photo-memos-grid" class="grid grid-cols-2 gap-3">
-            <!-- 照片清單歷史庫 -->
-          </div>
+        <div class="mt-3 space-y-2">
+          ${items.map(([emoji, name, note], i) => `
+            <label class="tap flex gap-3 rounded-2xl border border-slate-100 bg-white p-3 card-shadow items-start cursor-pointer">
+              <input type="checkbox" id="packing-item-${i}" class="mt-1 h-5 w-5 accent-sky-600 rounded" onchange="togglePackingItem(${i})">
+              <div>
+                <div class="text-xs font-black text-slate-900">${emoji} ${name}</div>
+                <p class="mt-0.5 text-[10.5px] leading-relaxed text-slate-500">${note}</p>
+              </div>
+            </label>
+          `).join('')}
         </div>`;
-      
-      lucide.createIcons();
     }
 
-    function switchPackingSubTab(type) {
-      const checkBtn = document.getElementById('pack-tab-check');
-      const photoBtn = document.getElementById('pack-tab-photo');
-      const checkSub = document.getElementById('packing-sub-check');
-      const photoSub = document.getElementById('packing-sub-photo');
-
-      if (type === 'check') {
-        checkBtn.className = "flex-1 py-2 text-center text-sky-600 border-b-2 border-sky-600 font-black";
-        photoBtn.className = "flex-1 py-2 text-center text-slate-400 font-black";
-        checkSub.classList.remove('hidden');
-        photoSub.classList.add('hidden');
-      } else {
-        photoBtn.className = "flex-1 py-2 text-center text-sky-600 border-b-2 border-sky-600 font-black";
-        checkBtn.className = "flex-1 py-2 text-center text-slate-400 font-black";
-        checkSub.classList.add('hidden');
-        photoSub.classList.remove('hidden');
-        renderPhotoMemos();
+    function togglePackingItem(index) {
+      const el = document.getElementById(`packing-item-${index}`);
+      if(el) {
+        try {
+          localStorage.setItem(`kansai_packing_${index}`, el.checked);
+          showToast(el.checked ? '已打包項目' : '未打包項目');
+        } catch(e) {}
       }
     }
 
-    function renderChecklistPills() {
-      const items = [
-        ['📱', '掛脖式迷你小風扇', '京都上坡二年坂與奈良公園無遮蔽烈日下的救命防暑神器。'],
-        ['🌂', '高係數防 UV 晴雨折疊傘', '高防曬係數一舉兩得，防禦關西突發式午後強雷雨。'],
-        ['🧴', '高防曬乳 & 涼感保濕濕紙巾', '流汗後降溫與補防曬，避免曝曬首日皮膚紅腫過敏。'],
-        ['👟', '防水/高透氣防滑跑鞋', '清水寺上坡、奈良公園及大佛殿、大阪港大步數抗壓鞋。'],
-        ['💳', '數位或實體西瓜卡 (Suica)', '關西地鐵、便利超商、大眾巴士通用，逼卡即走。'],
-        ['🔋', '高效快充行動電源', '數位周遊券檢票、導航、相機即時捕捉皆仰賴手機電量。']
-      ];
-      return items.map(([emoji, name, note], i) => `
-        <label class="tap flex gap-3 rounded-2xl border border-slate-100 bg-white p-3 card-shadow items-start cursor-pointer">
-          <input type="checkbox" id="packing-item-${i}" class="mt-1 h-5 w-5 accent-sky-600 rounded" onchange="togglePackingItem(${i})">
-          <div>
-            <div class="text-xs font-black text-slate-900">${emoji} ${name}</div>
-            <p class="mt-0.5 text-[10.5px] leading-relaxed text-slate-500">${note}</p>
-          </div>
-        </label>
-      `).join('');
-    }
-
-    function triggerPhotoMemoUpload() {
-      const title = document.getElementById('photo-memo-title')?.value.trim();
-      if(!title) {
-        showCustomAlert('提示', '請先輸入照片備忘的標題（例如：我的行李箱照片、退稅發票備份）');
-        return;
+    // 恢復打包勾選狀態
+    setTimeout(() => {
+      for(let i=0; i<6; i++) {
+        try {
+          const checked = localStorage.getItem(`kansai_packing_${i}`) === 'true';
+          const el = document.getElementById(`packing-item-${i}`);
+          if(el) el.checked = checked;
+        } catch(e) {}
       }
-      document.getElementById('photo-memo-file').click();
-    }
-
-    async function handlePhotoMemoUpload(event) {
-      const file = event?.target?.files?.[0];
-      if (event?.target) event.target.value = '';
-      if (!file) return;
-
-      showToast('照片處理壓縮中...');
-      try {
-        const titleInput = document.getElementById('photo-memo-title');
-        const catSelect = document.getElementById('photo-memo-cat');
-        const noteText = document.getElementById('photo-memo-note');
-
-        const compressed = await compressReceiptImage(file, 1000, 0.7);
-        const record = {
-          id: Date.now(),
-          title: titleInput.value.trim(),
-          category: catSelect.value,
-          note: noteText.value.trim(),
-          imageStr: compressed.dataUrl,
-          date: getLocalDateString()
-        };
-
-        await savePhotoMemoToDb(record);
-        
-        // 重設輸入
-        titleInput.value = '';
-        noteText.value = '';
-        
-        showToast('照片備忘清單已成功儲存於 IndexedDB');
-        renderPhotoMemos();
-      } catch(err) {
-        showCustomAlert('錯誤', '影像壓縮與儲存時發生異常。');
-      }
-    }
-
-    async function renderPhotoMemos() {
-      const grid = document.getElementById('photo-memos-grid');
-      if(!grid) return;
-
-      const filterText = document.getElementById('photo-memo-search')?.value.toLowerCase() || '';
-      const list = await loadPhotoMemosFromDb();
-      
-      const filtered = list.filter(item => 
-        item.title.toLowerCase().includes(filterText) || 
-        item.note.toLowerCase().includes(filterText) ||
-        item.category.toLowerCase().includes(filterText)
-      );
-
-      if(!filtered.length) {
-        grid.innerHTML = `<div class="col-span-2 py-8 text-center text-xs font-bold text-slate-400">目前尚無相符的照片備忘紀錄。</div>`;
-        return;
-      }
-
-      grid.innerHTML = filtered.map(item => `
-        <div class="rounded-2xl border border-slate-100 bg-white p-2 card-shadow flex flex-col justify-between">
-          <div onclick="openLightbox('${item.imageStr}', '${escapeHtml(item.title)}', '分類：${escapeHtml(item.category)} | 時間：${item.date}')" class="cursor-pointer overflow-hidden rounded-xl bg-slate-100 relative group aspect-[4/3] flex items-center justify-center border border-slate-50">
-            <img src="${item.imageStr}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" alt="${escapeHtml(item.title)}">
-            <span class="absolute top-1 left-1 bg-slate-900/60 text-white rounded px-1.5 py-0.5 text-[8px] font-black">${escapeHtml(item.category)}</span>
-          </div>
-          <div class="mt-2 text-left min-w-0">
-            <h5 class="text-xs font-black text-slate-900 truncate">${escapeHtml(item.title)}</h5>
-            ${item.note ? `<p class="text-[10px] leading-relaxed text-slate-500 mt-0.5 line-clamp-2">${escapeHtml(item.note)}</p>` : ''}
-          </div>
-          <div class="mt-2 pt-2 border-t border-slate-50 flex items-center justify-between text-[10px] text-slate-400">
-            <span>${item.date}</span>
-            <button onclick="deletePhotoMemo(${item.id})" class="tap text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded">刪除</button>
-          </div>
-        </div>`).join('');
-    }
-
-    async function deletePhotoMemo(id) {
-      showCustomConfirm('刪除備忘', '確定要永久刪除此張相片備忘錄嗎？', async () => {
-        await deletePhotoMemoFromDb(id);
-        renderPhotoMemos();
-        showToast('已刪除備忘相片');
-      });
-    }
+    }, 500);
 
     function infoBlock(title, text, color) {
       const map = {
@@ -2089,7 +1933,7 @@
               <h1 class="text-xl font-black text-slate-950">${escapeHtml(data.title)}</h1>
               <p class="mt-2 rounded-xl bg-sky-50 p-3 text-xs leading-relaxed text-sky-900 whitespace-pre-line font-semibold">${escapeHtml(buildWeatherBasedAdvice(currentDay))}</p>
               <div class="mt-4">${cards}</div>
-              <p style="margin-top:16px;border-top:1px solid #e2e8f0;padding-top:8px;font-size:10px;color:#64748b;">民宿：JS曉宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
+              <p style="margin-top:16px;border-top:1px solid #e2e8f0;padding-top:8px;font-size:10px;color:#64748b;">民宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
             </main>
           </div>`;
         panel.classList.remove('hidden');
@@ -2145,6 +1989,7 @@
       `).join('');
     }
 
+    // 動線地圖列表生成
     function buildRouteLaunchList(items) {
       return items.map((item, idx) => `
         <div>
@@ -2640,6 +2485,8 @@
     // GEMINI AI 收據拍照多模態辨識 OCR 與智慧金鑰清洗診斷系統
     // ==========================================
     const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
+    const defaultReceiptAiModel = 'gemini-1.5-flash';
+    const defaultReceiptAiApiVersion = 'v1beta';
     
     // 清洗過濾輸入的金鑰，自動去除引號、前後空白、不小心複製到的前綴
     function sanitizeApiKey(key) {
@@ -2662,41 +2509,69 @@
       }
     }
 
-    // 儲存設定 (三軌合一：Memory -> IndexedDB -> LocalStorage)
+    // 儲存設定 (四軌防護：Memory -> LocalStorage -> IndexedDB -> 即時驗證)
     async function saveReceiptAiSettings(settings) {
-      window.__receiptAiSettingsMemCache = settings || {};
-      
-      // 1. 寫入 LocalStorage
+      const normalized = {
+        key: sanitizeApiKey(settings?.key || ''),
+        model: settings?.model || defaultReceiptAiModel,
+        apiVersion: settings?.apiVersion || defaultReceiptAiApiVersion,
+        savedAt: new Date().toISOString()
+      };
+
+      const report = { memory: false, localStorage: false, indexedDB: false };
+
+      // 1. 記憶體立即可用：即使瀏覽器封鎖 storage，當前頁面仍可使用。
+      window.__receiptAiSettingsMemCache = normalized;
+      report.memory = true;
+
+      // 2. LocalStorage：手機瀏覽器最穩定、重新整理仍保留。
       try {
-        localStorage.setItem(embeddedReceiptAiKey, JSON.stringify(settings || {}));
+        localStorage.setItem(embeddedReceiptAiKey, JSON.stringify(normalized));
+        const verify = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}');
+        report.localStorage = verify.key === normalized.key && verify.model === normalized.model && verify.apiVersion === normalized.apiVersion;
       } catch(e) {
-        console.warn("LocalStorage 儲存被封鎖:", e);
+        console.warn('LocalStorage 儲存被封鎖:', e);
       }
-      
-      // 2. 寫入 IndexedDB (極致持久化，繞過 iframe 沙盒安全限制)
-      if (window.__db) {
-        try {
-          await saveSettingsToDb(settings);
-        } catch(e) {
-          console.error("IndexedDB 儲存設定失敗:", e);
+
+      // 3. IndexedDB：大量資料與部分沙盒環境的備援保存。
+      try {
+        if (!window.__db && typeof initDb === 'function') {
+          await initDb();
         }
+        if (window.__db && typeof saveSettingsToDb === 'function') {
+          await saveSettingsToDb(normalized);
+          if (typeof loadSettingsFromDb === 'function') {
+            const verifyDb = await loadSettingsFromDb();
+            report.indexedDB = !!verifyDb && verifyDb.key === normalized.key && verifyDb.model === normalized.model && verifyDb.apiVersion === normalized.apiVersion;
+          } else {
+            report.indexedDB = true;
+          }
+        }
+      } catch(e) {
+        console.warn('IndexedDB 儲存設定失敗:', e);
       }
+
+      window.__lastReceiptAiSaveReport = report;
+      return report;
     }
 
-    // 讀取設定 (三軌合一)
+    // 讀取設定 (先取記憶體，其次 LocalStorage；IndexedDB 於啟動時已同步進記憶體)
     function getReceiptAiSettings() {
-      if (window.__receiptAiSettingsMemCache && window.__receiptAiSettingsMemCache.key) {
-        return window.__receiptAiSettingsMemCache;
-      }
-      
+      const fallback = { key: '', model: defaultReceiptAiModel, apiVersion: defaultReceiptAiApiVersion };
+
       let localCfg = {};
       try {
         localCfg = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}') || {};
       } catch(e) {
         localCfg = {};
       }
-      
-      return Object.assign({ key: "", model: "gemini-2.5-flash-preview-09-2025", apiVersion: "v1beta" }, localCfg);
+
+      const memCfg = window.__receiptAiSettingsMemCache || {};
+      const merged = Object.assign({}, fallback, localCfg, memCfg);
+      merged.key = sanitizeApiKey(merged.key || '');
+      merged.model = merged.model || defaultReceiptAiModel;
+      merged.apiVersion = merged.apiVersion || defaultReceiptAiApiVersion;
+      return merged;
     }
     
     function openReceiptAiSettings() {
@@ -2705,10 +2580,16 @@
       const keyInput = document.getElementById('receipt-ai-key-input');
       const modelSelect = document.getElementById('receipt-ai-model-select');
       const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      const status = document.getElementById('receipt-ai-test-status');
       
       if (keyInput) keyInput.value = cfg.key || '';
-      if (modelSelect) modelSelect.value = cfg.model || 'gemini-2.5-flash-preview-09-2025';
-      if (versionSelect) versionSelect.value = cfg.apiVersion || 'v1beta';
+      if (modelSelect) modelSelect.value = cfg.model || defaultReceiptAiModel;
+      if (versionSelect) versionSelect.value = cfg.apiVersion || defaultReceiptAiApiVersion;
+      if (status) {
+        status.innerHTML = cfg.key
+          ? '✅ 已讀取到已儲存的 API Key。可直接測試連線，或按「保存設置」重新驗證儲存。'
+          : '準備就緒，等候貼上 API Key。';
+      }
       
       if (modal) modal.classList.add('show');
     }
@@ -2727,25 +2608,69 @@
       }
     }
 
+    function buildAiSaveReportText(report) {
+      const ok = [];
+      if (report?.memory) ok.push('記憶體');
+      if (report?.localStorage) ok.push('LocalStorage');
+      if (report?.indexedDB) ok.push('IndexedDB');
+      return ok.length ? `已保存：${ok.join('＋')}` : '目前僅暫存在表單，瀏覽器可能封鎖儲存。';
+    }
+
     async function saveReceiptAiSettingsFromModal() {
       const keyInput = document.getElementById('receipt-ai-key-input');
       const modelSelect = document.getElementById('receipt-ai-model-select');
       const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      const status = document.getElementById('receipt-ai-test-status');
       
       const key = sanitizeApiKey(keyInput?.value || '');
-      const model = modelSelect?.value || 'gemini-2.5-flash-preview-09-2025';
-      const apiVersion = versionSelect?.value || 'v1beta';
+      const model = modelSelect?.value || defaultReceiptAiModel;
+      const apiVersion = versionSelect?.value || defaultReceiptAiApiVersion;
+
+      if (keyInput) keyInput.value = key;
+      if (!key) {
+        if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ 尚未輸入 API Key，未執行保存。</span>';
+        showToast('請先貼上 API Key');
+        return;
+      }
       
-      await saveReceiptAiSettings({key, model, apiVersion});
-      showToast('金鑰與模型診斷配置已儲存');
-      closeReceiptAiSettings();
+      const report = await saveReceiptAiSettings({key, model, apiVersion});
+      const success = report.memory || report.localStorage || report.indexedDB;
+      if (status) {
+        status.innerHTML = success
+          ? `✅ <span class="text-emerald-600 font-bold">API Key 已確認可儲存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(report)}</span>`
+          : '❌ <span class="text-red-600 font-bold">儲存失敗，請檢查瀏覽器是否封鎖本機儲存。</span>';
+      }
+      showToast(success ? 'API Key 已確認儲存' : '儲存失敗');
+      if (success) closeReceiptAiSettings();
+    }
+
+
+
+    // 穩定版 Fetch 重試器：修正「fetchWithRetry is not defined」導致 API 測試永遠失敗
+    async function fetchWithRetry(url, options = {}, retries = 3, baseDelayMs = 900) {
+      let lastError = null;
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const res = await fetch(url, options);
+          // 429 / 5xx 通常是暫時性錯誤，等一下再試；4xx 直接回傳給診斷器判讀。
+          if (res.ok || (res.status < 500 && res.status !== 429)) return res;
+          lastError = new Error(`HTTP ${res.status}`);
+        } catch (err) {
+          lastError = err;
+        }
+        if (attempt < retries) {
+          const delay = baseDelayMs * Math.pow(2, attempt);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+      throw lastError || new Error('網路連線失敗，請確認瀏覽器可連到 Google Gemini API。');
     }
 
     // 測試金鑰與模型相容性 (連線成功時，自動執行背景同步儲存)
     async function testReceiptAiKey() {
       const customKey = sanitizeApiKey(document.getElementById('receipt-ai-key-input')?.value || '');
-      const model = document.getElementById('receipt-ai-model-select')?.value || 'gemini-2.5-flash-preview-09-2025';
-      const apiVer = document.getElementById('receipt-ai-endpoint-version')?.value || 'v1beta';
+      const model = document.getElementById('receipt-ai-model-select')?.value || defaultReceiptAiModel;
+      const apiVer = document.getElementById('receipt-ai-endpoint-version')?.value || defaultReceiptAiApiVersion;
       const status = document.getElementById('receipt-ai-test-status');
       
       const keyToUse = customKey || runtimeApiKey;
@@ -2790,7 +2715,7 @@
         const settingsToSave = { key: keyToUse, model, apiVersion: apiVer };
         await saveReceiptAiSettings(settingsToSave);
         
-        status.innerHTML = '✅ <span class="text-emerald-600 font-bold">連線成功！金鑰正確無誤，且已自動為您保存設定！</span>';
+        status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！金鑰正確無誤，且已自動保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
       } catch (err) {
         status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常！</span><br><span class="text-xs text-slate-500">${err.message}</span>`;
       }
@@ -2938,8 +2863,8 @@
       const cfg = getReceiptAiSettings();
       const apiKeyToUse = sanitizeApiKey(cfg.key || runtimeApiKey);
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
-      const model = cfg.model || 'gemini-2.5-flash-preview-09-2025';
-      const apiVer = cfg.apiVersion || 'v1beta';
+      const model = cfg.model || defaultReceiptAiModel;
+      const apiVer = cfg.apiVersion || defaultReceiptAiApiVersion;
       
       const prompt = `你是關西旅遊收據記帳助理。請嚴格解析該照片中的日本紙本收據/發票/明細，擷取必要資訊，僅輸出繁體中文 JSON 回覆，嚴禁 markdown 包裹或多餘論述。
       JSON Schema 要求:

@@ -3097,7 +3097,7 @@
 
     // 儲存設定 (四軌防護：Memory -> LocalStorage -> IndexedDB -> 即時驗證)
     async function saveReceiptAiSettings(settings) {
-      // V14 Enterprise Auto AI Engine：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
+      // V14.1 Enterprise JSON Repair Engine：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
       let previous = {};
       try { previous = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}') || {}; } catch(e) { previous = {}; }
       previous = Object.assign({}, previous, window.__receiptAiSettingsMemCache || {});
@@ -3892,14 +3892,27 @@
     }
 
     function buildGeminiGeneratePayload(image) {
-      const prompt = `請快速辨識日本收據、英文/日文/中文商品清單。只回傳 JSON，不要 markdown。
-格式：{"storeName":"店名","date":"YYYY-MM-DD","totalAmount":總額數字,"currency":"JPY|TWD|USD","category":"餐飲|交通|門票|購物|住宿|伴手禮|其他","note":"簡短備註","items":[{"name":"商品標準名稱或繁中名稱","originalName":"OCR原文","translatedName":"繁體中文翻譯","language":"ja|en|zh|mixed|unknown","normalizedName":"標準化繁中商品名","qty":數量,"unitPrice":單價,"subtotal":小計,"category":"分類","note":"備註"}]}
+      const prompt = `你是企業級收據 OCR JSON 轉換器。請辨識照片中的日本/英文/中文收據與商品清單。
+重要輸出限制：只能輸出一個合法 JSON 物件，第一個字元必須是 {，最後一個字元必須是 }。不要 markdown、不要說明、不要註解、不要多餘文字、不要用單引號、不要尾逗號。
+必須符合此 JSON 欄位：
+{
+  "storeName": "店名，若看不清填未知店家",
+  "date": "YYYY-MM-DD，若看不清填空字串",
+  "totalAmount": 0,
+  "currency": "JPY|TWD|USD",
+  "category": "餐飲|交通|門票|購物|住宿|伴手禮|其他",
+  "note": "簡短備註，可包含交易單號",
+  "items": [
+    {"name":"商品標準名稱或繁中名稱","originalName":"OCR原文","translatedName":"繁體中文翻譯","language":"ja|en|zh|mixed|unknown","normalizedName":"標準化繁中商品名","qty":1,"unitPrice":0,"subtotal":0,"category":"分類","note":""}
+  ]
+}
 規則：
-1. 每一個可辨識商品都要保留名稱、數量、單價、小計；看不清楚可留空或用 1 推定，勿捏造不存在商品。
+1. 每一個可辨識商品都要保留名稱、數量、單價、小計；看不清楚金額用 0，數量看不清用 1，不要捏造不存在商品。
 2. 商品可能是日文、英文、中文或混合語言；請自動判斷 language。
 3. translatedName 必須是繁體中文，品牌/型號/容量/規格需保留原文，例如 MSI、Micron、USB3.2、PCIe、SSD、RAM、1TB、64GB。
 4. normalizedName 請用利於搜尋與重複比對的繁體中文標準名稱，例如 USBメモリ/USB Memory/USB Flash Drive 統一為「USB 隨身碟」，SSD 統一為「固態硬碟」。
-5. name 優先填入 translatedName；originalName 保留 OCR 原文。`;
+5. name 優先填入 translatedName；originalName 保留 OCR 原文。
+6. 若收據總額是 NT$35400 或 ¥35400，totalAmount 請回 35400，只回數字。`;
       return {
         contents: [{
           parts: [
@@ -3912,7 +3925,7 @@
         // 因此改由 Prompt 強制 JSON，並在回傳端做 JSON 清洗與解析。
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 1800
+          maxOutputTokens: 4096
         }
       };
     }
@@ -3954,22 +3967,91 @@
       return null;
     }
 
-    function parseGeminiJsonText(text) {
-      const cleaned = String(text || '')
+    function normalizeSmartJsonText(text) {
+      return String(text || '')
+        .replace(/^\uFEFF/, '')
         .replace(/```json/gi, '')
         .replace(/```/g, '')
+        .replace(/[\u0000-\u001F\u007F]/g, ch => (ch === '\n' || ch === '\r' || ch === '\t') ? ch : ' ')
+        .replace(/[“”]/g, '"')
+        .replace(/[‘’]/g, "'")
+        .replace(/，(?=\s*[}\]])/g, ',')
         .trim();
-      try {
-        return JSON.parse(cleaned);
-      } catch(e) {
-        const match = cleaned.match(/\{[\s\S]*\}/);
-        if (!match) throw new Error('AI 未回傳正確 JSON 結構。');
-        try {
-          return JSON.parse(match[0]);
-        } catch(parseErr) {
-          throw new Error('AI 回傳 JSON 格式不完整，請重新拍攝或再辨識一次。');
+    }
+
+    function extractBalancedJson(text) {
+      const src = normalizeSmartJsonText(text);
+      const starts = [];
+      for (let i = 0; i < src.length; i++) {
+        if (src[i] === '{' || src[i] === '[') starts.push(i);
+      }
+      for (const start of starts) {
+        const open = src[start];
+        const close = open === '{' ? '}' : ']';
+        let depth = 0, inStr = false, esc = false;
+        for (let i = start; i < src.length; i++) {
+          const ch = src[i];
+          if (inStr) {
+            if (esc) esc = false;
+            else if (ch === '\\') esc = true;
+            else if (ch === '"') inStr = false;
+            continue;
+          }
+          if (ch === '"') { inStr = true; continue; }
+          if (ch === open) depth++;
+          else if (ch === close) {
+            depth--;
+            if (depth === 0) return src.slice(start, i + 1);
+          }
         }
       }
+      return '';
+    }
+
+    function repairLikelyJson(jsonText) {
+      let s = normalizeSmartJsonText(jsonText);
+      // 取最外層 JSON，避免模型在前後加文字。
+      const balanced = extractBalancedJson(s);
+      if (balanced) s = balanced;
+      // 常見 Gemini 輸出修復：尾逗號、全形冒號、非標準 true/false/null 外字元。
+      s = s
+        .replace(/：/g, ':')
+        .replace(/,\s*([}\]])/g, '$1')
+        .replace(/([{,]\s*)([A-Za-z_][\w$-]*)(\s*:)/g, '$1"$2"$3');
+      return s;
+    }
+
+    function fallbackReceiptFromText(text) {
+      const raw = String(text || '');
+      const amountMatch = raw.match(/(?:合計|total|TOTAL|金額|總額)[^0-9]{0,12}([0-9][0-9,]*)/i) || raw.match(/[¥￥$＄NT\$\s]*([0-9]{3,}(?:,[0-9]{3})*)\s*(?:円|JPY|TWD|NT)?/i);
+      const totalAmount = amountMatch ? Number(String(amountMatch[1]).replace(/,/g, '')) : 0;
+      const currency = /NT\$|TWD|台幣/i.test(raw) ? 'TWD' : 'JPY';
+      const lines = raw.split(/\n|\r|；|;/).map(x => x.trim()).filter(Boolean);
+      const itemCandidates = lines.filter(l => /[A-Za-z\u3040-\u30ff\u4e00-\u9fff]/.test(l) && !/storeName|totalAmount|currency|category|items|JSON|```/i.test(l)).slice(0, 12);
+      const items = itemCandidates.map(l => {
+        const price = (l.match(/([0-9][0-9,]*)\s*(?:円|JPY|NT)?\s*$/i) || [])[1];
+        const subtotal = price ? Number(price.replace(/,/g, '')) : 0;
+        const name = l.replace(/[¥￥$＄]?\s*[0-9][0-9,]*\s*(?:円|JPY|NT)?\s*$/i, '').trim() || l;
+        return { name, originalName: name, translatedName: name, language: 'unknown', normalizedName: name, qty: 1, unitPrice: subtotal, subtotal, category: '其他', note: 'fallback' };
+      });
+      return { storeName: 'AI 收據辨識', date: '', totalAmount, currency, category: '購物', note: 'AI 回傳非標準 JSON，已用文字備援解析；建議檢查明細。', items };
+    }
+
+    function parseGeminiJsonText(text) {
+      const cleaned = normalizeSmartJsonText(text);
+      const attempts = [cleaned, extractBalancedJson(cleaned), repairLikelyJson(cleaned)].filter(Boolean);
+      for (const candidate of attempts) {
+        try {
+          const parsed = JSON.parse(candidate);
+          // 若模型回傳陣列，取第一個物件，避免整個流程失敗。
+          if (Array.isArray(parsed)) return parsed[0] || { items: [] };
+          return parsed;
+        } catch(e) {}
+      }
+      // 最後備援：不要讓使用者看到「JSON 結構錯誤」直接中斷，至少把總額與文字留下。
+      const fallback = fallbackReceiptFromText(cleaned);
+      if (fallback.totalAmount || fallback.items.length) return fallback;
+      throw new Error('AI 回傳格式不完整，系統已啟用 JSON 修復但仍無法解析；請重新拍攝較清楚的收據。');
     }
 
     function withTimeoutPromise(promise, timeoutMs, timeoutMessage) {
@@ -3982,7 +4064,7 @@
       ]);
     }
 
-    // V14 Enterprise Auto AI Engine：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
+    // V14.1 Enterprise JSON Repair Engine：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
     // 流程：優先使用已儲存/預設穩定模型 -> 若模型不可用才快速 fallback -> 全流程硬性逾時。
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();

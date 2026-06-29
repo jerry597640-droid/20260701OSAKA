@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<!-- V13.5 Ultimate AI: 旅行儀表板 + 航班中心 + 匯率退稅 + AI日誌 + 家庭共享 + AI助理 -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -362,6 +363,15 @@
     .rate-card { border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; margin-top: 8px; }
 
 
+
+    /* V13.7.1 Enterprise AI Translation Engine：OCR 原文 / 繁中雙語商品欄位 */
+    .translation-toggle-row { display:flex; gap:6px; align-items:center; justify-content:flex-end; margin: 6px 0 0; }
+    .translation-toggle-row button { border:1px solid #dbeafe; background:#eff6ff; color:#0369a1; border-radius:999px; padding:4px 8px; font-size:9.5px; font-weight:900; }
+    .receipt-line-original { margin-top:2px; font-size:9.5px; line-height:1.35; color:#64748b; font-weight:800; }
+    .receipt-line-zh { margin-top:2px; font-size:10.5px; line-height:1.35; color:#0f172a; font-weight:900; }
+    .receipt-line-lang { display:inline-flex; align-items:center; gap:3px; margin-left:4px; border-radius:999px; background:#f1f5f9; color:#475569; padding:1px 5px; font-size:8.5px; font-weight:900; }
+    .receipt-translation-badge { display:inline-flex; align-items:center; gap:3px; border-radius:999px; background:#ecfeff; color:#0e7490; border:1px solid #a5f3fc; padding:2px 6px; font-size:8.5px; font-weight:900; }
+
     /* AI 收據管理系統：商品明細展開卡 */
     .receipt-items-box { margin-top: 8px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 14px; overflow: hidden; }
     .receipt-items-box summary { list-style: none; cursor: pointer; padding: 8px 10px; font-size: 10.5px; font-weight: 900; color: #334155; display: flex; align-items: center; justify-content: space-between; }
@@ -376,6 +386,80 @@
     .receipt-line-amount { text-align: right; font-family: ui-monospace, monospace; font-size: 11px; font-weight: 900; color: #047857; white-space: nowrap; }
     .receipt-search-card { border-radius: 16px; border: 1px solid #dbeafe; background: #eff6ff; padding: 10px; }
     .receipt-search-card input { width: 100%; border: 1px solid #bfdbfe; border-radius: 12px; padding: 8px 10px; font-size: 12px; font-weight: 800; color: #0f172a; outline: none; }
+
+    .duplicate-alert-panel { border-radius: 18px; border: 1px solid #fecdd3; background: linear-gradient(135deg, #fff1f2, #ffffff); padding: 12px; box-shadow: 0 10px 25px -10px rgba(190, 18, 60, 0.18); }
+    .duplicate-alert-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 900; color: #be123c; }
+    .duplicate-alert-list { margin-top: 8px; display: grid; gap: 6px; }
+    .duplicate-alert-item { border-radius: 13px; border: 1px solid #ffe4e6; background: #ffffff; padding: 8px 10px; font-size: 10.5px; line-height: 1.45; color: #475569; font-weight: 800; }
+    .duplicate-alert-item b { color: #0f172a; }
+    .duplicate-alert-tag { display: inline-flex; align-items: center; gap: 3px; border-radius: 999px; background: #ffe4e6; color: #be123c; padding: 2px 6px; font-size: 8.5px; font-weight: 900; border: 1px solid #fecdd3; }
+    .duplicate-note-badge { display: inline-flex; align-items: center; gap: 3px; margin-left: 5px; border-radius: 999px; background: #fff7ed; color: #c2410c; padding: 1px 6px; font-size: 8.5px; font-weight: 900; border: 1px dashed #fb923c; vertical-align: middle; }
+    .duplicate-note-badge svg { width: 10px; height: 10px; }
+    .expense-record.possible-duplicate { border-color: #fecdd3 !important; background: linear-gradient(135deg, #fff7f7, #ffffff) !important; }
+
+
+
+    /* V12 Ultimate：離線備援包與緊急模式 */
+    .ultimate-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg, #111827 0%, #1d4ed8 55%, #7c3aed 100%); color: white; box-shadow: 0 16px 35px rgba(30, 64, 175, 0.18); }
+    .ultimate-card { border-radius: 18px; border: 1px solid #e2e8f0; background: #ffffff; padding: 12px; box-shadow: 0 10px 25px -8px rgba(15,23,42,.08); }
+    .ultimate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .ultimate-action { border-radius: 16px; padding: 12px 8px; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 10.5px; font-weight: 900; line-height: 1.25; text-align: center; }
+    .emergency-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 55%, #f97316 100%); color: white; box-shadow: 0 16px 35px rgba(220,38,38,.18); }
+    .emergency-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .emergency-btn { border-radius: 18px; padding: 13px 8px; min-height: 78px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; font-size:11px; font-weight:900; text-align:center; box-shadow:0 8px 18px rgba(15,23,42,.06); }
+    .emergency-phrase { border-radius: 16px; border: 1px solid #fee2e2; background: #fff7ed; padding: 11px; }
+    .emergency-phrase .jp { font-size: 15px; line-height: 1.45; color: #7f1d1d; font-weight: 950; }
+    .emergency-phrase .zh { margin-top: 4px; font-size: 10.5px; color: #64748b; font-weight: 800; }
+    .offline-pack-preview { border-radius: 16px; background: #f8fafc; border: 1px dashed #cbd5e1; padding: 10px; font-size: 10.5px; color: #475569; line-height: 1.6; }
+    .lightbox-tools { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+
+
+
+    /* V13 Enterprise Plus Pro：安全返程中心 */
+    .plus-pro-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg, #111827 0%, #1e3a8a 48%, #7f1d1d 100%); color: #fff; box-shadow: 0 18px 38px -22px rgba(15,23,42,.55); }
+    .safe-return-card { border-radius: 20px; border: 1px solid #bfdbfe; background: linear-gradient(135deg,#eff6ff,#fff); padding: 12px; box-shadow: 0 10px 25px -12px rgba(2,132,199,.18); }
+    .safe-guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .safe-guide-item { border-radius: 16px; border: 1px solid #e2e8f0; background: #fff; padding: 10px; display: flex; gap: 9px; align-items: flex-start; }
+    .safe-guide-icon { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: #dbeafe; color: #1d4ed8; font-weight: 900; font-size: 12px; }
+    .safe-guide-title { font-size: 11.5px; font-weight: 900; color: #0f172a; margin: 0; }
+    .safe-guide-text { font-size: 10.5px; line-height: 1.55; color: #475569; margin: 3px 0 0; font-weight: 700; }
+    .safe-action-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .safe-action-btn { border-radius: 14px; padding: 10px 6px; text-align: center; font-size: 10.5px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 42px; }
+    .night-warning-card { border-radius: 18px; border: 1px solid #fed7aa; background: linear-gradient(135deg,#fff7ed,#fff); padding: 12px; }
+    .module-dashboard { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .module-tile { border-radius: 16px; border: 1px solid #e2e8f0; background: #fff; padding: 10px; min-height: 68px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .module-tile .k { font-size: 10px; font-weight: 900; color: #64748b; }
+    .module-tile .v { font-size: 13px; font-weight: 900; color: #0f172a; }
+    @media (orientation: landscape) and (min-width: 700px) {
+      .safe-guide-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .module-dashboard { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    }
+
+
+    /* V13.5 Ultimate AI：旅行儀表板、航班、退稅、AI助理 */
+    .v135-hero { border-radius: 24px; padding: 14px; background: linear-gradient(135deg,#020617 0%,#0f766e 45%,#2563eb 100%); color:#fff; box-shadow:0 18px 40px -24px rgba(15,23,42,.7); }
+    .v135-topline { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .v135-badge { border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.18); padding:4px 8px; font-size:10px; font-weight:900; color:#e0f2fe; white-space:nowrap; }
+    .v135-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
+    .v135-stat { border-radius:16px; background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.14); padding:10px; min-height:64px; }
+    .v135-stat .k { font-size:9.5px; color:#bfdbfe; font-weight:900; letter-spacing:.04em; }
+    .v135-stat .v { margin-top:3px; font-size:13px; line-height:1.3; color:#fff; font-weight:950; }
+    .v135-action-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:10px; }
+    .v135-action { border-radius:15px; background:#fff; border:1px solid #e2e8f0; padding:9px 3px; min-height:58px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:9.5px; line-height:1.2; color:#0f172a; font-weight:950; box-shadow:0 8px 18px -14px rgba(15,23,42,.35); }
+    .v135-panel { border-radius:20px; border:1px solid #dbeafe; background:linear-gradient(135deg,#eff6ff,#fff); padding:12px; box-shadow:0 12px 28px -20px rgba(37,99,235,.45); }
+    .v135-panel-title { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+    .v135-panel-title h4 { margin:0; font-size:12.5px; color:#0f172a; font-weight:950; }
+    .v135-chip-row { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
+    .v135-chip { flex:0 0 auto; border-radius:999px; border:1px solid #bfdbfe; background:#fff; color:#0369a1; padding:6px 9px; font-size:10.5px; font-weight:950; }
+    .v135-warning { border-radius:18px; border:1px solid #fed7aa; background:#fff7ed; padding:11px; color:#9a3412; font-size:11px; line-height:1.55; font-weight:850; }
+    .v135-flight-card { border-radius:17px; border:1px solid #e2e8f0; background:#fff; padding:10px; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .v135-flight-card .route { font-size:12px; font-weight:950; color:#0f172a; }
+    .v135-flight-card .time { font-family:ui-monospace,monospace; font-size:12px; font-weight:950; color:#0f766e; }
+    .v135-ai-float { position:fixed; right:calc(50% - 226px); bottom:calc(142px + var(--safe-bottom)); z-index:39; width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 28px rgba(37,99,235,.28); font-size:20px; }
+    @media(max-width:520px){ .v135-ai-float{ right:16px; } }
+    .v135-modal-sheet { width:100%; max-width:480px; max-height:88vh; overflow-y:auto; border-radius:24px; background:#fff; padding:16px; box-shadow:0 24px 60px rgba(15,23,42,.35); }
+    .v135-qa { border-radius:16px; border:1px solid #e2e8f0; background:#f8fafc; padding:10px; font-size:11.5px; line-height:1.55; color:#334155; font-weight:800; }
+    @media (orientation: landscape) and (min-width:700px){ .v135-grid{grid-template-columns:repeat(4,minmax(0,1fr));} .v135-action-grid{grid-template-columns:repeat(8,minmax(0,1fr));} }
 
     @media print {
       @page { size: A4; margin: 12mm; }
@@ -398,8 +482,8 @@
             <p class="text-[10px] font-black tracking-[0.2em] text-sky-600 flex items-center gap-1">
               <i data-lucide="plane-takeoff" class="w-3.5 h-3.5"></i> KANSAI 2026
             </p>
-            <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊</h1>
-            <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜領隊隨身極客版</p>
+            <h1 class="mt-1 text-base leading-tight font-black text-slate-950">京阪奈盛夏自由行手冊 <span class="text-[10px] rounded-full bg-violet-100 text-violet-700 px-1.5 py-0.5 align-middle">V13.5 Ultimate AI</span></h1>
+            <p class="mt-0.5 text-[10px] text-slate-500">大阪・京都・奈良｜AI Travel OS｜Enterprise Weather Engine</p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <!-- 頂部 API 金鑰設定捷徑 -->
@@ -448,6 +532,9 @@
       
       <!-- 行程視野 (Itinerary Tab) -->
       <section id="itinerary-view" class="space-y-4">
+
+        <!-- V13.5 Ultimate AI 旅行儀表板 -->
+        <div id="v135-dashboard" class="space-y-3"></div>
         
         <!-- 今日快速面板 -->
         <div class="flex items-center justify-between">
@@ -466,6 +553,9 @@
           </button>
           <button onclick="openRouteMap()" class="tap quick-btn bg-sky-600 text-white shadow-md">
             <i data-lucide="map-pin" class="w-4 h-4 mb-0.5"></i><span>導航<br>路徑</span>
+          </button>
+          <button onclick="switchMainTab('emergency')" class="tap quick-btn bg-rose-600 text-white shadow-md">
+            <i data-lucide="siren" class="w-4 h-4 mb-0.5"></i><span>緊急<br>SOS</span>
           </button>
           <button onclick="scrollToTimeline()" class="tap quick-btn bg-white text-slate-700 border border-slate-200 shadow-xs">
             <i data-lucide="navigation" class="w-4 h-4 mb-0.5 text-slate-500"></i><span>看<br>時間軸</span>
@@ -512,15 +602,23 @@
       
       <!-- 旅行記帳 (Expense Tab) -->
       <section id="expense-view" class="hidden space-y-4"></section>
+
+      <!-- 離線備援包 (Offline Tab) -->
+      <section id="offline-view" class="hidden space-y-4"></section>
+
+      <!-- 緊急模式 (Emergency Tab) -->
+      <section id="emergency-view" class="hidden space-y-4"></section>
     </main>
 
     <!-- 底部導航欄 -->
-    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-6 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
+    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-8 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
       <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-xl py-1 text-[9px] font-black text-sky-600"><span class="block text-lg"><i data-lucide="calendar" class="w-5 h-5 mx-auto mb-0.5"></i></span>行程</button>
       <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="luggage" class="w-5 h-5 mx-auto mb-0.5"></i></span>打包</button>
       <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="ticket" class="w-5 h-5 mx-auto mb-0.5"></i></span>周遊券</button>
       <button onclick="switchMainTab('hotel')" id="nav-hotel" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="home" class="w-5 h-5 mx-auto mb-0.5"></i></span>民宿</button>
       <button onclick="switchMainTab('expense')" id="nav-expense" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="japanese-yen" class="w-5 h-5 mx-auto mb-0.5"></i></span>記帳</button>
+      <button onclick="switchMainTab('offline')" id="nav-offline" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="archive" class="w-5 h-5 mx-auto mb-0.5"></i></span>離線</button>
+      <button onclick="switchMainTab('emergency')" id="nav-emergency" class="tap rounded-xl py-1 text-[9px] font-black text-rose-500"><span class="block text-lg"><i data-lucide="siren" class="w-5 h-5 mx-auto mb-0.5"></i></span>SOS</button>
       <button onclick="openRouteMap()" id="nav-route" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="map" class="w-5 h-5 mx-auto mb-0.5"></i></span>動線</button>
     </nav>
   </div>
@@ -629,12 +727,47 @@
       <div class="lightbox-img-wrap">
         <img id="lightbox-image" class="lightbox-img" src="" alt="收據原圖">
       </div>
-      <button onclick="closeLightbox()" class="tap w-full rounded-xl bg-slate-950/50 hover:bg-slate-900 text-white border border-white/10 py-2.5 text-xs font-black">返回手冊</button>
+      <div class="lightbox-tools">
+        <button onclick="downloadCurrentLightboxImage()" class="tap rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/10 py-2.5 text-xs font-black">下載原圖</button>
+        <button onclick="closeLightbox()" class="tap rounded-xl bg-slate-950/50 hover:bg-slate-900 text-white border border-white/10 py-2.5 text-xs font-black">返回手冊</button>
+      </div>
     </div>
   </div>
 
   <!-- Toast 訊息通知 -->
   <div id="toast" class="pointer-events-none fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-slate-950/90 px-4 py-2 text-[11px] font-black text-white opacity-0 shadow-lg transition-opacity">完成</div>
+
+
+
+  <!-- V13.5 AI 旅遊助理浮動按鈕 -->
+  <button type="button" onclick="openV135AiAssistant()" class="tap v135-ai-float" aria-label="AI 旅遊助理">🤖</button>
+
+  <!-- V13.5 AI 旅遊助理 -->
+  <div id="v135-ai-modal" class="receipt-ai-modal">
+    <div class="v135-modal-sheet animate-scale-up">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+        <div>
+          <p class="text-[9px] font-black tracking-widest text-violet-600 flex items-center gap-1"><i data-lucide="bot" class="w-3.5 h-3.5"></i> V13.5 ULTIMATE AI</p>
+          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 旅遊助理</h3>
+          <p class="text-[10px] text-slate-500 mt-1">離線可用：依目前行程、民宿、安全與收據資料提供快速建議。</p>
+        </div>
+        <button onclick="closeV135AiAssistant()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <button onclick="v135Ask('umbrella')" class="tap rounded-xl bg-sky-600 text-white py-2 text-xs font-black">今天要帶傘嗎</button>
+        <button onclick="v135Ask('hotel')" class="tap rounded-xl bg-slate-900 text-white py-2 text-xs font-black">回民宿最快</button>
+        <button onclick="v135Ask('safety')" class="tap rounded-xl bg-rose-600 text-white py-2 text-xs font-black">夜間安全</button>
+        <button onclick="v135Ask('budget')" class="tap rounded-xl bg-emerald-600 text-white py-2 text-xs font-black">今日花費</button>
+        <button onclick="v135Ask('flight')" class="tap rounded-xl bg-indigo-600 text-white py-2 text-xs font-black">航班提醒</button>
+        <button onclick="v135Ask('tax')" class="tap rounded-xl bg-amber-500 text-white py-2 text-xs font-black">退稅提醒</button>
+      </div>
+      <div id="v135-ai-answer" class="v135-qa mt-3">請點選上方快捷問題。真正像領隊的回答，正在待命。</div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <button onclick="copyText(document.getElementById('v135-ai-answer').innerText, 'AI 建議已複製')" class="tap rounded-xl bg-slate-100 text-slate-700 py-2 text-xs font-black">複製建議</button>
+        <button onclick="closeV135AiAssistant()" class="tap rounded-xl bg-slate-900 text-white py-2 text-xs font-black">關閉</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 隱藏列印區域 -->
   <div id="print-area" aria-hidden="true" class="hidden"></div>
@@ -678,7 +811,7 @@
           <p class="text-[9px] font-black tracking-widest text-blue-600 flex items-center gap-1">
             <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-500"></i> GEMINI API DIAGNOSTICS
           </p>
-          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 AI 拍照辨識與容錯設置</h3>
+          <h3 class="mt-0.5 text-sm font-black text-slate-950">🤖 🤖 V14 自動 AI 引擎設定</h3>
         </div>
         <button onclick="closeReceiptAiSettings()" class="tap rounded-full bg-slate-100 w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500">✕</button>
       </div>
@@ -686,7 +819,7 @@
       <div class="mt-3 space-y-3">
         <div class="ai-key-help">
           <p class="text-[11px] leading-relaxed text-slate-700 font-bold">
-            請貼上您的 Gemini API 金鑰。系統已啟用「自動清洗模組」，會自動為您修正複製時產生的格式雜訊：
+            請貼上您的 Gemini API 金鑰一次即可。V15 會自動清洗、保存、排隊、快取、降級與避開 429，不需要手動選擇模型或 API 版本。
           </p>
           <div class="ai-key-actions">
             <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="tap bg-blue-600 text-white block rounded-xl py-2 text-xs font-black text-center flex items-center justify-center gap-1">
@@ -698,13 +831,13 @@
         <div>
           <label class="block text-[10px] font-black text-slate-500">您的 Gemini API Key</label>
           <div class="ai-key-input-wrap">
-            <input id="receipt-ai-key-input" type="password" placeholder="請在此貼上您的金鑰 (通常以 AIzaSy 開頭)" autocomplete="off" oninput="sanitizeKeyFieldImmediately()">
+            <input id="receipt-ai-key-input" type="password" placeholder="請貼上 Gemini API Key，系統會自動處理" autocomplete="off" oninput="sanitizeKeyFieldImmediately()">
             <button id="receipt-ai-key-eye" onclick="toggleReceiptAiKeyVisibility()" class="tap rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">👁</button>
           </div>
         </div>
 
         <div>
-          <label class="block text-[10px] font-black text-slate-500">模型模式（V10 Ultimate：會自動降級到可用穩定模型）</label>
+          <label class="block text-[10px] font-black text-slate-500">模型模式（V13.7.4 自動穩定：自動偵測／降級／保存可用模型）</label>
           <select id="receipt-ai-model-select" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="gemini-1.5-flash" selected>gemini-1.5-flash (V10 預設：穩定優先)</option>
             <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (穩定自動更新)</option>
@@ -713,24 +846,36 @@
           </select>
         </div>
 
-        <div>
-          <label class="block text-[10px] font-black text-slate-500">API 請求版本</label>
+        <div style="display:none">
+          <label class="block text-[10px] font-black text-slate-500">API 請求版本（V14 自動選擇）</label>
           <select id="receipt-ai-endpoint-version" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="v1beta" selected>v1beta (支援多模態 JSON Schema 輸出)</option>
             <option value="v1">v1 (部分企業/受限帳戶指定穩定端點)</option>
           </select>
         </div>
 
-        <div id="receipt-ai-test-status" class="ai-test-status">準備就緒，等候測試連線。</div>
+        <div style="display:none" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+          <label class="block text-[10px] font-black text-emerald-700">V14 Enterprise API 模式（自動）</label>
+          <select id="receipt-ai-mode-select" class="mt-1 w-full border border-emerald-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none" onchange="toggleEnterpriseProxyHint()">
+            <option value="direct">前端直連 Gemini（免架站，可立即使用）</option>
+            <option value="proxy">Cloudflare Worker Proxy（最穩定／正式推薦）</option>
+          </select>
+          <label class="block mt-2 text-[10px] font-black text-emerald-700">Worker Proxy URL（選用）</label>
+          <input id="receipt-ai-proxy-url-input" class="mt-1 w-full border border-emerald-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none" placeholder="https://your-worker.yourname.workers.dev">
+          <p id="enterprise-proxy-hint" class="mt-2 text-[10px] leading-relaxed text-emerald-800 font-bold">正式穩定版建議使用 Worker Proxy：API Key 不放在 HTML，429 / Timeout / 模型切換由後端統一處理。</p>
+        </div>
+
+        <div id="receipt-ai-test-status" class="ai-test-status">V15 Ultimate 就緒：貼上 Key 後按「自動測試並儲存」，系統會自動挑選穩定模型、Queue、Cache 與 429 冷卻。</div>
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-2">
         <button onclick="testReceiptAiKey()" class="tap rounded-xl bg-indigo-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 測試連線
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 自動測試
         </button>
         <button onclick="saveReceiptAiSettingsFromModal()" class="tap rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white flex items-center justify-center gap-1">
-          <i data-lucide="save" class="w-3.5 h-3.5"></i> 保存設置
+          <i data-lucide="save" class="w-3.5 h-3.5"></i> 儲存
         </button>
+        
         <button onclick="closeReceiptAiSettings()" class="tap col-span-2 rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">關閉</button>
       </div>
     </div>
@@ -838,10 +983,19 @@
     const tripDateLabels = { 1: '7/1（三）', 2: '7/2（四）', 3: '7/3（五）', 4: '7/4（六）', 5: '7/5（日）', 6: '7/6（一）' };
     const primaryWeatherCityByDay = { 1: 'osaka', 2: 'osaka', 3: 'kyoto', 4: 'nara', 5: 'osaka', 6: 'osaka' };
     const localWeatherLinks = {
-      osaka: { label: '大阪', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=270000' },
-      kyoto: { label: '京都', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=260000' },
-      nara: { label: '奈良', url: 'https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=290000' }
+      osaka: { label: '大阪', url: 'https://tenki.jp/forecast/6/30/6200/27100/' },
+      kyoto: { label: '京都', url: 'https://tenki.jp/forecast/6/29/6110/26100/' },
+      nara: { label: '奈良', url: 'https://tenki.jp/forecast/6/31/6410/29201/' },
+      radar: { label: '雨雲雷達', url: 'https://tenki.jp/radar/' },
+      typhoon: { label: '颱風資訊', url: 'https://tenki.jp/bousai/typhoon/' },
+      top: { label: '日本氣象協會', url: 'https://tenki.jp/' }
     };
+    const HOTEL_NAME = 'JS曉宅・靜谷';
+    const HOTEL_ADDRESS_JP = '〒557-0031 大阪府大阪市西成区鶴見橋1-15-21';
+    const HOTEL_ADDRESS_EN = '1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031 日本';
+    const HOTEL_LAT = 34.645591234407185;
+    const HOTEL_LON = 135.49395738685791;
+    const HOTEL_COORDS = `${HOTEL_LAT},${HOTEL_LON}`;
 
     let currentDay = 1;
     let activeMainTab = 'itinerary';
@@ -902,7 +1056,7 @@
     const dbVersion = 3; // 升級至版本 3：加入 settings 獨立物件儲存區
 
     // 全域記憶體金鑰快取，做為極致沙盒環境防護 (100% 可用防線)
-    window.__receiptAiSettingsMemCache = { key: "", model: "gemini-1.5-flash", apiVersion: "v1beta" };
+    window.__receiptAiSettingsMemCache = { key: "", model: "gemini-1.5-flash", apiVersion: "v1beta", apiMode: "direct", proxyUrl: "" };
 
     function initDb() {
       return new Promise((resolve, reject) => {
@@ -1015,6 +1169,7 @@
       renderDayTabs();
       renderStaticPanels();
       switchDay(1);
+      renderV135Dashboard();
       refreshWeather(false);
       bindUiHelpers();
       bindExpenseAutoSave();
@@ -1119,7 +1274,70 @@
       dialog.classList.remove('flex');
     }
 
-    // 氣象資訊刷取
+    // V13.7.1 Enterprise AI Translation Engine：Open-Meteo 主資料源 + tenki.jp 官方備援入口
+    const WEATHER_CACHE_KEY = 'kansai2026_enterprise_weather_cache_v136';
+    const WEATHER_TIMEOUT_MS = 6500;
+
+    function fetchWithTimeout(url, timeoutMs = WEATHER_TIMEOUT_MS) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { signal: controller.signal, cache: 'no-store' })
+        .finally(() => clearTimeout(timer));
+    }
+
+    async function fetchWeatherCity(city, retry = 2) {
+      let lastErr;
+      for (let attempt = 0; attempt <= retry; attempt++) {
+        try {
+          const res = await fetchWithTimeout(weatherApiUrl(city));
+          if (!res.ok) throw new Error('Open-Meteo HTTP ' + res.status);
+          const data = await res.json();
+          data.__updatedAt = new Date().toISOString();
+          return { city, data };
+        } catch (err) {
+          lastErr = err;
+          if (attempt < retry) await new Promise(r => setTimeout(r, 700 * (attempt + 1)));
+        }
+      }
+      throw lastErr;
+    }
+
+    function saveWeatherCache() {
+      try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), weatherCache })); } catch(e) {}
+    }
+
+    function loadWeatherCache() {
+      try {
+        const obj = JSON.parse(localStorage.getItem(WEATHER_CACHE_KEY) || '{}');
+        if (obj && obj.weatherCache) {
+          weatherCache = obj.weatherCache;
+          return obj.savedAt || null;
+        }
+      } catch(e) {}
+      return null;
+    }
+
+    function renderWeatherFallback(reason='未連線') {
+      const grid = document.getElementById('weather-grid');
+      const cachedAt = loadWeatherCache();
+      if (cachedAt && Object.keys(weatherCache).length) {
+        renderTripWeatherCards(true);
+        document.getElementById('weather-updated').textContent = '快取 ' + new Date(cachedAt).toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
+        if (typeof renderItinerary === 'function') renderItinerary(currentDay);
+        if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+        return;
+      }
+      grid.innerHTML = cities.map(c => {
+        const official = localWeatherLinks[c.key]?.url || 'https://tenki.jp/';
+        return `
+          <a href="${official}" target="_blank" rel="noopener noreferrer" class="tap rounded-xl border border-amber-100 bg-amber-50 p-2 text-center">
+            <div class="text-sm">🌦️</div><div class="text-[11px] font-black text-amber-900">${c.name}</div><div class="text-[9px] text-amber-600">tenki.jp</div>
+          </a>`;
+      }).join('');
+      document.getElementById('weather-updated').textContent = reason;
+      if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+    }
+
     async function refreshWeather(manual) {
       const grid = document.getElementById('weather-grid');
       grid.innerHTML = cities.map(c => `
@@ -1129,30 +1347,25 @@
           <div class="weather-skeleton h-3 rounded-full"></div>
         </div>
       `).join('');
+      document.getElementById('weather-updated').textContent = 'Open-Meteo 讀取中';
       try {
-        const results = await Promise.all(cities.map(async city => {
-          const url = weatherApiUrl(city);
-          const res = await fetch(url);
-          if(!res.ok) throw new Error('weather error');
-          const data = await res.json();
-          return { city, data };
-        }));
-        weatherCache = Object.fromEntries(results.map(({city, data}) => [city.key, data]));
-        renderTripWeatherCards();
-        renderItinerary(currentDay);
-        if(manual) showToast('關西旅遊日氣候預報已更新');
+        const results = await Promise.allSettled(cities.map(city => fetchWeatherCity(city, 2)));
+        const ok = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+        if (!ok.length) throw new Error('all weather requests failed');
+        ok.forEach(({city, data}) => { weatherCache[city.key] = data; });
+        saveWeatherCache();
+        renderTripWeatherCards(false);
+        if (typeof renderItinerary === 'function') renderItinerary(currentDay);
+        if (typeof renderV135Dashboard === 'function') renderV135Dashboard();
+        if(manual) showToast('V13.6 天氣已更新：Open-Meteo 即時資料');
       } catch(err) {
-        grid.innerHTML = cities.map(c => `
-          <a href="https://www.google.com/search?q=${encodeURIComponent(c.name+' 2026/7 天氣')}" target="_blank" class="tap rounded-xl border border-amber-100 bg-amber-50 p-2 text-center">
-            <div class="text-sm">🌦️</div><div class="text-[11px] font-black text-amber-900">${c.name}</div><div class="text-[9px] text-amber-600">查預報</div>
-          </a>
-        `).join('');
-        document.getElementById('weather-updated').textContent = '未連線';
+        renderWeatherFallback(navigator.onLine ? '使用快取/官方' : '離線模式');
+        if(manual) showToast('即時天氣暫時無法取得，已切換快取或 tenki.jp');
       }
     }
 
     // 渲染氣象預報卡
-    function renderTripWeatherCards() {
+    function renderTripWeatherCards(fromCache=false) {
       const grid = document.getElementById('weather-grid');
       const targetDate = tripDates[currentDay];
       grid.innerHTML = cities.map(city => {
@@ -1173,7 +1386,7 @@
             </div>
           </article>`;
       }).join('');
-      document.getElementById('weather-updated').textContent = `D${currentDay} ${tripDateLabels[currentDay]}`;
+      document.getElementById('weather-updated').textContent = `${fromCache ? '快取' : '更新'} D${currentDay} ${tripDateLabels[currentDay]}`;
     }
 
     // 氣象細節 analysis 模型
@@ -1540,7 +1753,7 @@
       if(!label) return;
       const cityKey = primaryWeatherCityByDay[currentDay] || 'osaka';
       const city = localWeatherLinks[cityKey] || localWeatherLinks.osaka;
-      label.textContent = `開啟 D${currentDay} 💡 ${city.label} 氣象廳即時報`;
+      label.textContent = `開啟 D${currentDay} 🌤 日本氣象協會（${city.label}）`;
     }
 
     function openPrimaryLocalWeather() {
@@ -1550,7 +1763,14 @@
     }
 
     function weatherApiUrl(city) {
-      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date=2026-07-01&end_date=2026-07-06`;
+      const today = new Date();
+      const tripStart = new Date('2026-07-01T00:00:00+09:00');
+      const tripEnd = new Date('2026-07-06T00:00:00+09:00');
+      const fmt = d => d.toISOString().slice(0,10);
+      // Open-Meteo 可查未來預報；旅行前/旅行中以行程日為主，若已過旅行期則顯示目前近期天氣，避免永遠卡在讀取中。
+      const startDate = today <= tripEnd ? '2026-07-01' : fmt(today);
+      const endDate = today <= tripEnd ? '2026-07-06' : fmt(new Date(today.getTime() + 6*86400000));
+      return `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=weather_code,precipitation_probability,precipitation,temperature_2m&current=temperature_2m,weather_code,precipitation,wind_speed_10m&timezone=Asia%2FTokyo&start_date=${startDate}&end_date=${endDate}`;
     }
 
     async function openWeatherDetail(key) {
@@ -1614,15 +1834,18 @@
       
       switchMainTab('itinerary', false);
       renderItinerary(day);
+      renderV135Dashboard();
       updatePrimaryLocalWeatherButton();
       updateFootprintProgressBar(day);
+      renderOfflinePanel();
+      renderEmergencyPanel();
       if(Object.keys(weatherCache).length) renderTripWeatherCards();
       window.scrollTo({top:0, behavior:'smooth'});
     }
 
     function switchMainTab(tab, shouldScroll=true) {
       activeMainTab = tab;
-      ['itinerary','packing','ticket','hotel','expense'].forEach(id => {
+      ['itinerary','packing','ticket','hotel','expense','offline','emergency'].forEach(id => {
         const section = document.getElementById(`${id}-view`);
         if(section) section.classList.toggle('hidden', id !== tab);
         const nav = document.getElementById(`nav-${id}`);
@@ -1760,16 +1983,27 @@
           <p class="text-[9px] font-black text-slate-400">日本地址（大字導航）</p>
           <p class="mt-0.5 select-all text-sm font-black text-slate-900">〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
           <hr class="my-3 border-slate-100">
-          <p class="text-[9px] font-black text-slate-400">英文地址（給機場或入境申報）</p>
-          <p class="mt-0.5">1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031, Japan</p>
+          <p class="text-[9px] font-black text-slate-400">英文地址（給機場、入境申報與叫車）</p>
+          <p class="mt-0.5 select-all text-sm font-black text-slate-900">1 Chome-15-21 Tsurumibashi, Nishinari Ward, Osaka, 557-0031 日本</p>
+          <div class="mt-3 rounded-xl bg-sky-50 p-3 text-sky-900 text-[11px]">
+            <p class="text-[9px] font-black text-sky-500">Google Maps 精準座標</p>
+            <p class="mt-0.5 select-all font-mono font-black">34.645591234407185, 135.49395738685791</p>
+          </div>
+          <div class="mt-2 grid grid-cols-2 gap-2">
+            <button type="button" onclick="copyText(HOTEL_ADDRESS_EN, '英文民宿地址已複製')" class="tap rounded-xl bg-slate-100 px-3 py-2 text-[11px] font-black text-slate-700">📋 複製英文地址</button>
+            <button type="button" onclick="copyText(HOTEL_COORDS, '民宿座標已複製')" class="tap rounded-xl bg-sky-100 px-3 py-2 text-[11px] font-black text-sky-700">📍 複製座標</button>
+          </div>
           <div class="mt-3 rounded-xl bg-amber-50 p-3 text-amber-900 text-[11px]">退房日 11:00 前完成。沿途有遮雨棚商店街步行10分到天下茶屋站，拖行李防雨不暴曬。</div>
           <div class="mt-4 grid grid-cols-2 gap-2">
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}" target="_blank" class="tap rounded-xl bg-sky-600 py-2.5 text-center text-xs font-black text-white">🗺️ 導航地圖</a>
-            <button type="button" onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分、鶴見橋商店街の中です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21')}')" class="tap rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">🚕 司機大字卡</button>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}" target="_blank" class="tap rounded-xl bg-sky-600 py-2.5 text-center text-xs font-black text-white">🗺️ 導航地圖</a>
+            <button type="button" onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分、鶴見橋商店街の中です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}')" class="tap rounded-xl bg-slate-900 py-2.5 text-xs font-black text-white">🚕 司機大字卡</button>
           </div>
-        </div>`;
+        </div>
+        ${buildSafetyReturnGuideHtml('hotel')}`;
 
       renderExpensePanel();
+      renderOfflinePanel();
+      renderEmergencyPanel();
     }
 
     function panelWrap(title, items) {
@@ -2122,6 +2356,13 @@
           <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">數據保存於手機儲存區。支援拍攝日本收據由 AI 自動辨識關聯相片儲存。</p>
         </div>
 
+        <div class="module-dashboard mt-3">
+          <button onclick="switchMainTab('expense')" class="tap module-tile"><span class="k">📸 收據中心</span><span class="v">OCR / 重複偵測</span></button>
+          <button onclick="switchMainTab('itinerary')" class="tap module-tile"><span class="k">🗺 行程中心</span><span class="v">每日時間軸</span></button>
+          <button onclick="switchMainTab('offline')" class="tap module-tile"><span class="k">📦 離線備援</span><span class="v">一鍵保存</span></button>
+          <button onclick="switchMainTab('emergency')" class="tap module-tile"><span class="k">🛡 安全中心</span><span class="v">返程 / SOS</span></button>
+        </div>
+
         <!-- 匯率轉換與分帳工具 -->
         <div class="rate-card space-y-3">
           <div class="flex items-center justify-between">
@@ -2269,6 +2510,7 @@
           <h3>AI 收據管理系統</h3>
           <button type="button" onclick="clearAllExpenses()" class="tap rounded-full bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-700">清除全部</button>
         </div>
+        <div id="possible-duplicate-list" class="hidden"></div>
         <div id="expense-records" class="space-y-2"></div>`;
       
       renderExpenseRecords();
@@ -2298,6 +2540,64 @@
       const day = String(record?.day || '');
       const itemSig = buildItemLinesSignature(record?.itemLines || [], currency);
       return [store, amount, currency, day, itemSig].join('::');
+    }
+
+    function getReceiptDateForDuplicate(record) {
+      const raw = String(record?.receiptDate || '').trim();
+      if(/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+      const byDay = tripDates[String(record?.day || '')];
+      if(byDay) return byDay;
+      const created = String(record?.createdAt || '').slice(0, 10);
+      return /^\d{4}-\d{2}-\d{2}$/.test(created) ? created : '';
+    }
+
+    function buildStrictDuplicateListKey(record) {
+      const currency = String(record?.currency || 'JPY').toUpperCase();
+      const amount = Math.round(Number(record?.amount || 0));
+      const date = getReceiptDateForDuplicate(record);
+      const itemSig = buildItemLinesSignature(record?.itemLines || [], currency);
+      const fallbackItem = normalizeDuplicateText(record?.item || '');
+      const itemPart = itemSig || fallbackItem;
+      if(!date || !amount || !itemPart) return '';
+      return [date, currency, amount, itemPart].join('::');
+    }
+
+    function computePossibleDuplicateMarks(records) {
+      const groups = {};
+      (records || []).forEach(r => {
+        const key = buildStrictDuplicateListKey(r);
+        if(!key) return;
+        if(!groups[key]) groups[key] = [];
+        groups[key].push(r);
+      });
+      const marks = {};
+      Object.values(groups).filter(g => g.length >= 2).forEach((group, idx) => {
+        group.forEach(r => {
+          marks[String(r.id)] = { isDuplicate: true, groupIndex: idx + 1, groupSize: group.length };
+        });
+      });
+      return { marks, groups: Object.values(groups).filter(g => g.length >= 2) };
+    }
+
+    function buildPossibleDuplicateListHtml(groups) {
+      if(!groups || !groups.length) return '';
+      const rows = groups.map((group, idx) => {
+        const first = group[0];
+        const date = getReceiptDateForDuplicate(first);
+        const itemCount = getReceiptItemCount(first);
+        const names = normalizeReceiptItemLines(first.itemLines || [], first.currency).slice(0, 4).map(x => `${x.name}×${x.qty}`).join('、') || first.item;
+        return `<div class="duplicate-alert-item">
+          <b>可能重複清單 ${idx + 1}</b>｜${escapeHtml(date)}｜${formatMoney(first.amount, first.currency)}｜${group.length} 筆
+          <div class="mt-0.5">${escapeHtml(names)}${itemCount ? `｜共 ${itemCount} 件` : ''}</div>
+        </div>`;
+      }).join('');
+      return `<div class="duplicate-alert-panel card-shadow">
+        <div class="duplicate-alert-title">
+          <span>⚠️ 可能重複清單</span>
+          <span class="duplicate-alert-tag">項目＋數量＋金額＋日期相同</span>
+        </div>
+        <div class="duplicate-alert-list">${rows}</div>
+      </div>`;
     }
 
     function findPossibleDuplicateExpense(candidate) {
@@ -2384,6 +2684,8 @@
       if(!options.skipDuplicateCheck) {
         const duplicate = findPossibleDuplicateExpense(record);
         if(duplicate) {
+          record.possibleDuplicate = true;
+          record.duplicateOfId = duplicate.id || '';
           const proceed = await confirmPossibleDuplicateExpense(record, duplicate);
           if(!proceed) {
             showToast('已取消新增，避免重複入帳');
@@ -2427,16 +2729,25 @@
 
     function normalizeReceiptItemLine(line, fallbackCurrency='JPY') {
       if(!line || typeof line !== 'object') return null;
-      const name = String(line.name || line.itemName || line.product || line.description || '').trim();
-      if(!name) return null;
+      const originalName = String(line.originalName || line.original_name || line.ocrName || line.rawName || line.raw || line.name || line.itemName || line.product || line.description || '').trim();
+      const translatedName = String(line.translatedName || line.translated_name || line.zhName || line.zh || line.nameZh || '').trim();
+      const normalizedName = String(line.normalizedName || line.normalized_name || line.standardName || line.standardizedName || '').trim();
+      const primaryName = String(translatedName || normalizedName || line.name || line.itemName || line.product || line.description || originalName || '').trim();
+      if(!primaryName && !originalName) return null;
       const qtyRaw = Number(line.qty ?? line.quantity ?? line.count ?? 1);
       const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
       const unitRaw = Number(line.unitPrice ?? line.unit_price ?? line.price ?? 0);
       const subtotalRaw = Number(line.subtotal ?? line.total ?? line.amount ?? 0);
       const unitPrice = Number.isFinite(unitRaw) && unitRaw > 0 ? unitRaw : (subtotalRaw > 0 ? subtotalRaw / qty : 0);
       const subtotal = Number.isFinite(subtotalRaw) && subtotalRaw > 0 ? subtotalRaw : Math.round(unitPrice * qty);
+      const language = String(line.language || detectItemLanguage(originalName || primaryName)).toLowerCase();
+      const normalized = normalizedName || localNormalizeProductName(translatedName || primaryName || originalName);
       return {
-        name,
+        name: primaryName,
+        originalName: originalName || primaryName,
+        translatedName: translatedName || (language === 'zh' ? primaryName : localTranslateProductName(primaryName || originalName)),
+        normalizedName: normalized,
+        language,
         qty,
         unitPrice: Math.round(unitPrice * 100) / 100,
         subtotal: Math.round(subtotal * 100) / 100,
@@ -2444,6 +2755,43 @@
         note: String(line.note || '').trim(),
         currency: String(line.currency || fallbackCurrency || 'JPY').toUpperCase()
       };
+    }
+
+    function detectItemLanguage(text) {
+      const s = String(text || '');
+      if(/[ぁ-んァ-ン一-龯]/.test(s) && /[A-Za-z]/.test(s)) return 'mixed';
+      if(/[ぁ-んァ-ン]/.test(s)) return 'ja';
+      if(/[一-龯]/.test(s)) return 'zh';
+      if(/[A-Za-z]/.test(s)) return 'en';
+      return 'unknown';
+    }
+
+    function localTranslateProductName(text) {
+      let out = String(text || '').trim();
+      const dict = [
+        [/USB\s*(メモリ|memory|flash\s*drive|stick)/ig, 'USB 隨身碟'],
+        [/ノート\s*PC\s*用\s*メモリ/ig, '筆記型電腦記憶體'],
+        [/液晶\s*(クリーナー|清潔|螢幕清潔)/ig, '液晶螢幕清潔組'],
+        [/wireless\s*mouse/ig, '無線滑鼠'], [/gaming\s*headset/ig, '電競耳機'],
+        [/keyboard/ig, '鍵盤'], [/mouse/ig, '滑鼠'], [/monitor/ig, '螢幕'],
+        [/portable\s*SSD/ig, '可攜式固態硬碟'], [/SSD/ig, 'SSD 固態硬碟'], [/RAM|メモリ/ig, '記憶體'],
+        [/HDD/ig, '硬碟'], [/SDXC|microSD|SD\s*Card/ig, '記憶卡'], [/ケーブル|Cable/ig, '傳輸線'],
+        [/イヤホン|Earphone/ig, '耳機'], [/ヘッドホン|Headphone/ig, '耳罩式耳機']
+      ];
+      dict.forEach(([re, zh]) => { out = out.replace(re, zh); });
+      return out;
+    }
+
+    function localNormalizeProductName(text) {
+      const s = localTranslateProductName(text).replace(/\s+/g, ' ').trim();
+      if(/USB.*隨身碟|USB.*メモリ|USB.*Memory|USB.*Flash/i.test(s)) return 'USB 隨身碟';
+      if(/SSD|固態硬碟/i.test(s)) return '固態硬碟';
+      if(/RAM|記憶體|メモリ/i.test(s)) return '記憶體';
+      if(/滑鼠|mouse/i.test(s)) return '滑鼠';
+      if(/鍵盤|keyboard/i.test(s)) return '鍵盤';
+      if(/耳機|headset|earphone|headphone/i.test(s)) return '耳機';
+      if(/記憶卡|SDXC|microSD/i.test(s)) return '記憶卡';
+      return s;
     }
 
     function normalizeReceiptItemLines(lines, fallbackCurrency='JPY') {
@@ -2463,17 +2811,24 @@
       const itemCount = getReceiptItemCount(record);
       const subtotal = lines.reduce((sum, x) => sum + Number(x.subtotal || 0), 0);
       const diff = Math.round((Number(record.amount || 0) - subtotal) * 100) / 100;
-      const rows = lines.map((x, idx) => `
+      const rows = lines.map((x, idx) => {
+        const original = x.originalName && x.originalName !== x.name ? x.originalName : '';
+        const translated = x.translatedName || x.name;
+        const langLabel = ({ja:'日文', en:'英文', zh:'中文', mixed:'混合', unknown:'未判定'})[x.language] || x.language || '未判定';
+        return `
         <div class="receipt-line-item">
           <div>
-            <div class="receipt-line-name">${idx + 1}. ${escapeHtml(x.name)}</div>
+            <div class="receipt-line-name">${idx + 1}. ${escapeHtml(translated || x.name)} <span class="receipt-line-lang">${escapeHtml(langLabel)}</span></div>
+            ${original ? `<div class="receipt-line-original">OCR 原文：${escapeHtml(original)}</div>` : ''}
+            ${x.normalizedName && x.normalizedName !== translated ? `<div class="receipt-line-zh">標準化：${escapeHtml(x.normalizedName)}</div>` : ''}
             <div class="receipt-line-meta">數量：${escapeHtml(x.qty)}｜單價：${formatMoney(x.unitPrice, x.currency || record.currency)}${x.note ? '｜' + escapeHtml(x.note) : ''}</div>
           </div>
           <div class="receipt-line-amount">${formatMoney(x.subtotal, x.currency || record.currency)}</div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       return `
         <details class="receipt-items-box">
-          <summary><span>📦 商品明細｜${lines.length} 項 / ${itemCount} 件</span><span>${formatMoney(subtotal, record.currency)}</span></summary>
+          <summary><span>📦 商品明細｜${lines.length} 項 / ${itemCount} 件 <span class="receipt-translation-badge">🌐 已繁中化</span></span><span>${formatMoney(subtotal, record.currency)}</span></summary>
           <div class="receipt-line-list">${rows}</div>
           ${Math.abs(diff) > 0.5 ? `<div class="px-2.5 py-2 text-[10px] font-bold text-amber-700 bg-amber-50 border-t border-amber-100">提示：商品小計與收據總額差 ${formatMoney(diff, record.currency)}，可能包含稅額、折扣或 AI 辨識誤差。</div>` : ''}
         </details>`;
@@ -2483,7 +2838,7 @@
       if(!keyword) return true;
       const k = keyword.toLowerCase().trim();
       if(!k) return true;
-      const lineText = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY').map(x => [x.name, x.note, x.category].join(' ')).join(' ');
+      const lineText = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY').map(x => [x.name, x.originalName, x.translatedName, x.normalizedName, x.note, x.category, x.language].join(' ')).join(' ');
       const all = [record.item, record.category, record.payer, record.note, record.day, lineText].join(' ').toLowerCase();
       return all.includes(k);
     }
@@ -2493,6 +2848,13 @@
       const queryNode = document.getElementById('expense-search-input');
       const query = queryNode ? queryNode.value : '';
       const records = allRecords.filter(r => recordMatchesExpenseSearch(r, query));
+      const duplicateInfo = computePossibleDuplicateMarks(allRecords);
+      const duplicatePanel = document.getElementById('possible-duplicate-list');
+      if(duplicatePanel) {
+        const duplicateHtml = buildPossibleDuplicateListHtml(duplicateInfo.groups);
+        duplicatePanel.innerHTML = duplicateHtml;
+        duplicatePanel.classList.toggle('hidden', !duplicateHtml);
+      }
       const summary = allRecords.reduce((acc, r) => { acc[r.currency]=(acc[r.currency]||0)+Number(r.amount||0); return acc; }, {});
       document.getElementById('expense-count').textContent = query ? `${records.length} / ${allRecords.length} 筆` : `${allRecords.length} 筆`;
       
@@ -2544,8 +2906,9 @@
       document.getElementById('expense-records').innerHTML = records.length ? records.map(r => {
         const lines = normalizeReceiptItemLines(r.itemLines || [], r.currency);
         const itemCount = getReceiptItemCount(r);
+        const dupMark = duplicateInfo.marks[String(r.id)] || null;
         return `
-        <article class="expense-record flex items-start gap-3">
+        <article class="expense-record ${dupMark ? 'possible-duplicate' : ''} flex items-start gap-3">
           ${r.imageStr ? `
             <div onclick="openLightbox('${r.imageStr}', '${escapeHtml(r.item)}', '分類：${escapeHtml(r.category)} | 金額：${formatMoney(r.amount, r.currency)}')" class="cursor-pointer shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 bg-slate-900 relative group aspect-square shadow-sm flex items-center justify-center">
               <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="${r.imageStr}">
@@ -2558,10 +2921,11 @@
             <div class="expense-record-name font-bold text-slate-900 flex items-center gap-1.5 flex-wrap">
               <span>${escapeHtml(r.item)}</span>
               ${r.imageStr ? '<span class="rounded bg-violet-100 px-1 py-0.5 text-[8.5px] font-black text-violet-700 flex items-center gap-0.5"><i data-lucide="image" class="w-2.5 h-2.5"></i>已附圖</span>' : ''}
+              ${dupMark ? `<span class="duplicate-alert-tag">⚠ 可能重複清單 ${dupMark.groupIndex}</span>` : ''}
               ${lines.length ? `<span class="rounded bg-emerald-100 px-1 py-0.5 text-[8.5px] font-black text-emerald-700">📦 ${lines.length}項/${itemCount}件</span>` : ''}
             </div>
             <div class="expense-record-meta">D${escapeHtml(r.day)}｜${escapeHtml(r.category)} ${r.payer ? '｜' + escapeHtml(r.payer) : ''}</div>
-            ${r.note ? `<div class="text-[10px] text-slate-500 mt-0.5">備註：${escapeHtml(r.note)}</div>` : ''}
+            ${r.note ? `<div class="text-[10px] text-slate-500 mt-0.5">備註：${dupMark ? `<span class="duplicate-note-badge"><i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i>可能重複清單 ${dupMark.groupIndex}</span>` : ''} ${escapeHtml(r.note)}</div>` : (dupMark ? `<div class="text-[10px] text-slate-500 mt-0.5">備註：<span class="duplicate-note-badge"><i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i>可能重複清單 ${dupMark.groupIndex}</span></div>` : '')}
             ${buildReceiptItemsHtml(r)}
           </div>
           <div class="text-right shrink-0">
@@ -2733,11 +3097,21 @@
 
     // 儲存設定 (四軌防護：Memory -> LocalStorage -> IndexedDB -> 即時驗證)
     async function saveReceiptAiSettings(settings) {
+      // V14.2 Enterprise Vision OCR Fixed：任何局部更新都會保留既有模式/Proxy/備援設定，避免自動換模型時把 Proxy 設定洗掉。
+      let previous = {};
+      try { previous = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}') || {}; } catch(e) { previous = {}; }
+      previous = Object.assign({}, previous, window.__receiptAiSettingsMemCache || {});
+      const rawKey = settings && Object.prototype.hasOwnProperty.call(settings, 'key') ? settings.key : previous.key;
       const normalized = {
-        key: sanitizeApiKey(settings?.key || ''),
-        model: settings?.model || defaultReceiptAiModel,
-        apiVersion: settings?.apiVersion || defaultReceiptAiApiVersion,
-        savedAt: new Date().toISOString()
+        key: sanitizeApiKey(rawKey || ''),
+        model: settings?.model || previous.model || defaultReceiptAiModel,
+        apiVersion: settings?.apiVersion || previous.apiVersion || defaultReceiptAiApiVersion,
+        apiMode: settings?.apiMode || previous.apiMode || 'direct',
+        proxyUrl: String(settings?.proxyUrl ?? previous.proxyUrl ?? '').trim().replace(/\/$/, ''),
+        savedAt: new Date().toISOString(),
+        stableMode: true,
+        lastStableCheckAt: settings?.lastStableCheckAt || previous.lastStableCheckAt || '',
+        lastStableModel: settings?.lastStableModel || previous.lastStableModel || ''
       };
 
       const report = { memory: false, localStorage: false, indexedDB: false };
@@ -2750,7 +3124,7 @@
       try {
         localStorage.setItem(embeddedReceiptAiKey, JSON.stringify(normalized));
         const verify = JSON.parse(localStorage.getItem(embeddedReceiptAiKey) || '{}');
-        report.localStorage = verify.key === normalized.key && verify.model === normalized.model && verify.apiVersion === normalized.apiVersion;
+        report.localStorage = verify.key === normalized.key && verify.model === normalized.model && verify.apiVersion === normalized.apiVersion && (verify.apiMode || "direct") === normalized.apiMode && (verify.proxyUrl || "") === normalized.proxyUrl;
       } catch(e) {
         console.warn('LocalStorage 儲存被封鎖:', e);
       }
@@ -2764,7 +3138,7 @@
           await saveSettingsToDb(normalized);
           if (typeof loadSettingsFromDb === 'function') {
             const verifyDb = await loadSettingsFromDb();
-            report.indexedDB = !!verifyDb && verifyDb.key === normalized.key && verifyDb.model === normalized.model && verifyDb.apiVersion === normalized.apiVersion;
+            report.indexedDB = !!verifyDb && verifyDb.key === normalized.key && verifyDb.model === normalized.model && verifyDb.apiVersion === normalized.apiVersion && (verifyDb.apiMode || "direct") === normalized.apiMode && (verifyDb.proxyUrl || "") === normalized.proxyUrl;
           } else {
             report.indexedDB = true;
           }
@@ -2779,7 +3153,7 @@
 
     // 讀取設定 (先取記憶體，其次 LocalStorage；IndexedDB 於啟動時已同步進記憶體)
     function getReceiptAiSettings() {
-      const fallback = { key: '', model: defaultReceiptAiModel, apiVersion: defaultReceiptAiApiVersion };
+      const fallback = { key: '', model: defaultReceiptAiModel, apiVersion: defaultReceiptAiApiVersion, apiMode: 'direct', proxyUrl: '', stableMode: true, lastStableCheckAt: '', lastStableModel: '' };
 
       let localCfg = {};
       try {
@@ -2793,6 +3167,8 @@
       merged.key = sanitizeApiKey(merged.key || '');
       merged.model = merged.model || defaultReceiptAiModel;
       merged.apiVersion = merged.apiVersion || defaultReceiptAiApiVersion;
+      merged.apiMode = merged.apiMode || 'direct';
+      merged.proxyUrl = String(merged.proxyUrl || '').trim().replace(/\/$/, '');
       return merged;
     }
     
@@ -2802,14 +3178,19 @@
       const keyInput = document.getElementById('receipt-ai-key-input');
       const modelSelect = document.getElementById('receipt-ai-model-select');
       const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      const modeSelect = document.getElementById('receipt-ai-mode-select');
+      const proxyInput = document.getElementById('receipt-ai-proxy-url-input');
       const status = document.getElementById('receipt-ai-test-status');
       
       if (keyInput) keyInput.value = cfg.key || '';
       if (modelSelect) modelSelect.value = cfg.model || defaultReceiptAiModel;
       if (versionSelect) versionSelect.value = cfg.apiVersion || defaultReceiptAiApiVersion;
+      if (modeSelect) modeSelect.value = cfg.apiMode || 'direct';
+      if (proxyInput) proxyInput.value = cfg.proxyUrl || '';
+      if (typeof toggleEnterpriseProxyHint === 'function') toggleEnterpriseProxyHint();
       if (status) {
         status.innerHTML = cfg.key
-          ? '✅ 已讀取到已儲存的 API Key。可直接測試連線，或按「保存設置」重新驗證儲存。'
+          ? '✅ 已讀取到已儲存的 API Key。V13.7.4 已啟用自動穩定模式：會自動清洗 Key、偵測可用模型並保存。' 
           : '準備就緒，等候貼上 API Key。';
       }
       
@@ -2842,24 +3223,33 @@
       const keyInput = document.getElementById('receipt-ai-key-input');
       const modelSelect = document.getElementById('receipt-ai-model-select');
       const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      const modeSelect = document.getElementById('receipt-ai-mode-select');
+      const proxyInput = document.getElementById('receipt-ai-proxy-url-input');
       const status = document.getElementById('receipt-ai-test-status');
       
       const key = sanitizeApiKey(keyInput?.value || '');
       const model = modelSelect?.value || defaultReceiptAiModel;
       const apiVersion = versionSelect?.value || defaultReceiptAiApiVersion;
+      const apiMode = modeSelect?.value || 'direct';
+      const proxyUrl = String(proxyInput?.value || '').trim().replace(/\/$/, '');
 
       if (keyInput) keyInput.value = key;
-      if (!key) {
+      if (apiMode === 'direct' && !key) {
         if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ 尚未輸入 API Key，未執行保存。</span>';
         showToast('請先貼上 API Key');
         return;
       }
+      if (apiMode === 'proxy' && !proxyUrl) {
+        if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ Proxy 模式請先填入 Worker URL。</span>';
+        showToast('請先填入 Worker URL');
+        return;
+      }
       
-      const report = await saveReceiptAiSettings({key, model, apiVersion});
+      const report = await saveReceiptAiSettings({key, model, apiVersion, apiMode, proxyUrl});
       const success = report.memory || report.localStorage || report.indexedDB;
       if (status) {
         status.innerHTML = success
-          ? `✅ <span class="text-emerald-600 font-bold">API Key 已確認可儲存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(report)}</span>`
+          ? `✅ <span class="text-emerald-600 font-bold">API Key 已確認可儲存，並保留自動穩定模式。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(report)}</span>`
           : '❌ <span class="text-red-600 font-bold">儲存失敗，請檢查瀏覽器是否封鎖本機儲存。</span>';
       }
       showToast(success ? 'API Key 已確認儲存' : '儲存失敗');
@@ -2867,6 +3257,109 @@
     }
 
 
+
+
+
+    function copyEnterpriseWorkerTemplate() {
+      const code = `export default {
+  async fetch(request, env) {
+    const cors = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    if (request.method !== "POST") return Response.json({ ok:false, error:"POST only" }, { status:405, headers:cors });
+    try {
+      const body = await request.json();
+      const apiKey = env.GEMINI_API_KEY;
+      if (!apiKey) return Response.json({ ok:false, error:"Missing GEMINI_API_KEY in Worker environment variables" }, { status:500, headers:cors });
+      if (body.action === "health") return Response.json({ ok:true, mode:"enterprise-proxy", model: env.GEMINI_MODEL || "gemini-1.5-flash" }, { headers:cors });
+      const modelList = [env.GEMINI_MODEL || "gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"];
+      const apiVersions = [env.GEMINI_API_VERSION || "v1beta", "v1"];
+      const payload = body.payload;
+      if (!payload) return Response.json({ ok:false, error:"Missing payload" }, { status:400, headers:cors });
+      let lastError = "unknown";
+      for (const apiVer of apiVersions) {
+        for (const model of modelList) {
+          for (let attempt = 0; attempt < 4; attempt++) {
+            const endpoint = \`https://generativelanguage.googleapis.com/\${apiVer}/models/\${encodeURIComponent(model)}:generateContent?key=\${encodeURIComponent(apiKey)}\`;
+            const res = await fetch(endpoint, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) return Response.json({ ok:true, model, apiVer, gemini:data }, { headers:cors });
+            lastError = data?.error?.message || \`HTTP \${res.status}\`;
+            if (res.status === 429 || res.status >= 500) {
+              const retryAfter = Number(res.headers.get("retry-after") || 0) * 1000;
+              const wait = retryAfter || Math.min(12000, 1000 * Math.pow(2, attempt));
+              await new Promise(r => setTimeout(r, wait));
+              continue;
+            }
+            if (res.status === 404) break;
+            break;
+          }
+        }
+      }
+      return Response.json({ ok:false, error:lastError }, { status:502, headers:cors });
+    } catch (err) {
+      return Response.json({ ok:false, error:String(err.message || err) }, { status:500, headers:cors });
+    }
+  }
+};`;
+      copyText(code, 'Cloudflare Worker 範本已複製');
+    }
+
+    function toggleEnterpriseProxyHint() {
+      const mode = document.getElementById('receipt-ai-mode-select')?.value || 'direct';
+      const hint = document.getElementById('enterprise-proxy-hint');
+      const proxyInput = document.getElementById('receipt-ai-proxy-url-input');
+      if (hint) {
+        hint.textContent = mode === 'proxy'
+          ? 'Enterprise Proxy 模式：HTML 只呼叫您的 Worker，Gemini Key 存在 Cloudflare 後台環境變數，最穩定也最安全。'
+          : '前端直連模式：免架設即可使用；若遇 429 / Timeout / 公司網路阻擋，請改用 Worker Proxy。';
+      }
+      if (proxyInput) proxyInput.disabled = mode !== 'proxy';
+      if (proxyInput) proxyInput.classList.toggle('opacity-50', mode !== 'proxy');
+    }
+
+    async function callEnterpriseProxy(proxyUrl, payload, timeoutMs = 30000) {
+      const cleanUrl = String(proxyUrl || '').trim().replace(/\/$/, '');
+      if (!cleanUrl) throw new Error('尚未設定 Worker Proxy URL。');
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(cleanUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload || {}),
+          signal: controller.signal
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok || body.ok === false) {
+          const msg = body.error || body.message || `HTTP ${res.status}`;
+          throw new Error(msg);
+        }
+        return body;
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    async function recognizeReceiptWithEnterpriseProxy(image, cfg) {
+      setReceiptAiStatus('🛡️ V13 Enterprise Proxy：後端正在穩定呼叫 Gemini，前端不暴露 API Key...');
+      const payload = buildGeminiGeneratePayload(image);
+      const body = await callEnterpriseProxy(cfg.proxyUrl, {
+        action: 'recognizeReceipt',
+        payload,
+        meta: { app: 'kansai2026-v13-enterprise', ts: new Date().toISOString() }
+      }, 60000);
+      const geminiBody = body.gemini || body.body || body;
+      const text = geminiBody?.text || geminiBody?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || body?.result || '';
+      if (typeof body.receipt === 'object' && body.receipt) return body.receipt;
+      const clean = String(text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+      const match = clean.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Enterprise Proxy 未回傳可解析的收據 JSON。');
+      return JSON.parse(match[0]);
+    }
 
     // 穩定版 Fetch 重試器：修正 API 測試誤判，並支援 AbortController 逾時
     async function fetchWithRetry(url, options = {}, retries = 2, baseDelayMs = 650, timeoutMs = 14000) {
@@ -2993,6 +3486,37 @@
       return match ? match[0] : clean;
     }
 
+    function looksLikeGeminiApiKey(key) {
+      // V14：不再用前端規則判斷 API Key 格式。
+      // 只要不是空字串就允許送到 Google 端點，由 Google 回傳 401/403/429 等正式狀態。
+      return !!sanitizeApiKeyStrict(key || '');
+    }
+
+    async function autoStabilizeGeminiSettings(apiKey, preferredModel, preferredApiVer, silent=false) {
+      const key = sanitizeApiKeyStrict(apiKey || '');
+      if (!key) {
+        throw new Error('請先貼上 Gemini API Key。');
+      }
+      if (!silent) {
+        const status = document.getElementById('receipt-ai-test-status');
+        if (status) status.innerHTML = '🛡️ <span class="text-amber-600 font-bold">自動穩定模式啟動：正在尋找此 Key 可用的 Gemini Flash 模型...</span>';
+      }
+      const found = await findAvailableGeminiModel(key, preferredApiVer || defaultReceiptAiApiVersion);
+      if (!found) throw new Error('此 API Key 可連線，但目前找不到可用的 generateContent 模型；請確認 Generative Language API 已啟用，或稍後再試。');
+      await saveReceiptAiSettings({
+        key,
+        model: found.model,
+        apiVersion: found.apiVer,
+        lastStableCheckAt: new Date().toISOString(),
+        lastStableModel: `${found.model}/${found.apiVer}`
+      });
+      const modelSelect = document.getElementById('receipt-ai-model-select');
+      const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      if (modelSelect && [...modelSelect.options].some(o => o.value === found.model)) modelSelect.value = found.model;
+      if (versionSelect) versionSelect.value = found.apiVer;
+      return found;
+    }
+
     function geminiEndpoint(apiVer, model, apiKey) {
       return `https://generativelanguage.googleapis.com/${apiVer}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
     }
@@ -3095,56 +3619,58 @@
       const keyInput = document.getElementById('receipt-ai-key-input');
       const modelSelect = document.getElementById('receipt-ai-model-select');
       const versionSelect = document.getElementById('receipt-ai-endpoint-version');
+      const modeSelect = document.getElementById('receipt-ai-mode-select');
+      const proxyInput = document.getElementById('receipt-ai-proxy-url-input');
       const status = document.getElementById('receipt-ai-test-status');
 
       const customKey = sanitizeApiKeyStrict(keyInput?.value || '');
       const model = modelSelect?.value || defaultReceiptAiModel;
       const apiVer = versionSelect?.value || defaultReceiptAiApiVersion;
+      const apiMode = modeSelect?.value || 'direct';
+      const proxyUrl = String(proxyInput?.value || '').trim().replace(/\/$/, '');
       const keyToUse = customKey || sanitizeApiKeyStrict(runtimeApiKey);
 
       if (keyInput) keyInput.value = customKey;
+      if (apiMode === 'proxy') {
+        if (!proxyUrl) {
+          if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ Proxy 模式請先填入 Worker URL。</span>';
+          return;
+        }
+        await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer, apiMode, proxyUrl });
+        if (status) status.innerHTML = `🧪 <span class="text-amber-600 font-bold">正在測試 Worker Proxy...</span><br><span class="text-xs text-slate-500">${escapeHtml(proxyUrl)}</span>`;
+        try {
+          const health = await callEnterpriseProxy(proxyUrl, { action: 'health' }, 12000);
+          if (status) status.innerHTML = `✅ <span class="text-emerald-600 font-bold">Worker Proxy 連線成功。</span><br><span class="text-xs text-slate-500">模式：Enterprise Proxy｜模型：${escapeHtml(health.model || 'server-auto')}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+          showToast('Enterprise Proxy 測試成功');
+        } catch(err) {
+          if (status) status.innerHTML = `<span class="text-red-600 font-bold">❌ Worker Proxy 測試失敗</span><br><span class="text-xs text-slate-500">${escapeHtml(err.message || err)}</span><br><span class="text-xs text-emerald-700 font-bold">※ URL 已保存，可修正 Worker 後再測。</span>`;
+        }
+        return;
+      }
       if (!keyToUse) {
         if (status) status.innerHTML = '<span class="text-red-600 font-bold">❌ 請先貼上 Gemini API Key。</span>';
         return;
       }
 
       // 先保存，避免使用者測試中途關閉導致 Key 消失。
-      await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer });
+      await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer, apiMode, proxyUrl });
       if (status) {
-        status.innerHTML = `💾 <span class="text-emerald-700 font-bold">API Key 已先保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span><br>🧪 <span class="text-amber-600 font-bold">正在測試 ${model} / ${apiVer}...</span>`;
+        status.innerHTML = `💾 <span class="text-emerald-700 font-bold">API Key 已先保存。</span><br><span class="text-xs text-slate-500">${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span><br>🧪 <span class="text-amber-600 font-bold">正在自動偵測可用 Gemini 模型與 API 版本...</span>`;
       }
 
       try {
-        let result = await tryGeminiConnection(keyToUse, model, apiVer);
-        if (!result.ok) {
-          const info = getGeminiErrorInfo(result);
-          const canAutoFallback = info.code === 'NOT_FOUND' || /model|not found|not supported/i.test(info.message);
-          if (!canAutoFallback) {
-            throw Object.assign(new Error(info.message), { geminiInfo: info });
-          }
-          if (status) status.innerHTML += '<br>🔁 <span class="text-sky-700 font-bold">目前模型不可用，正在自動尋找可用模型...</span>';
-          const found = await findAvailableGeminiModel(keyToUse, apiVer);
-          if (!found) throw Object.assign(new Error(info.message), { geminiInfo: info });
-          result = found.result;
-          if (modelSelect) modelSelect.value = found.model;
-          if (versionSelect) versionSelect.value = found.apiVer;
-          await saveReceiptAiSettings({ key: keyToUse, model: found.model, apiVersion: found.apiVer });
-          if (status) {
-            status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！已自動切換到可用模型。</span><br><span class="text-xs text-slate-500">模型：${found.model}｜版本：${found.apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
-          }
-          showToast('API Key 測試成功');
-          return;
-        }
-
-        await saveReceiptAiSettings({ key: keyToUse, model, apiVersion: apiVer });
+        const found = await autoStabilizeGeminiSettings(keyToUse, model, apiVer, false);
+        await saveReceiptAiSettings({ key: keyToUse, model: found.model, apiVersion: found.apiVer, apiMode, proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${found.model}/${found.apiVer}` });
+        if (modelSelect && [...modelSelect.options].some(o => o.value === found.model)) modelSelect.value = found.model;
+        if (versionSelect) versionSelect.value = found.apiVer;
         if (status) {
-          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">連線成功！API Key 正常，且已保存。</span><br><span class="text-xs text-slate-500">模型：${model}｜版本：${apiVer}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
+          status.innerHTML = `✅ <span class="text-emerald-600 font-bold">V14 自動 AI 引擎設定完成！系統已自動選定可用模型並保存。</span><br><span class="text-xs text-slate-500">穩定模型：${found.model}｜版本：${found.apiVer}｜來源：${found.source || 'auto'}｜${buildAiSaveReportText(window.__lastReceiptAiSaveReport)}</span>`;
         }
-        showToast('API Key 測試成功');
+        showToast('V14 自動 AI 引擎已完成設定');
       } catch (err) {
         const info = err?.geminiInfo || getGeminiErrorInfo(err);
         if (status) {
-          status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常</span><br><span class="text-xs text-slate-500">${info.code}：${escapeHtml(info.message)}</span><br><span class="text-xs text-slate-500">${escapeHtml(info.advice)}</span><br><span class="text-xs text-emerald-700 font-bold">※ API Key 已先保存，不會因測試失敗而消失。</span>`;
+          status.innerHTML = `<span class="text-red-600 font-bold">❌ 測試連線異常</span><br><span class="text-xs text-slate-500">${info.code}：${escapeHtml(info.message)}</span><br><span class="text-xs text-slate-500">${escapeHtml(info.advice)}</span><br><span class="text-xs text-emerald-700 font-bold">※ API Key 已先保存；若失敗，系統下次會再自動嘗試，不需手動選模型。</span>`;
         }
       }
     }
@@ -3154,6 +3680,11 @@
       const cfg = getReceiptAiSettings();
       const apiKeyToUse = cfg.key || runtimeApiKey;
       
+      if ((cfg.apiMode || 'direct') === 'proxy' && cfg.proxyUrl) {
+        window.__manualAttachmentOnly = false;
+        document.getElementById('embedded-receipt-camera').click();
+        return;
+      }
       if (!apiKeyToUse) {
         showCustomConfirm(
           '需要設定 API 金鑰', 
@@ -3226,13 +3757,13 @@
       
       const aiStartedAt = performance.now();
       try {
-        const image = await compressReceiptImage(file, 720, 0.55);
+        const image = await compressReceiptImage(file, 1100, 0.72);
         const preview = document.getElementById('receipt-ai-preview');
         if(preview) {
           preview.src = image.dataUrl;
           preview.classList.remove('hidden');
         }
-        setReceiptAiStatus(`⚡ 圖片已輕量化（${image.width}×${image.height}，${image.compressMs || 0}ms），正在啟動 Gemini 快速收據解析...`);
+        setReceiptAiStatus(`⚡ 圖片已強化為 OCR 穩定尺寸（${image.width}×${image.height}，${image.compressMs || 0}ms），正在啟動 Gemini 視覺辨識；若回傳不標準，系統會自動修復...`);
         
         const parsed = await recognizeReceiptWithGemini(image);
         const normalized = normalizeReceiptResult(parsed);
@@ -3252,7 +3783,8 @@
           category: normalized.category,
           note: normalized.note,
           itemLines: normalized.itemLines || [],
-          imageStr: image.dataUrl
+          imageStr: image.dataUrl,
+          receiptDate: normalized.date || tripDates[normalized.day] || ''
         };
         const duplicate = findPossibleDuplicateExpense(duplicateCandidate);
         if(duplicate) {
@@ -3271,7 +3803,7 @@
         }
 
         applyReceiptToExpenseForm(normalized);
-        await addExpenseRecord({ skipDuplicateCheck: true }); // 自動新增明細
+        const addedRecord = await addExpenseRecord({ skipDuplicateCheck: true }); // 自動新增明細
         
         setReceiptAiStatus(`✨ 辨識成功！耗時 ${((performance.now() - aiStartedAt) / 1000).toFixed(1)} 秒，紀錄與收據原圖已同步至本機記帳表。`);
         document.getElementById('receipt-ai-result').innerHTML = `
@@ -3360,9 +3892,33 @@
     }
 
     function buildGeminiGeneratePayload(image) {
-      const prompt = `請快速辨識日本收據。只回傳 JSON，不要 markdown。
-格式：{"storeName":"店名","date":"YYYY-MM-DD","totalAmount":總額數字,"currency":"JPY","category":"餐飲|交通|門票|購物|住宿|伴手禮|其他","note":"簡短備註","items":[{"name":"商品名","qty":數量,"unitPrice":單價,"subtotal":小計,"category":"","note":""}]}
-規則：每一個可辨識商品都要保留名稱、數量、單價、小計；看不清楚可留空或用 1 推定，勿捏造不存在商品。`;
+      const prompt = `你是企業級收據/購物清單 OCR 視覺解析器。請放大閱讀照片中的收據、明細表、手寫/列印文字，照片可能歪斜、很小、部分模糊。
+
+【最重要輸出規則】
+只能輸出一個合法 JSON 物件，第一個字元必須是 {，最後一個字元必須是 }。不要 markdown、不要說明、不要註解、不要多餘文字、不要單引號、不要尾逗號。
+
+【JSON 欄位】
+{
+  "storeName": "店名，若看不清填未知店家",
+  "date": "YYYY-MM-DD，若看不清填空字串",
+  "totalAmount": 0,
+  "currency": "JPY|TWD|USD",
+  "category": "餐飲|交通|門票|購物|住宿|伴手禮|其他",
+  "note": "簡短備註，可包含交易單號或辨識信心",
+  "items": [
+    {"name":"繁體中文商品名","originalName":"OCR原文","translatedName":"繁體中文翻譯","language":"ja|en|zh|mixed|unknown","normalizedName":"標準化繁中商品名","qty":1,"unitPrice":0,"subtotal":0,"category":"分類","note":""}
+  ]
+}
+
+【辨識規則】
+1. 逐列讀取商品明細。每列盡量保留：商品名、數量、單價、小計；看不清楚金額用 0，數量看不清用 1。
+2. 若畫面底部有「合計/總計/TOTAL/金額」請把最終金額填入 totalAmount，只填數字，不要逗號。
+3. 若幣別出現 NT$/TWD/台幣，currency=TWD；若出現 ¥/円/JPY，currency=JPY；不確定預設 TWD。
+4. 商品可能是日文、英文、中文或混合語言；請自動判斷 language。
+5. translatedName 必須是繁體中文；品牌/型號/容量/規格保留原文，例如 MSI、Micron、USB3.2、PCIe、SSD、RAM、1TB、64GB、RTX。
+6. normalizedName 用利於搜尋與重複比對的繁中標準名稱，例如 USBメモリ/USB Memory/USB Flash Drive 統一為「USB 隨身碟」，SSD 統一為「固態硬碟」，メモリ/RAM 統一為「記憶體」。
+7. 不要把「合計、稅額、折扣、找零」當商品。若商品旁邊價格為 0，也要保留，note 可寫「贈品/折扣/未計價」。
+8. 若整張單據無法完整辨識，仍請輸出 JSON，items 可為已讀出的部分，note 寫「部分辨識」。`;
       return {
         contents: [{
           parts: [
@@ -3372,8 +3928,7 @@
         }],
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 1280,
-          responseMimeType: "application/json"
+          maxOutputTokens: 6144
         }
       };
     }
@@ -3415,59 +3970,200 @@
       return null;
     }
 
+    function normalizeSmartJsonText(text) {
+      return String(text || '')
+        .replace(/^\uFEFF/, '')
+        .replace(/```json/gi, '')
+        .replace(/```/g, '')
+        .replace(/[\u0000-\u001F\u007F]/g, ch => (ch === '\n' || ch === '\r' || ch === '\t') ? ch : ' ')
+        .replace(/[“”]/g, '"')
+        .replace(/[‘’]/g, "'")
+        .replace(/，(?=\s*[}\]])/g, ',')
+        .trim();
+    }
+
+    function extractBalancedJson(text) {
+      const src = normalizeSmartJsonText(text);
+      const starts = [];
+      for (let i = 0; i < src.length; i++) {
+        if (src[i] === '{' || src[i] === '[') starts.push(i);
+      }
+      for (const start of starts) {
+        const open = src[start];
+        const close = open === '{' ? '}' : ']';
+        let depth = 0, inStr = false, esc = false;
+        for (let i = start; i < src.length; i++) {
+          const ch = src[i];
+          if (inStr) {
+            if (esc) esc = false;
+            else if (ch === '\\') esc = true;
+            else if (ch === '"') inStr = false;
+            continue;
+          }
+          if (ch === '"') { inStr = true; continue; }
+          if (ch === open) depth++;
+          else if (ch === close) {
+            depth--;
+            if (depth === 0) return src.slice(start, i + 1);
+          }
+        }
+      }
+      return '';
+    }
+
+    function repairLikelyJson(jsonText) {
+      let s = normalizeSmartJsonText(jsonText);
+      // 取最外層 JSON，避免模型在前後加文字。
+      const balanced = extractBalancedJson(s);
+      if (balanced) s = balanced;
+      // 常見 Gemini 輸出修復：尾逗號、全形冒號、非標準 true/false/null 外字元。
+      s = s
+        .replace(/：/g, ':')
+        .replace(/,\s*([}\]])/g, '$1')
+        .replace(/([{,]\s*)([A-Za-z_][\w$-]*)(\s*:)/g, '$1"$2"$3');
+      return s;
+    }
+
+    function fallbackReceiptFromText(text) {
+      const raw = String(text || '');
+      const amountMatches = [...raw.matchAll(/(?:合計|總計|TOTAL|total|金額|總額)[^0-9]{0,16}([0-9][0-9,]*)/gi)].map(m => Number(String(m[1]).replace(/,/g, ''))).filter(Boolean);
+      const allMoney = [...raw.matchAll(/(?:NT\$|TWD|¥|￥)?\s*([0-9]{2,}(?:,[0-9]{3})*)\s*(?:円|JPY|TWD|NT)?/gi)].map(m => Number(String(m[1]).replace(/,/g, ''))).filter(n => Number.isFinite(n));
+      const totalAmount = amountMatches[amountMatches.length - 1] || Math.max(0, ...allMoney, 0);
+      const currency = /NT\$|TWD|台幣/i.test(raw) ? 'TWD' : (/¥|￥|円|JPY/i.test(raw) ? 'JPY' : 'TWD');
+      const lines = raw.split(/\n|\r|；|;/).map(x => x.trim()).filter(Boolean);
+      const items = [];
+      for (const l0 of lines) {
+        let l = normalizeOcrTextToken(l0);
+        if (!/[A-Za-z\u3040-\u30ff\u4e00-\u9fff]/.test(l)) continue;
+        if (/storeName|totalAmount|currency|category|items|JSON|合計|總計|TOTAL|稅|找零|折扣|小計/i.test(l)) continue;
+        const nums = [...l.matchAll(/([0-9][0-9,]*)/g)].map(m => Number(String(m[1]).replace(/,/g,''))).filter(n => Number.isFinite(n));
+        let qty = 1, unitPrice = 0, subtotal = 0;
+        if (nums.length >= 3) { qty = nums[nums.length-3] || 1; unitPrice = nums[nums.length-2] || 0; subtotal = nums[nums.length-1] || 0; }
+        else if (nums.length >= 2) { unitPrice = nums[nums.length-2] || 0; subtotal = nums[nums.length-1] || 0; }
+        else if (nums.length === 1) { subtotal = nums[0]; unitPrice = nums[0]; }
+        const name = l.replace(/(?:NT\$|TWD|¥|￥)?\s*[0-9][0-9,]*\s*(?:円|JPY|TWD|NT)?\s*$/gi, '').replace(/\s+\d+\s+\d+\s*$/g, '').trim() || l;
+        const zh = inferZhProductName(name);
+        items.push({ name: zh || name, originalName: name, translatedName: zh || name, language: 'unknown', normalizedName: zh || name, qty: qty || 1, unitPrice, subtotal, category: '其他', note: '文字備援解析' });
+        if (items.length >= 20) break;
+      }
+      return { storeName: 'AI 收據辨識', date: '', totalAmount, currency, category: '購物', note: 'AI 回傳非標準 JSON，已用文字備援解析；建議檢查明細。', items };
+    }
+
+    function parseGeminiJsonText(text) {
+      const cleaned = normalizeSmartJsonText(text);
+      const attempts = [cleaned, extractBalancedJson(cleaned), repairLikelyJson(cleaned)].filter(Boolean);
+      for (const candidate of attempts) {
+        try {
+          const parsed = JSON.parse(candidate);
+          // 若模型回傳陣列，取第一個物件，避免整個流程失敗。
+          if (Array.isArray(parsed)) return parsed[0] || { items: [] };
+          return parsed;
+        } catch(e) {}
+      }
+      // 最後備援：不要讓使用者看到「JSON 結構錯誤」直接中斷，至少把總額與文字留下。
+      const fallback = fallbackReceiptFromText(cleaned);
+      if (fallback.totalAmount || fallback.items.length) return fallback;
+      throw new Error('AI 回傳格式不完整，系統已啟用 JSON 修復但仍無法解析；請重新拍攝較清楚的收據。');
+    }
+
+    function withTimeoutPromise(promise, timeoutMs, timeoutMessage) {
+      let timer;
+      return Promise.race([
+        promise.finally(() => clearTimeout(timer)),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error(timeoutMessage || 'Gemini 辨識逾時，請重新拍攝或稍後再試。')), timeoutMs);
+        })
+      ]);
+    }
+
+    // V14.2 Enterprise Vision OCR Fixed：拍照 OCR 加入長退避、全域佇列與頻率保護，避免 429 直接失敗。
+    // 流程：優先使用已儲存/預設穩定模型 -> 若模型不可用才快速 fallback -> 全流程硬性逾時。
     async function recognizeReceiptWithGemini(image) {
       const cfg = getReceiptAiSettings();
+      if ((cfg.apiMode || 'direct') === 'proxy') {
+        if (!cfg.proxyUrl) throw new Error('已選 Enterprise Proxy 模式，但尚未設定 Worker URL。');
+        return await withTimeoutPromise(
+          recognizeReceiptWithEnterpriseProxy(image, cfg),
+          45000,
+          'Enterprise Proxy 辨識逾時，請確認 Worker 可正常連線。'
+        );
+      }
+
       const apiKeyToUse = sanitizeApiKeyStrict(cfg.key || runtimeApiKey);
       if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定進行設定。');
 
       const payload = buildGeminiGeneratePayload(image);
-      let model = cfg.model || defaultReceiptAiModel;
-      let apiVer = cfg.apiVersion || defaultReceiptAiApiVersion;
+      // V14：不在前端阻擋 Key 格式，避免新版 Key 或複製格式被誤判。由 Google API 正式驗證。
+      const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-1.5-flash';
+      const preferredApiVer = cfg.apiVersion || defaultReceiptAiApiVersion || 'v1beta';
+      const candidates = [
+        { model: preferredModel, apiVer: preferredApiVer },
+        { model: 'gemini-1.5-flash', apiVer: 'v1beta' },
+        { model: 'gemini-1.5-flash-latest', apiVer: 'v1beta' },
+        { model: 'gemini-2.0-flash', apiVer: 'v1beta' },
+        { model: 'gemini-2.5-flash', apiVer: 'v1beta' }
+      ].filter((v, i, arr) => v.model && v.apiVer && arr.findIndex(x => x.model === v.model && x.apiVer === v.apiVer) === i);
 
-      const resolved = await resolveStableGeminiModel(apiKeyToUse, model, apiVer);
-      if (resolved) {
-        model = resolved.model;
-        apiVer = resolved.apiVer;
-        setReceiptAiStatus(`✅ 已自動採用穩定模型：${model} / ${apiVer}，正在辨識收據...`);
-      } else {
-        setReceiptAiStatus(`⚠️ 無法預先偵測模型，改用預設穩定端點 ${model} / ${apiVer} 嘗試辨識...`);
-      }
-
-      let endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
-      let result = await fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-        maxRetries: 4,
-        baseDelayMs: 1800,
-        timeoutMs: 28000
-      });
-
-      let res = result.response;
-      let body = result.body;
-
-      // V10 Ultimate：若收據辨識階段才發現模型不可用，自動重新找可用穩定模型並重送一次。
-      if (!res.ok && shouldAutoFallbackGemini(res.status, body)) {
-        setReceiptAiStatus('🔁 目前模型不可用，V10 正在自動切換至可用穩定模型後重試...');
-        window.__receiptAiResolvedRuntime = null;
-        const fallback = await resolveStableGeminiModel(apiKeyToUse, defaultReceiptAiModel, defaultReceiptAiApiVersion);
-        if (fallback) {
-          model = fallback.model;
-          apiVer = fallback.apiVer;
-          endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
-          setReceiptAiStatus(`✅ 已切換：${model} / ${apiVer}，正在重新辨識...`);
-          result = await fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-            maxRetries: 4,
-            baseDelayMs: 1800,
-            timeoutMs: 28000
-          });
-          res = result.response;
-          body = result.body;
+      let lastErrText = '';
+      for (let i = 0; i < candidates.length; i++) {
+        const { model, apiVer } = candidates[i];
+        setReceiptAiStatus(`⚡ Gemini 穩定辨識中：${model} / ${apiVer}（第 ${i + 1}/${candidates.length} 組）...`);
+        const endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
+        let result;
+        try {
+          result = await withTimeoutPromise(
+            fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
+              maxRetries: 4,
+              baseDelayMs: 8000,
+              timeoutMs: 30000
+            }),
+            150000,
+            '本次 Gemini 請求逾時。系統已停止等待，避免畫面卡住。'
+          );
+        } catch (err) {
+          lastErrText = err?.message || String(err);
+          if (i < candidates.length - 1) continue;
+          throw new Error(lastErrText);
         }
-      }
 
-      if(!res.ok) {
+        const res = result.response;
+        const body = result.body || {};
+        if (res.ok) {
+          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
+          const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+          if (!text) throw new Error('Gemini 沒有回傳文字內容，請重新拍攝較清楚的收據。');
+          return coerceReceiptShape(parseGeminiJsonText(text));
+        }
+
         const code = body?.error?.status || `HTTP_${res.status}`;
         const rawMsg = body?.error?.message || `HTTP ${res.status}`;
+        lastErrText = rawMsg;
+
         if (res.status === 429 || code === 'RESOURCE_EXHAUSTED') {
-          throw new Error('Gemini 目前回報 429 頻率/配額限制。系統已自動重試仍未成功，請等待 1–3 分鐘再拍下一張；若仍連續發生，請稍後再用同一組 API Key 測試。');
+          const retryMs = getRetryAfterMsFromResponse(res, 90000);
+          setGeminiQuotaCooldown(retryMs);
+          setReceiptAiStatus(`⏳ Gemini 目前忙碌/限流，系統已進入安全等待 ${formatWaitSeconds(retryMs)}。請不要重複按拍照，稍後會自動再試一次。`);
+          await new Promise(resolve => setTimeout(resolve, Math.min(retryMs, 90000)));
+          try {
+            const second = await withTimeoutPromise(
+              fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
+                maxRetries: 2,
+                baseDelayMs: 12000,
+                timeoutMs: 30000
+              }),
+              110000,
+              'Gemini 限流後重試逾時。請稍後重新拍攝，或改用 Enterprise Proxy 模式。'
+            );
+            if (second.response && second.response.ok) {
+              try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
+              const text = second.body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+              if (!text) throw new Error('Gemini 重試成功但沒有回傳文字內容，請重新拍攝較清楚的收據。');
+              return coerceReceiptShape(parseGeminiJsonText(text));
+            }
+          } catch(e) {
+            lastErrText = e?.message || String(e);
+          }
+          throw new Error('Gemini 仍在頻率/配額限制中。這通常不是 API Key 壞掉，而是 Google 暫時限流；系統已自動等待與重試。建議等待 3–5 分鐘，或到 API 設定切換 Cloudflare Worker Proxy 模式。');
         }
         if (res.status === 401 || code === 'UNAUTHENTICATED') {
           throw new Error('API Key 驗證失敗：請重新貼上 Google AI Studio 產生的 Key，確認沒有空白、換行或多餘文字。');
@@ -3475,21 +4171,79 @@
         if (res.status === 403 || code === 'PERMISSION_DENIED') {
           throw new Error('Gemini 權限被拒絕：請確認 API Key 沒有網域/IP 限制，並已啟用 Generative Language API。');
         }
-        if (res.status === 404 || code === 'NOT_FOUND') {
-          throw new Error('目前 Google 回報所有嘗試模型都不可用。請按 API 設定中的「測試連線」，讓系統重新掃描此 Key 可用模型。');
+        // 模型不存在/不支援才換下一組；其他錯誤直接回報，避免無意義等待。
+        if (shouldAutoFallbackGemini(res.status, body) && i < candidates.length - 1) {
+          setReceiptAiStatus('🔁 目前模型不可用，正在快速切換下一組穩定模型...');
+          continue;
         }
         throw new Error(rawMsg);
       }
-      
-      const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
-      const match = text.match(/\{[\s\S]*\}/);
-      if(!match) throw new Error('AI 未回傳正確 JSON 結構。');
-      return JSON.parse(match[0]);
+      throw new Error(lastErrText || 'Gemini 辨識失敗，請稍後再試。');
+    }
+
+
+    function normalizeOcrTextToken(value) {
+      return String(value || '')
+        .replace(/\bSSO\b/gi, 'SSD')
+        .replace(/\bUS83\.2\b/gi, 'USB3.2')
+        .replace(/\bMlcron\b/gi, 'Micron')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function inferZhProductName(original) {
+      const src = normalizeOcrTextToken(original);
+      if (!src) return '';
+      const lower = src.toLowerCase();
+      let suffix = '';
+      if (/ssd|solid state|固態|ソリッド/.test(lower)) suffix = '固態硬碟';
+      else if (/ram|memory|メモリ|記憶體|d5|ddr/.test(lower)) suffix = '記憶體';
+      else if (/usb|隨身|フラッシュ|メモリ/.test(lower)) suffix = 'USB 隨身碟';
+      else if (/mouse|マウス|滑鼠/.test(lower)) suffix = '滑鼠';
+      else if (/keyboard|キーボード|鍵盤/.test(lower)) suffix = '鍵盤';
+      else if (/headset|耳機|ヘッドセット|イヤホン/.test(lower)) suffix = '耳機';
+      else if (/clean|クリーナ|清潔/.test(lower)) suffix = '清潔用品';
+      else if (/pc|notebook|ノート|cyborg|laptop/.test(lower)) suffix = '筆記型電腦';
+      if (!suffix) return src;
+      const brandMatch = src.match(/\b(MSI|ASUS|Acer|Kingston|Micron|Crucial|Samsung|SanDisk|WD|Western Digital|Seagate|Intel|AMD|NVIDIA|Logitech|ELECOM|BUFFALO|i\.shock|Apple|Sony)\b/i);
+      const brand = brandMatch ? brandMatch[0] + ' ' : '';
+      const specs = (src.match(/(?:\d+(?:\.\d+)?\s*(?:TB|GB|G|T)|DDR\d|D\d|Gen\d|PCIe|NVMe|USB\s*3\.2|USB3\.2|RTX\d+|H\d+)/gi) || []).join(' ');
+      return `${brand}${specs ? specs + ' ' : ''}${suffix}`.replace(/\s+/g, ' ').trim();
+    }
+
+    function coerceReceiptShape(raw) {
+      const obj = (raw && typeof raw === 'object') ? Object.assign({}, raw) : {};
+      const possibleItems = obj.items || obj.lineItems || obj.products || obj.details || [];
+      if (!Array.isArray(possibleItems)) obj.items = [];
+      else {
+        obj.items = possibleItems.map(it => {
+          const sourceName = normalizeOcrTextToken(it?.originalName || it?.name || it?.product || it?.title || '');
+          const translated = normalizeOcrTextToken(it?.translatedName || it?.nameZh || it?.zhName || '') || inferZhProductName(sourceName);
+          const qty = Math.max(1, Number(String(it?.qty ?? it?.quantity ?? 1).replace(/[^0-9.]/g, '')) || 1);
+          const unitPrice = Number(String(it?.unitPrice ?? it?.price ?? it?.unit_price ?? 0).replace(/[^0-9.-]/g, '')) || 0;
+          let subtotal = Number(String(it?.subtotal ?? it?.amount ?? it?.total ?? 0).replace(/[^0-9.-]/g, '')) || 0;
+          if (!subtotal && unitPrice) subtotal = unitPrice * qty;
+          return Object.assign({}, it, {
+            name: translated || sourceName || '未命名商品',
+            originalName: sourceName || translated || '未命名商品',
+            translatedName: translated || sourceName || '未命名商品',
+            normalizedName: normalizeOcrTextToken(it?.normalizedName || translated || inferZhProductName(sourceName) || sourceName || '未命名商品'),
+            language: it?.language || 'mixed',
+            qty, unitPrice, subtotal,
+            category: it?.category || '其他',
+            note: it?.note || ''
+          });
+        });
+      }
+      const itemSum = (obj.items || []).reduce((sum, x) => sum + (Number(x.subtotal) || 0), 0);
+      const rawAmount = Number(String(obj.totalAmount ?? obj.amount ?? obj.total ?? 0).replace(/[^0-9.-]/g, '')) || 0;
+      if (!rawAmount && itemSum) obj.totalAmount = itemSum;
+      return obj;
     }
 
     function normalizeReceiptResult(raw) {
       const store = String(raw?.storeName || raw?.store || raw?.merchant || '').trim();
-      const amount = Number(raw?.totalAmount ?? raw?.amount ?? raw?.total ?? 0);
+      let amount = Number(raw?.totalAmount ?? raw?.amount ?? raw?.total ?? 0);
       let category = String(raw?.category || '其他').trim();
       if(!['餐飲','交通','門票','購物','住宿','伴手禮','其他','other'].includes(category)) category = '其他';
       if(category === 'other') category = '其他';
@@ -3500,6 +4254,7 @@
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)) date = tripDates[currentDay];
       const day = getTripDayByDate(date) || String(currentDay);
       const itemLines = normalizeReceiptItemLines(raw?.items || raw?.lineItems || raw?.products || [], currency);
+      if ((!amount || amount <= 0) && itemLines.length) amount = itemLines.reduce((sum, x) => sum + (Number(x.subtotal) || 0), 0);
       const fallbackNote = itemLines.length ? itemLines.map(x => `${x.name}×${x.qty}`).join('、') : '';
       return {
         item: store || 'AI 收據消費辨識',
@@ -3533,6 +4288,478 @@
       saveExpenseDraft();
     }
 
+
+
+    // ================================
+    // V12 Ultimate：離線備援包
+    // ================================
+    function renderOfflinePanel() {
+      const target = document.getElementById('offline-view');
+      if(!target) return;
+      const data = travelData[currentDay] || travelData[1];
+      target.innerHTML = `
+        <div class="ultimate-hero">
+          <p class="text-[9px] font-black tracking-widest text-sky-200 flex items-center gap-1"><i data-lucide="archive" class="w-3.5 h-3.5"></i> V13 PLUS PRO OFFLINE PACK</p>
+          <h2 class="mt-1 text-sm font-black">離線備援包</h2>
+          <p class="mt-1 text-[11px] leading-relaxed text-slate-100">一鍵產生可離線開啟的 HTML 備援資料，包含今日行程、住宿地址、緊急電話、日文求助句、Google Map 文字連結與當日收據摘要。</p>
+        </div>
+        <div class="ultimate-grid">
+          <button onclick="downloadOfflinePack()" class="tap ultimate-action bg-sky-600 text-white"><i data-lucide="download" class="w-5 h-5"></i>下載今日<br>離線HTML</button>
+          <button onclick="copyOfflinePackText()" class="tap ultimate-action bg-slate-900 text-white"><i data-lucide="copy" class="w-5 h-5"></i>複製今日<br>備援文字</button>
+          <button onclick="buildPrintArea(); setTimeout(()=>window.print(),80)" class="tap ultimate-action bg-white border border-slate-200 text-slate-700"><i data-lucide="printer" class="w-5 h-5 text-slate-500"></i>列印今日<br>PDF備份</button>
+          <button onclick="switchMainTab('emergency')" class="tap ultimate-action bg-rose-600 text-white"><i data-lucide="siren" class="w-5 h-5"></i>開啟緊急<br>模式</button>
+        </div>
+        <div class="ultimate-card">
+          <h3 class="text-xs font-black text-slate-900 flex items-center gap-1"><i data-lucide="file-check" class="w-4 h-4 text-sky-600"></i> 今日備援包預覽</h3>
+          <div class="offline-pack-preview mt-2">
+            <b>D${currentDay}｜${escapeHtml(tripDateLabels[currentDay] || '')}</b><br>
+            ${escapeHtml(data.title)}<br>
+            住宿：JS暁宅・靜谷｜〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br>
+            緊急：110 警察｜119 救護/消防｜KIX 關西機場
+          </div>
+        </div>
+        <div class="ultimate-card">
+          <h3 class="text-xs font-black text-slate-900">離線包會包含</h3>
+          <div class="mt-2 grid grid-cols-2 gap-2 text-[10.5px] font-bold text-slate-600">
+            <div class="rounded-xl bg-slate-50 p-2">✅ 今日時間軸</div>
+            <div class="rounded-xl bg-slate-50 p-2">✅ 民宿地址</div>
+            <div class="rounded-xl bg-slate-50 p-2">✅ 緊急日文</div>
+            <div class="rounded-xl bg-slate-50 p-2">✅ 收據摘要</div>
+            <div class="rounded-xl bg-slate-50 p-2">✅ Google Map 連結</div>
+            <div class="rounded-xl bg-slate-50 p-2">✅ 可列印PDF</div>
+          </div>
+        </div>`;
+      lucide.createIcons();
+    }
+
+    function getOfflinePackText(day=currentDay) {
+      const data = travelData[day] || travelData[1];
+      const records = getExpenseRecords().filter(r => String(r.day) === String(day));
+      let text = `2026 京阪奈自由行 離線備援包\nD${day}｜${tripDateLabels[day] || ''}\n${data.title}\n\n`;
+      text += `【住宿】\nJS暁宅・靜谷\n〒557-0031 大阪府大阪市西成区鶴見橋1-15-21\nGoogle Map: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}\n\n`;
+      text += `【今日行程】\n`;
+      data.items.forEach((item, idx) => {
+        text += `${idx+1}. ${item.time}｜${item.name}\n地址：${item.addr}\n備註：${item.note}\nMap: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}\n\n`;
+      });
+      text += `【緊急聯絡】\n警察 110\n消防/救護 119\n關西機場 KIX\n\n`;
+      text += `【日文求助大字】\n助けてください。｜請幫助我。\nホテルまでお願いします。｜請載我回飯店。\n空港までお願いします。｜請載我去機場。\n財布をなくしました。｜我錢包遺失了。\n病院へ連れて行ってください。｜請帶我去醫院。\n\n`;
+      text += `【今日收據摘要】\n`;
+      if(records.length) records.forEach((r, i) => { text += `${i+1}. ${r.item}｜${formatMoney(r.amount, r.currency)}｜${r.category}\n`; });
+      else text += `尚無今日收據。\n`;
+      return text;
+    }
+
+    function buildOfflinePackHtml(day=currentDay) {
+      const data = travelData[day] || travelData[1];
+      const records = getExpenseRecords().filter(r => String(r.day) === String(day));
+      const itemRows = data.items.map((item, idx) => `<article><h3>${idx+1}. ${escapeHtml(item.time)}｜${escapeHtml(item.name)}</h3><p>${escapeHtml(item.note)}</p><p><b>地址：</b>${escapeHtml(item.addr)}</p><p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}">Google Map</a></p></article>`).join('');
+      const receiptRows = records.length ? records.map(r => `<li>${escapeHtml(r.item)}｜${formatMoney(r.amount, r.currency)}｜${escapeHtml(r.category)}</li>`).join('') : '<li>尚無今日收據。</li>';
+      return `<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D${day} 離線備援包</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.6}.wrap{max-width:760px;margin:auto;padding:18px}h1{font-size:22px}h2{font-size:17px;margin-top:22px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}article{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}a{color:#0369a1;font-weight:800}.sos{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px}.big{font-size:22px;font-weight:900;color:#7f1d1d}@media print{body{background:white}.wrap{max-width:none}}</style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main>
+<script>
+/* ==========================================================
+   V15 Ultimate Enterprise OCR Engine Override
+   - Single-flight Queue 防止連點與多張同時打 API
+   - Image SHA-256 Cache 相同照片直接讀取結果
+   - 429 Smart Cooldown：遇限流改為排隊/待辨識，不再顯示硬失敗
+   - JSON Repair 2.0 沿用原本解析器
+   ========================================================== */
+(function(){
+  const V15_CACHE_KEY = 'kansai2026_v15_ocr_cache_v1';
+  const V15_PENDING_KEY = 'kansai2026_v15_pending_ocr_v1';
+  const V15_LOG_KEY = 'kansai2026_v15_ocr_log_v1';
+  window.__v15OcrQueue = window.__v15OcrQueue || Promise.resolve();
+
+  function v15Sleep(ms){ return new Promise(r => setTimeout(r, Math.max(0, ms||0))); }
+  function v15ReadJson(key, fallback){ try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e){ return fallback; } }
+  function v15WriteJson(key, value){ try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){} }
+  function v15AppendLog(row){ const arr=v15ReadJson(V15_LOG_KEY,[]); arr.unshift(Object.assign({ts:new Date().toISOString()}, row||{})); v15WriteJson(V15_LOG_KEY, arr.slice(0,80)); }
+
+  async function v15HashBase64(base64){
+    try{
+      const raw = atob(String(base64||''));
+      const bytes = new Uint8Array(raw.length);
+      for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){
+      return 'fallback_' + String(base64||'').slice(0,80).replace(/[^a-zA-Z0-9]/g,'');
+    }
+  }
+
+  function v15GetCache(hash){ const map=v15ReadJson(V15_CACHE_KEY,{}); return map[hash] || null; }
+  function v15SetCache(hash, receipt){ const map=v15ReadJson(V15_CACHE_KEY,{}); map[hash]={receipt, savedAt:new Date().toISOString()}; v15WriteJson(V15_CACHE_KEY,map); }
+  function v15SavePending(image, hash, reason){
+    const arr=v15ReadJson(V15_PENDING_KEY,[]);
+    const exists=arr.some(x=>x.hash===hash);
+    if(!exists){
+      arr.unshift({hash, imageDataUrl:image.dataUrl, width:image.width, height:image.height, reason:String(reason||'pending'), createdAt:new Date().toISOString()});
+      v15WriteJson(V15_PENDING_KEY, arr.slice(0,30));
+    }
+  }
+
+  function v15Is429(res, body){ return res?.status === 429 || body?.error?.status === 'RESOURCE_EXHAUSTED' || /429|quota|rate|exhausted|頻率|配額/i.test(String(body?.error?.message||'')); }
+  function v15RetryMs(res, fallback){
+    try { return Math.min(Math.max(getRetryAfterMsFromResponse(res, fallback||60000), 30000), 180000); }
+    catch(e){ return fallback || 60000; }
+  }
+
+  async function v15Queued(task){
+    const run = window.__v15OcrQueue.then(task, task);
+    window.__v15OcrQueue = run.catch(()=>{});
+    return run;
+  }
+
+  // 覆寫 Gemini 辨識：先查 cache，再經 Queue 單張送出，遇 429 存待辨識。
+  window.recognizeReceiptWithGemini = async function(image){
+    const hash = await v15HashBase64(image.base64);
+    image.hash = hash;
+    const cached = v15GetCache(hash);
+    if(cached && cached.receipt){
+      setReceiptAiStatus('⚡ V15 Cache 命中：相同收據已辨識過，直接載入結果。');
+      v15AppendLog({type:'cache-hit', hash});
+      return cached.receipt;
+    }
+
+    return await v15Queued(async () => {
+      const cooldownLeft = typeof getGeminiQuotaCooldownLeftMs === 'function' ? getGeminiQuotaCooldownLeftMs() : 0;
+      if(cooldownLeft > 0){
+        const wait = Math.min(cooldownLeft, 120000);
+        setReceiptAiStatus(`⏳ V15 OCR Queue：Gemini 仍在冷卻中，系統自動等待 ${formatWaitSeconds(wait)} 後再送出。請勿重複拍照。`);
+        await v15Sleep(wait);
+      }
+
+      const cfg = getReceiptAiSettings();
+      if ((cfg.apiMode || 'direct') === 'proxy') {
+        if (!cfg.proxyUrl) throw new Error('已選 Enterprise Proxy 模式，但尚未設定 Worker URL。');
+        const receipt = await withTimeoutPromise(recognizeReceiptWithEnterpriseProxy(image, cfg), 70000, 'Enterprise Proxy 辨識逾時，已停止等待。');
+        const normalized = coerceReceiptShape(receipt);
+        v15SetCache(hash, normalized);
+        v15AppendLog({type:'proxy-success', hash});
+        return normalized;
+      }
+
+      const apiKeyToUse = sanitizeApiKeyStrict((cfg && cfg.key) || runtimeApiKey);
+      if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定，貼上一次即可，V15 會自動保存與選擇模型。');
+
+      const payload = buildGeminiGeneratePayload(image);
+      const preferredModel = (cfg && cfg.model) || defaultReceiptAiModel || 'gemini-1.5-flash';
+      const preferredApiVer = (cfg && cfg.apiVersion) || defaultReceiptAiApiVersion || 'v1beta';
+      const candidates = [
+        { model: preferredModel, apiVer: preferredApiVer },
+        { model: 'gemini-1.5-flash', apiVer: 'v1beta' },
+        { model: 'gemini-1.5-flash-latest', apiVer: 'v1beta' },
+        { model: 'gemini-2.0-flash', apiVer: 'v1beta' },
+        { model: 'gemini-2.5-flash', apiVer: 'v1beta' }
+      ].filter((v,i,a)=>v.model&&v.apiVer&&a.findIndex(x=>x.model===v.model&&x.apiVer===v.apiVer)===i);
+
+      let lastErr = '';
+      for(let i=0;i<candidates.length;i++){
+        const {model, apiVer} = candidates[i];
+        setReceiptAiStatus(`🧠 V15 Ultimate OCR：Queue 已鎖定單張辨識，使用 ${model}/${apiVer}（${i+1}/${candidates.length}）...`);
+        const endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
+        let result;
+        try{
+          result = await withTimeoutPromise(
+            fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, { maxRetries: 1, baseDelayMs: 25000, timeoutMs: 35000 }),
+            95000,
+            'Gemini 請求逾時，V15 已停止等待，避免畫面卡住。'
+          );
+        }catch(e){
+          lastErr = e?.message || String(e);
+          if(/429|quota|rate|RESOURCE_EXHAUSTED|頻率|配額/i.test(lastErr)){
+            v15SavePending(image, hash, lastErr);
+            setGeminiQuotaCooldown?.(90000);
+            const err = new Error('PENDING_429'); err.isPending429 = true; err.hash = hash;
+            throw err;
+          }
+          continue;
+        }
+
+        const res = result.response;
+        const body = result.body || {};
+        if(res && res.ok){
+          const text = body?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '';
+          if(!text) { lastErr = 'Gemini 沒有回傳文字內容'; continue; }
+          const parsed = coerceReceiptShape(parseGeminiJsonText(text));
+          v15SetCache(hash, parsed);
+          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e){}
+          v15AppendLog({type:'gemini-success', hash, model, apiVer});
+          return parsed;
+        }
+
+        const bodyMsg = body?.error?.message || `HTTP ${res?.status || 'UNKNOWN'}`;
+        lastErr = bodyMsg;
+        if(v15Is429(res, body)){
+          const waitMs = v15RetryMs(res, 90000);
+          setGeminiQuotaCooldown?.(waitMs);
+          v15SavePending(image, hash, bodyMsg);
+          v15AppendLog({type:'pending-429', hash, waitMs});
+          const err = new Error('PENDING_429'); err.isPending429 = true; err.hash = hash; err.waitMs = waitMs;
+          throw err;
+        }
+        if(shouldAutoFallbackGemini(res?.status, body) && i < candidates.length-1){
+          setReceiptAiStatus('🔁 V15：目前模型不可用，自動切換下一組穩定模型。');
+          continue;
+        }
+        if(res?.status === 401) throw new Error('API Key 驗證失敗：請重新貼上 Google AI Studio 的完整 Key。');
+        if(res?.status === 403) throw new Error('Gemini 權限被拒：請確認 API Key 沒有限制網域/IP，並已啟用 Generative Language API。');
+      }
+      throw new Error(lastErr || 'Gemini 辨識失敗，請稍後再試。');
+    });
+  };
+
+  // 覆寫拍照處理：遇 429 改成待辨識，不再出現紅色硬失敗；成功後快取。
+  window.handleEmbeddedReceiptImage = async function(event){
+    const file = event?.target?.files?.[0];
+    if(event?.target) event.target.value = '';
+    if(!file) return;
+    const isManual = window.__manualAttachmentOnly === true;
+    if(isManual){
+      showToast('正在壓縮並附加收據相片...');
+      try{
+        const image = await compressReceiptImage(file, 720, 0.62);
+        window.__tempReceiptImage = image.dataUrl;
+        const previewWrap = document.getElementById('attached-receipt-preview-wrap');
+        const previewThumb = document.getElementById('attached-receipt-thumbnail');
+        if(previewWrap && previewThumb){ previewThumb.src=image.dataUrl; previewWrap.classList.remove('hidden'); }
+        showToast('收據照片已成功附加至表單中！');
+      }catch(e){ showCustomAlert('錯誤','相片附加失敗，請重試！'); }
+      window.__manualAttachmentOnly=false;
+      return;
+    }
+    if(window.__receiptAiRecognitionLock){
+      showCustomAlert('辨識排隊中','V15 Queue 正在處理上一張收據，請稍候完成後再拍下一張。');
+      return;
+    }
+    window.__receiptAiRecognitionLock = true;
+    openReceiptAiModal();
+    const resultBox = document.getElementById('receipt-ai-result');
+    if(resultBox) resultBox.classList.add('hidden');
+    setReceiptAiStatus('⚡ V15 Ultimate：正在壓縮、建立指紋、檢查快取與 Queue...');
+    const started = performance.now();
+    try{
+      const image = await compressReceiptImage(file, 1000, 0.68);
+      const preview = document.getElementById('receipt-ai-preview');
+      if(preview){ preview.src=image.dataUrl; preview.classList.remove('hidden'); }
+      setReceiptAiStatus(`⚡ 圖片已最佳化（${image.width}×${image.height}，${image.compressMs || 0}ms），V15 Queue 正在辨識...`);
+      const parsed = await recognizeReceiptWithGemini(image);
+      const normalized = normalizeReceiptResult(parsed);
+      if(!normalized.item || !normalized.amount) throw new Error('未能識別出足夠的消費項目或金額欄位。');
+      window.__tempReceiptImage = image.dataUrl;
+      const duplicateCandidate = { item: normalized.item, amount: normalized.amount, currency: normalized.currency, day: normalized.day, category: normalized.category, note: normalized.note, itemLines: normalized.itemLines || [], imageStr: image.dataUrl, receiptDate: normalized.date || tripDates[normalized.day] || '' };
+      const duplicate = findPossibleDuplicateExpense(duplicateCandidate);
+      if(duplicate){
+        setReceiptAiStatus('⚠️ 偵測到可能重複單據，請確認是否仍要新增。');
+        const proceed = await confirmPossibleDuplicateExpense(duplicateCandidate, duplicate);
+        if(!proceed){
+          setReceiptAiStatus(`⚠️ 已取消新增。耗時 ${((performance.now()-started)/1000).toFixed(1)} 秒；這張單據可能已存在。`);
+          if(resultBox){
+            resultBox.innerHTML = `<div class="font-bold text-amber-800">已取消新增，避免重複入帳。</div><div class="text-[10px] text-slate-600 mt-1">可能重複：${escapeHtml(duplicate.item)}｜D${escapeHtml(duplicate.day)}｜${formatMoney(duplicate.amount, duplicate.currency)}</div>`;
+            resultBox.classList.remove('hidden');
+          }
+          return;
+        }
+      }
+      applyReceiptToExpenseForm(normalized);
+      await addExpenseRecord({ skipDuplicateCheck: true });
+      setReceiptAiStatus(`✨ V15 辨識成功！耗時 ${((performance.now()-started)/1000).toFixed(1)} 秒；結果已快取，下次相同照片 0.1 秒載入。`);
+      if(resultBox){
+        resultBox.innerHTML = `<div class="font-bold text-violet-950">項目：${escapeHtml(normalized.item)}</div><div class="font-bold text-emerald-800">金額：${formatMoney(normalized.amount, normalized.currency)}</div><div>分類：${escapeHtml(normalized.category)} | 行程：D${normalized.day}</div><div class="mt-1 font-bold text-violet-800">📦 商品明細：${normalized.itemLines?.length || 0} 項 / ${(normalized.itemLines || []).reduce((sum,x)=>sum+(Number(x.qty)||1),0)} 件</div>${normalized.note ? `<div class="text-[10px] text-violet-700 mt-1">細節：${escapeHtml(normalized.note)}</div>` : ''}`;
+        resultBox.classList.remove('hidden');
+      }
+      showToast('V15 OCR 成功，已保存收據與商品明細');
+    }catch(err){
+      if(err && err.isPending429){
+        setReceiptAiStatus('⏳ Google Gemini 目前 429 限流；V15 已把此張收據存入「待辨識佇列」。請等 1–3 分鐘後再拍下一張，或切換 Cloudflare Worker Proxy。', false);
+        if(resultBox){
+          resultBox.innerHTML = `<div class="font-bold text-amber-800">⏳ 已存入待辨識佇列，未遺失照片。</div><div class="text-[10px] text-slate-600 mt-1">原因：Gemini 429 限流。V15 已記錄圖片指紋，之後相同照片不會重複消耗 API。</div>`;
+          resultBox.classList.remove('hidden');
+        }
+        showToast('已存入待辨識佇列');
+      }else{
+        setReceiptAiStatus('❌ 辨識失敗：' + (err?.message || err), true);
+      }
+    }finally{
+      window.__receiptAiRecognitionLock = false;
+    }
+  };
+
+  // 初始化時補一個版本標記（不影響原 UI）。
+  document.addEventListener('DOMContentLoaded', () => {
+    try{
+      const title = document.querySelector('h1');
+      if(title && !title.textContent.includes('V15')){
+        const badge = document.createElement('span');
+        badge.className='ml-1 rounded-full bg-indigo-100 px-1.5 py-0.5 text-[10px] font-black text-indigo-700';
+        badge.textContent='V15';
+        title.appendChild(badge);
+      }
+    }catch(e){}
+  });
+})();
+</script>
+
+</body></html>`;
+    }
+
+    function downloadBlob(filename, content, type='text/plain;charset=utf-8') {
+      const blob = new Blob([content], {type});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1200);
+    }
+
+    function downloadOfflinePack() {
+      const html = buildOfflinePackHtml(currentDay);
+      downloadBlob(`Kansai2026_D${currentDay}_OfflinePack.html`, html, 'text/html;charset=utf-8');
+      showToast('離線備援包已下載');
+    }
+
+    function copyOfflinePackText() {
+      copyText(getOfflinePackText(currentDay), '今日離線備援文字已複製');
+    }
+
+
+    // ================================
+    // V13 Enterprise Plus Pro：安全返程中心
+    // ================================
+    function buildSafetyReturnGuideHtml(mode='default') {
+      const compact = mode === 'compact';
+      return `
+        <div class="plus-pro-hero card-shadow">
+          <p class="text-[9px] font-black tracking-widest text-blue-100 flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> V13 ENTERPRISE PLUS PRO</p>
+          <h2 class="mt-1 text-sm font-black">🛡 安全民宿返程中心</h2>
+          <p class="mt-1 text-[11px] leading-relaxed text-blue-50">晚上返程以「大馬路、明亮、結伴、必要時搭車」為原則。這不是恐慌模式，是自由行的安全帽。</p>
+        </div>
+        <section class="safe-return-card">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <h3 class="text-xs font-black text-slate-950 flex items-center gap-1"><i data-lucide="route" class="w-4 h-4 text-sky-600"></i> 4 個安全民宿舍指南</h3>
+            <span class="pill bg-sky-50 text-sky-700">重要</span>
+          </div>
+          <div class="safe-guide-grid">
+            ${safeGuideItem('1', '最推路線：走主要道路回宿舍', '不論從哪裡回程，建議搭到「天下茶屋站」或「花園町站」。出站後先沿主要大馬路或國道26號方向行走，接近民宿後再轉入巷口。大馬路車流與照明較好，也較容易找到便利商店求助。')}
+            ${safeGuideItem('2', '避免邊走邊滑手機或戴耳機', '晚上 21:00–22:00 進入住宅區巷弄時，請收起手機、拿下耳機，注意前後方與單車動向。保持警覺，就能提早避開讓人不舒服的狀況。')}
+            ${safeGuideItem('3', '結伴同行，不要落單', '家人或朋友同行時，請一起回民宿。若需要一個人回去，建議走明亮主路、不要停留暗巷，步伐穩定直接返回住宿地點。')}
+            ${safeGuideItem('4', '晚了或很累就善用計程車', '若超過 22:30、下雨、帶長輩小孩、提很多購物袋或行李，建議從難波、心齋橋或梅田直接搭 Uber／計程車回民宿，直達門口最省心。')}
+          </div>
+          <div class="night-warning-card mt-3">
+            <p class="text-[11px] font-black text-orange-900 flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 晚間總結</p>
+            <p class="mt-1 text-[10.5px] leading-relaxed text-orange-800 font-bold">晚上 21:00–22:30 只要走明亮大馬路、不走暗巷小路、不單獨落單，通常不需要過度恐慌。若身體疲累或購物太多，搭車回去就是最好的風險管理。</p>
+          </div>
+          <div class="safe-action-grid mt-3">
+            <button onclick="openSafeRoute('tengachaya')" class="tap safe-action-btn bg-sky-600 text-white"><i data-lucide="train" class="w-3.5 h-3.5"></i>天下茶屋返程</button>
+            <button onclick="openSafeRoute('hanazonocho')" class="tap safe-action-btn bg-blue-700 text-white"><i data-lucide="train-front" class="w-3.5 h-3.5"></i>花園町返程</button>
+            <button onclick="copyHotelTaxiCard()" class="tap safe-action-btn bg-slate-900 text-white"><i data-lucide="car-taxi-front" class="w-3.5 h-3.5"></i>計程車大字卡</button>
+            <button onclick="openUberToHotel()" class="tap safe-action-btn bg-emerald-600 text-white"><i data-lucide="navigation" class="w-3.5 h-3.5"></i>Uber 到民宿</button>
+          </div>
+          <button onclick="copySafeReturnGuide()" class="tap mt-2 w-full rounded-xl bg-white border border-slate-200 py-2 text-[11px] font-black text-slate-700">📋 複製安全返程指南</button>
+        </section>`;
+    }
+
+    function safeGuideItem(num, title, text) {
+      return `<div class="safe-guide-item"><div class="safe-guide-icon">${num}</div><div><p class="safe-guide-title">${escapeHtml(title)}</p><p class="safe-guide-text">${escapeHtml(text)}</p></div></div>`;
+    }
+
+    function openSafeRoute(type) {
+      const hotel = HOTEL_COORDS;
+      const origin = type === 'tengachaya' ? '天下茶屋駅' : '花園町駅';
+      const mode = type === 'tengachaya' ? 'walking' : 'walking';
+      window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(hotel)}&travelmode=${mode}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function openUberToHotel() {
+      const hotel = `${HOTEL_NAME} ${HOTEL_ADDRESS_EN}`;
+      const uberUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[formatted_address]=${encodeURIComponent(hotel)}&dropoff[latitude]=${encodeURIComponent(HOTEL_LAT)}&dropoff[longitude]=${encodeURIComponent(HOTEL_LON)}`;
+      window.open(uberUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function copySafeReturnGuide() {
+      const text = `🛡 民宿安全返程指南\n\n1. 最推路線：晚上回民宿建議搭到「天下茶屋站」或「花園町站」，出站後先走主要大馬路或國道26號方向，接近民宿後再轉巷口。\n\n2. 避免邊走邊滑手機或戴耳機：21:00–22:00 進入住宅區時，請收起手機、拿下耳機，注意前後方與單車動向。\n\n3. 結伴同行，不要落單：家人朋友一起回最安心；若單獨返回，請走明亮主路並直接回住宿。\n\n4. 善用計程車：超過 22:30、下雨、帶長輩小孩、提行李或購物太多時，建議從難波、心齋橋或梅田搭 Uber／計程車直達民宿。\n\n總結：走明亮大馬路、不走暗巷、不落單；疲累或太晚就搭車。`;
+      copyText(text, '安全返程指南已複製');
+    }
+
+    // ================================
+    // V13 Enterprise Plus Pro：緊急模式
+    // ================================
+    function renderEmergencyPanel() {
+      const target = document.getElementById('emergency-view');
+      if(!target) return;
+      target.innerHTML = `
+        <div class="emergency-hero">
+          <p class="text-[9px] font-black tracking-widest text-rose-100 flex items-center gap-1"><i data-lucide="siren" class="w-3.5 h-3.5"></i> V13 PLUS PRO EMERGENCY</p>
+          <h2 class="mt-1 text-sm font-black">緊急模式</h2>
+          <p class="mt-1 text-[11px] leading-relaxed text-rose-50">迷路、叫車、回飯店、去機場、找醫院/警察局、日文求助大字卡，一頁完成。旅遊工具箱裡的安全帽。</p>
+        </div>
+        ${buildSafetyReturnGuideHtml('compact')}
+        <div class="emergency-grid">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}" target="_blank" class="tap emergency-btn bg-slate-900 text-white"><i data-lucide="home" class="w-5 h-5"></i>我要回飯店</a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Kansai International Airport')}&travelmode=transit" target="_blank" class="tap emergency-btn bg-sky-600 text-white"><i data-lucide="plane" class="w-5 h-5"></i>我要去機場</a>
+          <button onclick="openNearestEmergency('hospital')" class="tap emergency-btn bg-white border border-rose-200 text-rose-700"><i data-lucide="hospital" class="w-5 h-5"></i>最近醫院</button>
+          <button onclick="openNearestEmergency('police')" class="tap emergency-btn bg-white border border-blue-200 text-blue-700"><i data-lucide="shield" class="w-5 h-5"></i>最近警察局</button>
+          <a href="tel:119" class="tap emergency-btn bg-red-600 text-white"><i data-lucide="ambulance" class="w-5 h-5"></i>119 救護/消防</a>
+          <a href="tel:110" class="tap emergency-btn bg-blue-700 text-white"><i data-lucide="phone-call" class="w-5 h-5"></i>110 警察</a>
+          <button onclick="shareCurrentLocationForEmergency()" class="tap emergency-btn bg-emerald-600 text-white"><i data-lucide="map-pin" class="w-5 h-5"></i>複製目前位置</button>
+          <button onclick="copyHotelTaxiCard()" class="tap emergency-btn bg-amber-500 text-white"><i data-lucide="car-taxi-front" class="w-5 h-5"></i>叫車大字卡</button>
+        </div>
+        <div class="ultimate-card">
+          <h3 class="text-xs font-black text-slate-900">日文求助大字卡</h3>
+          <div class="mt-2 space-y-2">
+            ${emergencyPhraseCard('助けてください。', '請幫助我。')}
+            ${emergencyPhraseCard('ホテルまでお願いします。', '請載我回飯店。')}
+            ${emergencyPhraseCard('病院へ連れて行ってください。', '請帶我去醫院。')}
+            ${emergencyPhraseCard('財布をなくしました。警察に行きたいです。', '我錢包遺失了，我想去警察局。')}
+            ${emergencyPhraseCard('日本語が話せません。翻訳アプリを使ってもいいですか。', '我不會說日文，可以使用翻譯 App 嗎？')}
+          </div>
+        </div>
+        <div class="ultimate-card">
+          <h3 class="text-xs font-black text-slate-900">飯店地址</h3>
+          <p class="mt-2 select-all rounded-xl bg-slate-950 p-3 text-white text-sm font-black leading-relaxed">〒557-0031 大阪府大阪市西成区鶴見橋1-15-21</p>
+          <div class="mt-2 grid grid-cols-2 gap-2">
+            <button onclick="copyText('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21', '飯店地址已複製')" class="tap rounded-xl bg-slate-100 py-2 text-[11px] font-black text-slate-700">複製地址</button>
+            <button onclick="openPlaceModal('JS暁宅・靜谷','〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','花園町駅2番出口から徒歩約5分です。','https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}')" class="tap rounded-xl bg-slate-900 py-2 text-[11px] font-black text-white">大字卡</button>
+          </div>
+        </div>`;
+      lucide.createIcons();
+    }
+
+    function emergencyPhraseCard(jp, zh) {
+      return `<button onclick="showEmergencyPhrase(${JSON.stringify(jp)}, ${JSON.stringify(zh)})" class="tap emergency-phrase w-full text-left"><div class="jp">${escapeHtml(jp)}</div><div class="zh">${escapeHtml(zh)}</div></button>`;
+    }
+
+    function showEmergencyPhrase(jp, zh) {
+      showCustomAlert('日文求助大字卡', `${jp}\n\n${zh}`);
+      copyText(`${jp}\n${zh}`, '日文求助句已複製');
+    }
+
+    function openNearestEmergency(type) {
+      const query = type === 'hospital' ? 'hospital near me' : 'police station near me';
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function shareCurrentLocationForEmergency() {
+      if(!navigator.geolocation) {
+        copyText('我需要協助。目前手機不支援定位。飯店：〒557-0031 大阪府大阪市西成区鶴見橋1-15-21', '緊急文字已複製');
+        return;
+      }
+      showToast('正在取得目前位置...');
+      navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude.toFixed(6);
+        const lon = pos.coords.longitude.toFixed(6);
+        const text = `我需要協助。我的位置：https://www.google.com/maps?q=${lat},${lon}\n飯店：〒557-0031 大阪府大阪市西成区鶴見橋1-15-21`;
+        copyText(text, '目前位置已複製，可貼到 LINE');
+      }, () => {
+        copyText('我需要協助，但定位失敗。飯店：〒557-0031 大阪府大阪市西成区鶴見橋1-15-21', '定位失敗，已複製飯店資訊');
+      }, {enableHighAccuracy:true, timeout:8000, maximumAge:60000});
+    }
+
+    function copyHotelTaxiCard() {
+      const text = `ホテルまでお願いします。\n〒557-0031 大阪府大阪市西成区鶴見橋1-15-21\nJS暁宅・靜谷\nPlease take me to my hotel.`;
+      copyText(text, '叫車大字卡已複製');
+      openPlaceModal('叫車大字卡｜回飯店','ホテルまでお願いします。\n〒557-0031 大阪府大阪市西成区鶴見橋1-15-21','請直接出示給司機。','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('〒557-0031 大阪府大阪市西成区鶴見橋1-15-21'));
+    }
+
     // 燈箱大圖控制器 (Lightbox)
     function openLightbox(imgSrc, title, meta) {
       const modal = document.getElementById('lightbox-modal');
@@ -3542,6 +4769,8 @@
 
       if (!modal || !img) return;
       img.src = imgSrc;
+      window.__currentLightboxImage = imgSrc;
+      window.__currentLightboxTitle = title || 'receipt';
       if (titleNode) titleNode.textContent = title;
       if (metaNode) metaNode.textContent = meta;
 
@@ -3549,10 +4778,189 @@
       document.body.style.overflow = 'hidden';
     }
 
+    function downloadCurrentLightboxImage() {
+      const img = window.__currentLightboxImage || document.getElementById('lightbox-image')?.src || '';
+      if(!img) { showToast('目前沒有可下載的收據原圖'); return; }
+      const title = normalizeDuplicateText(window.__currentLightboxTitle || 'receipt') || 'receipt';
+      const a = document.createElement('a');
+      a.href = img;
+      a.download = `receipt_${title}_${Date.now()}.jpg`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast('收據原圖已下載');
+    }
+
     function closeLightbox() {
       const modal = document.getElementById('lightbox-modal');
       if (modal) modal.style.display = 'none';
       document.body.style.overflow = '';
+    }
+
+
+    // =============================
+    // V13.5 Ultimate AI：旅行儀表板、航班中心、退稅中心、AI日誌、家庭共享
+    // =============================
+    const V135_FLIGHTS = {
+      outbound: { no:'JX820', from:'TPE 桃園', to:'KIX 關西', date:'2026-07-01', time:'08:30', note:'建議 05:30–06:00 抵達機場，保留行李託運與安檢時間。' },
+      inbound: { no:'JX823', from:'KIX 關西', to:'TPE 桃園', date:'2026-07-06', time:'15:10', note:'建議 12:00 前抵達關西機場，回程日以準時為最高原則。' }
+    };
+    const V135_BUDGET_TWD = 80000;
+    const V135_RATE = 0.21;
+
+    function v135TodayDay() {
+      const today = getLocalDateString ? getLocalDateString() : new Date().toISOString().slice(0,10);
+      const found = Object.keys(tripDates).find(d => tripDates[d] === today);
+      return Number(found || currentDay || 1);
+    }
+    function v135ExpenseSummary(day=currentDay) {
+      const records = typeof getExpenseRecords === 'function' ? getExpenseRecords() : [];
+      const dayRecords = records.filter(r => String(r.day) === String(day));
+      const allJpy = records.reduce((sum,r)=> sum + v135ToJpy(Number(r.amount||0), r.currency), 0);
+      const dayJpy = dayRecords.reduce((sum,r)=> sum + v135ToJpy(Number(r.amount||0), r.currency), 0);
+      return { records, dayRecords, allJpy: Math.round(allJpy), dayJpy: Math.round(dayJpy) };
+    }
+    function v135ToJpy(amount, currency) {
+      if(currency === 'TWD') return amount / V135_RATE;
+      if(currency === 'USD') return amount * 150;
+      return amount || 0;
+    }
+    function v135MoneyJpy(v){ return '¥' + Math.round(v||0).toLocaleString('zh-TW'); }
+    function v135MoneyTwdFromJpy(v){ return 'NT$' + Math.round((v||0) * V135_RATE).toLocaleString('zh-TW'); }
+    function v135NextStop(day=currentDay) {
+      const data = travelData[day];
+      if(!data || !data.items?.length) return null;
+      const now = new Date();
+      const hhmm = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      return data.items.find(i => i.time >= hhmm) || data.items[data.items.length - 1];
+    }
+    function renderV135Dashboard() {
+      const el = document.getElementById('v135-dashboard');
+      if(!el) return;
+      const day = currentDay || v135TodayDay();
+      const data = travelData[day] || travelData[1];
+      const exp = v135ExpenseSummary(day);
+      const next = v135NextStop(day);
+      const w = getTripWeatherSnapshot(day);
+      const rain = w?.rain ?? '-';
+      const cityKey = primaryWeatherCityByDay[day] || 'osaka';
+      const cityName = (localWeatherLinks[cityKey] || localWeatherLinks.osaka).label;
+      const night = new Date().getHours() >= 21;
+      const budgetUsedPct = Math.min(100, Math.round((exp.allJpy * V135_RATE / V135_BUDGET_TWD) * 100));
+      el.innerHTML = `
+        <section class="v135-hero">
+          <div class="v135-topline">
+            <div>
+              <div class="text-[9px] font-black tracking-[0.18em] text-cyan-100">AI TRAVEL OS｜V13.6 WEATHER ENGINE</div>
+              <h2 class="mt-1 text-base font-black leading-snug">今日旅行儀表板：D${day} ${tripDateLabels[day]}</h2>
+              <p class="mt-1 text-[11px] text-slate-100 leading-relaxed">${escapeHtml(data.title)}</p>
+            </div>
+            <span class="v135-badge">${night ? '🌙 夜間模式' : '🟢 白天模式'}</span>
+          </div>
+          <div class="v135-grid">
+            <div class="v135-stat"><div class="k">今日天氣</div><div class="v">${cityName}<br>${w ? `${w.min}-${w.max}°C｜雨${rain}%` : '可點天氣'}</div></div>
+            <div class="v135-stat"><div class="k">下一行程</div><div class="v">${next ? `${next.time}<br>${escapeHtml(next.name)}` : '尚無'}</div></div>
+            <div class="v135-stat"><div class="k">今日花費</div><div class="v">${v135MoneyJpy(exp.dayJpy)}<br>${v135MoneyTwdFromJpy(exp.dayJpy)}</div></div>
+            <div class="v135-stat"><div class="k">總預算</div><div class="v">${budgetUsedPct}% 已用<br>NT$${V135_BUDGET_TWD.toLocaleString('zh-TW')}</div></div>
+          </div>
+          <div class="v135-action-grid">
+            <button onclick="openPrimaryLocalWeather()" class="tap v135-action">🌤<span>今日天氣</span></button>
+            <button onclick="openTenkiRadar()" class="tap v135-action">☔<span>雨雲雷達</span></button>
+            <button onclick="switchMainTab('hotel')" class="tap v135-action">🏠<span>回民宿</span></button>
+            <button onclick="switchMainTab('emergency')" class="tap v135-action">🆘<span>SOS</span></button>
+            <button onclick="openV135FlightCenter()" class="tap v135-action">✈️<span>航班</span></button>
+            <button onclick="openV135TaxCenter()" class="tap v135-action">💴<span>匯率退稅</span></button>
+            <button onclick="generateV135DailyJournal()" class="tap v135-action">📖<span>旅遊日誌</span></button>
+            <button onclick="copyV135FamilyShare()" class="tap v135-action">👨‍👩‍👧‍👦<span>家庭共享</span></button>
+          </div>
+        </section>
+        <section class="v135-panel">
+          <div class="v135-panel-title"><h4>🌤 日本氣象協會 tenki.jp</h4><span class="pill bg-sky-50 text-sky-700">官方連結</span></div>
+          <div class="v135-chip-row no-scrollbar">
+            <button onclick="openTenkiCity('osaka')" class="v135-chip">大阪</button>
+            <button onclick="openTenkiCity('kyoto')" class="v135-chip">京都</button>
+            <button onclick="openTenkiCity('nara')" class="v135-chip">奈良</button>
+            <button onclick="openTenkiRadar()" class="v135-chip">雨雲雷達</button>
+            <button onclick="openTenkiTyphoon()" class="v135-chip">颱風</button>
+          </div>
+          ${night ? `<div class="v135-warning mt-2">🌙 夜間返程提醒：建議走大馬路、不要戴耳機、不邊走邊滑手機。若超過 22:30 或帶長輩/行李，建議直接搭 Uber 或計程車回民宿。</div>` : ``}
+        </section>`;
+      if(window.lucide) lucide.createIcons();
+    }
+
+    function openTenkiCity(key){ const x = localWeatherLinks[key] || localWeatherLinks.osaka; window.open(x.url, '_blank', 'noopener,noreferrer'); }
+    function openTenkiRadar(){ window.open(localWeatherLinks.radar.url, '_blank', 'noopener,noreferrer'); }
+    function openTenkiTyphoon(){ window.open(localWeatherLinks.typhoon.url, '_blank', 'noopener,noreferrer'); }
+
+    function openV135FlightCenter() {
+      const msg = `✈️ 航班中心
+
+去程：${V135_FLIGHTS.outbound.no}｜${V135_FLIGHTS.outbound.from} → ${V135_FLIGHTS.outbound.to}
+${V135_FLIGHTS.outbound.date} ${V135_FLIGHTS.outbound.time}
+${V135_FLIGHTS.outbound.note}
+
+回程：${V135_FLIGHTS.inbound.no}｜${V135_FLIGHTS.inbound.from} → ${V135_FLIGHTS.inbound.to}
+${V135_FLIGHTS.inbound.date} ${V135_FLIGHTS.inbound.time}
+${V135_FLIGHTS.inbound.note}`;
+      showCustomAlert('✈️ 智慧航班中心', msg);
+    }
+    function openV135TaxCenter() {
+      const exp = v135ExpenseSummary(currentDay);
+      const twd = Math.round(exp.allJpy * V135_RATE);
+      const msg = `💴 匯率與退稅中心
+
+目前估算匯率：¥1 ≈ NT$${V135_RATE}
+全旅程已記錄：${v135MoneyJpy(exp.allJpy)} ≈ NT$${twd.toLocaleString('zh-TW')}
+
+退稅提醒：購物、電器、藥妝類收據請保留原圖。離境前請確認商品未拆封規定與店家退稅文件。`;
+      showCustomAlert('💴 匯率與退稅中心', msg);
+    }
+    function generateV135DailyJournal() {
+      const day = currentDay;
+      const data = travelData[day];
+      const exp = v135ExpenseSummary(day);
+      const visited = getVisitedState()[`D${day}`] || {};
+      const visitedNames = data.items.filter((_,i)=>visited[i]).map(i=>i.name);
+      const text = `📖 Day ${day} 旅遊日誌
+${data.title}
+
+今日造訪：${visitedNames.length ? visitedNames.join('、') : '尚未勾選足跡'}
+今日收據：${exp.dayRecords.length} 張
+今日花費：${v135MoneyJpy(exp.dayJpy)}（約 ${v135MoneyTwdFromJpy(exp.dayJpy)}）
+
+AI 小結：今天行程主軸為${getDayTripProfile(day).theme}。請記得備份收據照片，並於晚上返回民宿時走主要道路。`;
+      copyText(text, '今日旅遊日誌已複製');
+      showCustomAlert('📖 AI 每日旅遊日誌', text);
+    }
+    function copyV135FamilyShare() {
+      const day = currentDay;
+      const data = travelData[day];
+      const next = v135NextStop(day);
+      const text = `👨‍👩‍👧‍👦 家庭共享資訊
+
+今日：D${day} ${tripDateLabels[day]}
+行程：${data.title}
+下一站：${next ? next.time + ' ' + next.name : '尚無'}
+民宿：${HOTEL_NAME}
+地址：${HOTEL_ADDRESS_EN}
+座標：${HOTEL_COORDS}
+Google導航：https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(HOTEL_COORDS)}
+SOS：日本警察110、救護消防119`;
+      copyText(text, '家庭共享資訊已複製，可貼到 LINE 群組');
+    }
+    function openV135AiAssistant(){ document.getElementById('v135-ai-modal')?.classList.add('show'); if(window.lucide) lucide.createIcons(); }
+    function closeV135AiAssistant(){ document.getElementById('v135-ai-modal')?.classList.remove('show'); }
+    function v135Ask(type) {
+      const day = currentDay; const w = getTripWeatherSnapshot(day); const exp = v135ExpenseSummary(day); const next = v135NextStop(day);
+      let ans = '';
+      if(type === 'umbrella') ans = `☔ 今日帶傘建議：${w ? `${w.city.name} 降雨機率 ${w.rain}%` : '天氣仍在載入'}。若降雨率超過 30%，請攜帶晴雨兩用傘；京都與奈良石板路雨天較滑，鞋底防滑優先。`;
+      if(type === 'hotel') ans = `🏠 回民宿建議：目的地 ${HOTEL_ADDRESS_EN}。晚上建議搭到天下茶屋站或花園町站，沿大馬路回民宿。導航可用座標 ${HOTEL_COORDS}。`;
+      if(type === 'safety') ans = `🛡 夜間安全：21:00 後請走主要道路、不戴耳機、不邊走邊滑手機。若超過 22:30、下雨、帶長輩或購物袋很多，請改搭 Uber 或計程車。`;
+      if(type === 'budget') ans = `💴 今日花費：${v135MoneyJpy(exp.dayJpy)}，約 ${v135MoneyTwdFromJpy(exp.dayJpy)}。今日已有 ${exp.dayRecords.length} 張收據。全旅程目前約 ${v135MoneyTwdFromJpy(exp.allJpy)}。`;
+      if(type === 'flight') ans = `✈️ 航班提醒：去程 ${V135_FLIGHTS.outbound.no} ${V135_FLIGHTS.outbound.date} ${V135_FLIGHTS.outbound.time}；回程 ${V135_FLIGHTS.inbound.no} ${V135_FLIGHTS.inbound.date} ${V135_FLIGHTS.inbound.time}。回程日請以準時抵達 KIX 為優先。`;
+      if(type === 'tax') ans = `💴 退稅提醒：藥妝、電器、購物類收據請保留原始照片與商品明細。若同店消費金額高，建議將收據集中，離境前確認退稅文件與未拆封規定。`;
+      if(next) ans += `
+
+下一個行程：${next.time}｜${next.name}`;
+      const el = document.getElementById('v135-ai-answer'); if(el) el.innerText = ans;
     }
 
     // UI 通用綁定與事件監聽
@@ -3593,5 +5001,250 @@
       }, 2500);
     }
   </script>
+
+<script>
+/* ==========================================================
+   V15 Ultimate Enterprise OCR Engine Override
+   - Single-flight Queue 防止連點與多張同時打 API
+   - Image SHA-256 Cache 相同照片直接讀取結果
+   - 429 Smart Cooldown：遇限流改為排隊/待辨識，不再顯示硬失敗
+   - JSON Repair 2.0 沿用原本解析器
+   ========================================================== */
+(function(){
+  const V15_CACHE_KEY = 'kansai2026_v15_ocr_cache_v1';
+  const V15_PENDING_KEY = 'kansai2026_v15_pending_ocr_v1';
+  const V15_LOG_KEY = 'kansai2026_v15_ocr_log_v1';
+  window.__v15OcrQueue = window.__v15OcrQueue || Promise.resolve();
+
+  function v15Sleep(ms){ return new Promise(r => setTimeout(r, Math.max(0, ms||0))); }
+  function v15ReadJson(key, fallback){ try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e){ return fallback; } }
+  function v15WriteJson(key, value){ try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){} }
+  function v15AppendLog(row){ const arr=v15ReadJson(V15_LOG_KEY,[]); arr.unshift(Object.assign({ts:new Date().toISOString()}, row||{})); v15WriteJson(V15_LOG_KEY, arr.slice(0,80)); }
+
+  async function v15HashBase64(base64){
+    try{
+      const raw = atob(String(base64||''));
+      const bytes = new Uint8Array(raw.length);
+      for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){
+      return 'fallback_' + String(base64||'').slice(0,80).replace(/[^a-zA-Z0-9]/g,'');
+    }
+  }
+
+  function v15GetCache(hash){ const map=v15ReadJson(V15_CACHE_KEY,{}); return map[hash] || null; }
+  function v15SetCache(hash, receipt){ const map=v15ReadJson(V15_CACHE_KEY,{}); map[hash]={receipt, savedAt:new Date().toISOString()}; v15WriteJson(V15_CACHE_KEY,map); }
+  function v15SavePending(image, hash, reason){
+    const arr=v15ReadJson(V15_PENDING_KEY,[]);
+    const exists=arr.some(x=>x.hash===hash);
+    if(!exists){
+      arr.unshift({hash, imageDataUrl:image.dataUrl, width:image.width, height:image.height, reason:String(reason||'pending'), createdAt:new Date().toISOString()});
+      v15WriteJson(V15_PENDING_KEY, arr.slice(0,30));
+    }
+  }
+
+  function v15Is429(res, body){ return res?.status === 429 || body?.error?.status === 'RESOURCE_EXHAUSTED' || /429|quota|rate|exhausted|頻率|配額/i.test(String(body?.error?.message||'')); }
+  function v15RetryMs(res, fallback){
+    try { return Math.min(Math.max(getRetryAfterMsFromResponse(res, fallback||60000), 30000), 180000); }
+    catch(e){ return fallback || 60000; }
+  }
+
+  async function v15Queued(task){
+    const run = window.__v15OcrQueue.then(task, task);
+    window.__v15OcrQueue = run.catch(()=>{});
+    return run;
+  }
+
+  // 覆寫 Gemini 辨識：先查 cache，再經 Queue 單張送出，遇 429 存待辨識。
+  window.recognizeReceiptWithGemini = async function(image){
+    const hash = await v15HashBase64(image.base64);
+    image.hash = hash;
+    const cached = v15GetCache(hash);
+    if(cached && cached.receipt){
+      setReceiptAiStatus('⚡ V15 Cache 命中：相同收據已辨識過，直接載入結果。');
+      v15AppendLog({type:'cache-hit', hash});
+      return cached.receipt;
+    }
+
+    return await v15Queued(async () => {
+      const cooldownLeft = typeof getGeminiQuotaCooldownLeftMs === 'function' ? getGeminiQuotaCooldownLeftMs() : 0;
+      if(cooldownLeft > 0){
+        const wait = Math.min(cooldownLeft, 120000);
+        setReceiptAiStatus(`⏳ V15 OCR Queue：Gemini 仍在冷卻中，系統自動等待 ${formatWaitSeconds(wait)} 後再送出。請勿重複拍照。`);
+        await v15Sleep(wait);
+      }
+
+      const cfg = getReceiptAiSettings();
+      if ((cfg.apiMode || 'direct') === 'proxy') {
+        if (!cfg.proxyUrl) throw new Error('已選 Enterprise Proxy 模式，但尚未設定 Worker URL。');
+        const receipt = await withTimeoutPromise(recognizeReceiptWithEnterpriseProxy(image, cfg), 70000, 'Enterprise Proxy 辨識逾時，已停止等待。');
+        const normalized = coerceReceiptShape(receipt);
+        v15SetCache(hash, normalized);
+        v15AppendLog({type:'proxy-success', hash});
+        return normalized;
+      }
+
+      const apiKeyToUse = sanitizeApiKeyStrict((cfg && cfg.key) || runtimeApiKey);
+      if(!apiKeyToUse) throw new Error('未設定 API Key。請點選金鑰設定，貼上一次即可，V15 會自動保存與選擇模型。');
+
+      const payload = buildGeminiGeneratePayload(image);
+      const preferredModel = (cfg && cfg.model) || defaultReceiptAiModel || 'gemini-1.5-flash';
+      const preferredApiVer = (cfg && cfg.apiVersion) || defaultReceiptAiApiVersion || 'v1beta';
+      const candidates = [
+        { model: preferredModel, apiVer: preferredApiVer },
+        { model: 'gemini-1.5-flash', apiVer: 'v1beta' },
+        { model: 'gemini-1.5-flash-latest', apiVer: 'v1beta' },
+        { model: 'gemini-2.0-flash', apiVer: 'v1beta' },
+        { model: 'gemini-2.5-flash', apiVer: 'v1beta' }
+      ].filter((v,i,a)=>v.model&&v.apiVer&&a.findIndex(x=>x.model===v.model&&x.apiVer===v.apiVer)===i);
+
+      let lastErr = '';
+      for(let i=0;i<candidates.length;i++){
+        const {model, apiVer} = candidates[i];
+        setReceiptAiStatus(`🧠 V15 Ultimate OCR：Queue 已鎖定單張辨識，使用 ${model}/${apiVer}（${i+1}/${candidates.length}）...`);
+        const endpoint = geminiEndpoint(apiVer, model, apiKeyToUse);
+        let result;
+        try{
+          result = await withTimeoutPromise(
+            fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, { maxRetries: 1, baseDelayMs: 25000, timeoutMs: 35000 }),
+            95000,
+            'Gemini 請求逾時，V15 已停止等待，避免畫面卡住。'
+          );
+        }catch(e){
+          lastErr = e?.message || String(e);
+          if(/429|quota|rate|RESOURCE_EXHAUSTED|頻率|配額/i.test(lastErr)){
+            v15SavePending(image, hash, lastErr);
+            setGeminiQuotaCooldown?.(90000);
+            const err = new Error('PENDING_429'); err.isPending429 = true; err.hash = hash;
+            throw err;
+          }
+          continue;
+        }
+
+        const res = result.response;
+        const body = result.body || {};
+        if(res && res.ok){
+          const text = body?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '';
+          if(!text) { lastErr = 'Gemini 沒有回傳文字內容'; continue; }
+          const parsed = coerceReceiptShape(parseGeminiJsonText(text));
+          v15SetCache(hash, parsed);
+          try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e){}
+          v15AppendLog({type:'gemini-success', hash, model, apiVer});
+          return parsed;
+        }
+
+        const bodyMsg = body?.error?.message || `HTTP ${res?.status || 'UNKNOWN'}`;
+        lastErr = bodyMsg;
+        if(v15Is429(res, body)){
+          const waitMs = v15RetryMs(res, 90000);
+          setGeminiQuotaCooldown?.(waitMs);
+          v15SavePending(image, hash, bodyMsg);
+          v15AppendLog({type:'pending-429', hash, waitMs});
+          const err = new Error('PENDING_429'); err.isPending429 = true; err.hash = hash; err.waitMs = waitMs;
+          throw err;
+        }
+        if(shouldAutoFallbackGemini(res?.status, body) && i < candidates.length-1){
+          setReceiptAiStatus('🔁 V15：目前模型不可用，自動切換下一組穩定模型。');
+          continue;
+        }
+        if(res?.status === 401) throw new Error('API Key 驗證失敗：請重新貼上 Google AI Studio 的完整 Key。');
+        if(res?.status === 403) throw new Error('Gemini 權限被拒：請確認 API Key 沒有限制網域/IP，並已啟用 Generative Language API。');
+      }
+      throw new Error(lastErr || 'Gemini 辨識失敗，請稍後再試。');
+    });
+  };
+
+  // 覆寫拍照處理：遇 429 改成待辨識，不再出現紅色硬失敗；成功後快取。
+  window.handleEmbeddedReceiptImage = async function(event){
+    const file = event?.target?.files?.[0];
+    if(event?.target) event.target.value = '';
+    if(!file) return;
+    const isManual = window.__manualAttachmentOnly === true;
+    if(isManual){
+      showToast('正在壓縮並附加收據相片...');
+      try{
+        const image = await compressReceiptImage(file, 720, 0.62);
+        window.__tempReceiptImage = image.dataUrl;
+        const previewWrap = document.getElementById('attached-receipt-preview-wrap');
+        const previewThumb = document.getElementById('attached-receipt-thumbnail');
+        if(previewWrap && previewThumb){ previewThumb.src=image.dataUrl; previewWrap.classList.remove('hidden'); }
+        showToast('收據照片已成功附加至表單中！');
+      }catch(e){ showCustomAlert('錯誤','相片附加失敗，請重試！'); }
+      window.__manualAttachmentOnly=false;
+      return;
+    }
+    if(window.__receiptAiRecognitionLock){
+      showCustomAlert('辨識排隊中','V15 Queue 正在處理上一張收據，請稍候完成後再拍下一張。');
+      return;
+    }
+    window.__receiptAiRecognitionLock = true;
+    openReceiptAiModal();
+    const resultBox = document.getElementById('receipt-ai-result');
+    if(resultBox) resultBox.classList.add('hidden');
+    setReceiptAiStatus('⚡ V15 Ultimate：正在壓縮、建立指紋、檢查快取與 Queue...');
+    const started = performance.now();
+    try{
+      const image = await compressReceiptImage(file, 1000, 0.68);
+      const preview = document.getElementById('receipt-ai-preview');
+      if(preview){ preview.src=image.dataUrl; preview.classList.remove('hidden'); }
+      setReceiptAiStatus(`⚡ 圖片已最佳化（${image.width}×${image.height}，${image.compressMs || 0}ms），V15 Queue 正在辨識...`);
+      const parsed = await recognizeReceiptWithGemini(image);
+      const normalized = normalizeReceiptResult(parsed);
+      if(!normalized.item || !normalized.amount) throw new Error('未能識別出足夠的消費項目或金額欄位。');
+      window.__tempReceiptImage = image.dataUrl;
+      const duplicateCandidate = { item: normalized.item, amount: normalized.amount, currency: normalized.currency, day: normalized.day, category: normalized.category, note: normalized.note, itemLines: normalized.itemLines || [], imageStr: image.dataUrl, receiptDate: normalized.date || tripDates[normalized.day] || '' };
+      const duplicate = findPossibleDuplicateExpense(duplicateCandidate);
+      if(duplicate){
+        setReceiptAiStatus('⚠️ 偵測到可能重複單據，請確認是否仍要新增。');
+        const proceed = await confirmPossibleDuplicateExpense(duplicateCandidate, duplicate);
+        if(!proceed){
+          setReceiptAiStatus(`⚠️ 已取消新增。耗時 ${((performance.now()-started)/1000).toFixed(1)} 秒；這張單據可能已存在。`);
+          if(resultBox){
+            resultBox.innerHTML = `<div class="font-bold text-amber-800">已取消新增，避免重複入帳。</div><div class="text-[10px] text-slate-600 mt-1">可能重複：${escapeHtml(duplicate.item)}｜D${escapeHtml(duplicate.day)}｜${formatMoney(duplicate.amount, duplicate.currency)}</div>`;
+            resultBox.classList.remove('hidden');
+          }
+          return;
+        }
+      }
+      applyReceiptToExpenseForm(normalized);
+      await addExpenseRecord({ skipDuplicateCheck: true });
+      setReceiptAiStatus(`✨ V15 辨識成功！耗時 ${((performance.now()-started)/1000).toFixed(1)} 秒；結果已快取，下次相同照片 0.1 秒載入。`);
+      if(resultBox){
+        resultBox.innerHTML = `<div class="font-bold text-violet-950">項目：${escapeHtml(normalized.item)}</div><div class="font-bold text-emerald-800">金額：${formatMoney(normalized.amount, normalized.currency)}</div><div>分類：${escapeHtml(normalized.category)} | 行程：D${normalized.day}</div><div class="mt-1 font-bold text-violet-800">📦 商品明細：${normalized.itemLines?.length || 0} 項 / ${(normalized.itemLines || []).reduce((sum,x)=>sum+(Number(x.qty)||1),0)} 件</div>${normalized.note ? `<div class="text-[10px] text-violet-700 mt-1">細節：${escapeHtml(normalized.note)}</div>` : ''}`;
+        resultBox.classList.remove('hidden');
+      }
+      showToast('V15 OCR 成功，已保存收據與商品明細');
+    }catch(err){
+      if(err && err.isPending429){
+        setReceiptAiStatus('⏳ Google Gemini 目前 429 限流；V15 已把此張收據存入「待辨識佇列」。請等 1–3 分鐘後再拍下一張，或切換 Cloudflare Worker Proxy。', false);
+        if(resultBox){
+          resultBox.innerHTML = `<div class="font-bold text-amber-800">⏳ 已存入待辨識佇列，未遺失照片。</div><div class="text-[10px] text-slate-600 mt-1">原因：Gemini 429 限流。V15 已記錄圖片指紋，之後相同照片不會重複消耗 API。</div>`;
+          resultBox.classList.remove('hidden');
+        }
+        showToast('已存入待辨識佇列');
+      }else{
+        setReceiptAiStatus('❌ 辨識失敗：' + (err?.message || err), true);
+      }
+    }finally{
+      window.__receiptAiRecognitionLock = false;
+    }
+  };
+
+  // 初始化時補一個版本標記（不影響原 UI）。
+  document.addEventListener('DOMContentLoaded', () => {
+    try{
+      const title = document.querySelector('h1');
+      if(title && !title.textContent.includes('V15')){
+        const badge = document.createElement('span');
+        badge.className='ml-1 rounded-full bg-indigo-100 px-1.5 py-0.5 text-[10px] font-black text-indigo-700';
+        badge.textContent='V15';
+        title.appendChild(badge);
+      }
+    }catch(e){}
+  });
+})();
+</script>
+
 </body>
 </html>

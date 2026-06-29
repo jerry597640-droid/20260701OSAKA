@@ -839,7 +839,9 @@
         <div>
           <label class="block text-[10px] font-black text-slate-500">模型模式（V13.7.4 自動穩定：自動偵測／降級／保存可用模型）</label>
           <select id="receipt-ai-model-select" class="mt-1 w-full border border-slate-200 rounded-xl p-2.5 text-xs font-bold bg-white text-slate-800 outline-none">
-            <option value="gemini-1.5-flash" selected>gemini-1.5-flash (V10 預設：穩定優先)</option>
+            <option value="gemini-2.5-flash" selected>gemini-2.5-flash (自動穩定優先)</option>
+            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (快速備援)</option>
+            <option value="gemini-2.0-flash">gemini-2.0-flash (穩定備援)</option>
             <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (穩定自動更新)</option>
             <option value="gemini-2.0-flash">gemini-2.0-flash (可用時自動升級)</option>
             <option value="gemini-2.5-flash">gemini-2.5-flash (可用時自動升級)</option>
@@ -1056,7 +1058,7 @@
     const dbVersion = 3; // 升級至版本 3：加入 settings 獨立物件儲存區
 
     // 全域記憶體金鑰快取，做為極致沙盒環境防護 (100% 可用防線)
-    window.__receiptAiSettingsMemCache = { key: "", model: "gemini-1.5-flash", apiVersion: "v1beta", apiMode: "direct", proxyUrl: "" };
+    window.__receiptAiSettingsMemCache = { key: "", model: "gemini-2.5-flash", apiVersion: "v1beta", apiMode: "direct", proxyUrl: "" };
 
     function initDb() {
       return new Promise((resolve, reject) => {
@@ -2727,6 +2729,27 @@
     }
 
 
+    function isReceiptNonProductLine(text) {
+      const s = String(text || '').trim().toLowerCase();
+      if(!s) return false;
+      const compact = s.replace(/[\s:：\-—_.,，。/\|()（）\[\]【】]+/g, '');
+      const keywords = [
+        '合計','總計','总计','小計','小计','税込','稅額','税額','消費税','消費稅','內稅','内税','外稅','外税','未稅','未税',
+        '折扣','割引','値引','找零','お釣り','釣銭','應收','应收','實收','实收','現金','信用卡','クレジット','カード','visa','mastercard',
+        '付款','支払','支付','交易','取引','承認','認証','傳票','發票','發票號碼','領収','領收','レシート','receipt','invoice',
+        '日期','時間','時刻','date','time','total','subtotal','tax','discount','change','cash','card','payment','amount','balance','points','point','ポイント','備註','备注','note','memo','店名','電話','tel','住所','地址'
+      ];
+      if(keywords.some(k => compact.includes(String(k).toLowerCase()))) return true;
+      // 只有貨幣符號、數字、日期或摘要符號的列，不視為商品
+      if(/^[¥￥$＄ntusdjpytw\d,，.\s:：\/\-年月日時分]+$/i.test(s)) return true;
+      return false;
+    }
+
+    function isReceiptNonProductLineObject(line) {
+      const joined = [line?.name, line?.itemName, line?.product, line?.description, line?.originalName, line?.translatedName, line?.normalizedName, line?.note, line?.category].map(v => String(v || '')).join(' ');
+      return isReceiptNonProductLine(joined);
+    }
+
     function normalizeReceiptItemLine(line, fallbackCurrency='JPY') {
       if(!line || typeof line !== 'object') return null;
       const originalName = String(line.originalName || line.original_name || line.ocrName || line.rawName || line.raw || line.name || line.itemName || line.product || line.description || '').trim();
@@ -2734,6 +2757,7 @@
       const normalizedName = String(line.normalizedName || line.normalized_name || line.standardName || line.standardizedName || '').trim();
       const primaryName = String(translatedName || normalizedName || line.name || line.itemName || line.product || line.description || originalName || '').trim();
       if(!primaryName && !originalName) return null;
+      if(isReceiptNonProductLineObject(line)) return null;
       const qtyRaw = Number(line.qty ?? line.quantity ?? line.count ?? 1);
       const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
       const unitRaw = Number(line.unitPrice ?? line.unit_price ?? line.price ?? 0);
@@ -3065,9 +3089,9 @@
     // GEMINI AI 收據拍照多模態辨識 OCR 與智慧金鑰清洗診斷系統
     // ==========================================
     const embeddedReceiptAiKey = 'kansai_embedded_receipt_ai_v1';
-    const defaultReceiptAiModel = 'gemini-1.5-flash';
+    const defaultReceiptAiModel = 'gemini-2.5-flash';
     const defaultReceiptAiApiVersion = 'v1beta';
-    const stableGeminiModelCandidates = ['gemini-1.5-flash','gemini-1.5-flash-latest','gemini-2.0-flash','gemini-2.5-flash','gemini-2.5-flash-lite'];
+    const stableGeminiModelCandidates = ['gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.0-flash','gemini-2.0-flash-lite','gemini-flash-latest','gemini-1.5-flash','gemini-1.5-flash-latest'];
     const geminiQuotaCooldownKey = 'kansai_gemini_quota_cooldown_until_v1';
     window.__receiptAiRecognitionLock = false;
     
@@ -3274,8 +3298,8 @@
       const body = await request.json();
       const apiKey = env.GEMINI_API_KEY;
       if (!apiKey) return Response.json({ ok:false, error:"Missing GEMINI_API_KEY in Worker environment variables" }, { status:500, headers:cors });
-      if (body.action === "health") return Response.json({ ok:true, mode:"enterprise-proxy", model: env.GEMINI_MODEL || "gemini-1.5-flash" }, { headers:cors });
-      const modelList = [env.GEMINI_MODEL || "gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"];
+      if (body.action === "health") return Response.json({ ok:true, mode:"enterprise-proxy", model: env.GEMINI_MODEL || "gemini-2.5-flash" }, { headers:cors });
+      const modelList = [env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-flash-latest", "gemini-1.5-flash", "gemini-1.5-flash-latest"];
       const apiVersions = [env.GEMINI_API_VERSION || "v1beta", "v1"];
       const payload = body.payload;
       if (!payload) return Response.json({ ok:false, error:"Missing payload" }, { status:400, headers:cors });
@@ -3415,9 +3439,9 @@
     }
 
     async function fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, options = {}) {
-      const maxRetries = options.maxRetries ?? 4;
-      const baseDelayMs = options.baseDelayMs ?? 1800;
-      const timeoutMs = options.timeoutMs ?? 28000;
+      const maxRetries = options.maxRetries ?? 1;
+      const baseDelayMs = options.baseDelayMs ?? 900;
+      const timeoutMs = options.timeoutMs ?? 18000;
       let lastResponse = null;
       let lastBody = null;
       let lastError = null;
@@ -3573,35 +3597,26 @@
 
     async function findAvailableGeminiModel(apiKey, preferredApiVer) {
       const versions = [preferredApiVer, 'v1beta', 'v1'].filter((v, i, arr) => v && arr.indexOf(v) === i);
-      const preferredModels = stableGeminiModelCandidates || [
-        'gemini-1.5-flash',
-        'gemini-1.5-flash-latest',
-        'gemini-2.0-flash',
-        'gemini-2.5-flash',
-        'gemini-2.5-flash-lite'
-      ];
+      const preferredModels = stableGeminiModelCandidates || ['gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.0-flash','gemini-2.0-flash-lite','gemini-flash-latest','gemini-1.5-flash','gemini-1.5-flash-latest'];
+      const modelScore = name => {
+        const n = String(name || '').toLowerCase();
+        return (n.includes('flash') ? 1000 : 0) + (n.includes('lite') ? 60 : 0) + (n.includes('2.5') ? 50 : 0) + (n.includes('2.0') ? 40 : 0) + (n.includes('1.5') ? 10 : 0) - (n.includes('embedding') ? 10000 : 0) - (n.includes('aqa') ? 10000 : 0);
+      };
       for (const apiVer of versions) {
-        // 先用常見模型快速測，不必每次都列 models，速度比較快。
-        for (const model of preferredModels) {
-          try {
-            const result = await tryGeminiConnection(apiKey, model, apiVer);
-            if (result.ok) return { model, apiVer, result, source: 'quick-probe' };
-          } catch(e) {}
-        }
-        // 若常見模型都失敗，再列出該 Key 可用模型。
+        // V14.2.6：優先使用 ModelService.ListModels 取得「此 Key + 此 API 版本」真正支援 generateContent 的模型，避免固定寫死 gemini-1.5-flash 導致 not found。
         try {
           const listUrl = `https://generativelanguage.googleapis.com/${apiVer}/models?key=${encodeURIComponent(apiKey)}`;
           const listRes = await fetchWithRetry(listUrl, { method: 'GET' }, 1, 500, 12000);
           const listBody = await listRes.json().catch(() => ({}));
           if (listRes.ok && Array.isArray(listBody.models)) {
-            const candidates = listBody.models
+            const available = listBody.models
               .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
               .map(m => String(m.name || '').replace(/^models\//, ''))
-              .filter(Boolean)
-              .sort((a, b) => {
-                const score = name => (name.includes('flash') ? 100 : 0) + (name.includes('2.5') ? 30 : 0) + (name.includes('2.0') ? 20 : 0) + (name.includes('1.5') ? 10 : 0);
-                return score(b) - score(a);
-              });
+              .filter(Boolean);
+            const preferredAvailable = preferredModels.filter(m => available.includes(m));
+            const candidates = [...preferredAvailable, ...available]
+              .filter((m, i, arr) => m && arr.indexOf(m) === i)
+              .sort((a, b) => modelScore(b) - modelScore(a));
             for (const model of candidates) {
               try {
                 const result = await tryGeminiConnection(apiKey, model, apiVer);
@@ -3610,6 +3625,13 @@
             }
           }
         } catch(e) {}
+        // 若 models.list 因網路或權限暫時失敗，再用常見模型快速測試。
+        for (const model of preferredModels) {
+          try {
+            const result = await tryGeminiConnection(apiKey, model, apiVer);
+            if (result.ok) return { model, apiVer, result, source: 'quick-probe' };
+          } catch(e) {}
+        }
       }
       return null;
     }
@@ -3753,17 +3775,17 @@
       window.__receiptAiRecognitionLock = true;
       openReceiptAiModal();
       document.getElementById('receipt-ai-result').classList.add('hidden');
-      setReceiptAiStatus('⚡ 快速模式：正在壓縮圖片至高速辨識尺寸...');
+      setReceiptAiStatus('⚡ 極速辨識模式：正在壓縮圖片並自動判斷幣別（NT$/¥/USD）...');
       
       const aiStartedAt = performance.now();
       try {
-        const image = await compressReceiptImage(file, 1100, 0.72);
+        const image = await compressReceiptImage(file, 680, 0.46);
         const preview = document.getElementById('receipt-ai-preview');
         if(preview) {
           preview.src = image.dataUrl;
           preview.classList.remove('hidden');
         }
-        setReceiptAiStatus(`⚡ 圖片已強化為 OCR 穩定尺寸（${image.width}×${image.height}，${image.compressMs || 0}ms），正在啟動 Gemini 視覺辨識；若回傳不標準，系統會自動修復...`);
+        setReceiptAiStatus(`⚡ 圖片已極速壓縮（${image.width}×${image.height}，${image.compressMs || 0}ms），正在送出快速 OCR；若細節太小可改用原清晰版...`);
         
         const parsed = await recognizeReceiptWithGemini(image);
         const normalized = normalizeReceiptResult(parsed);
@@ -3832,7 +3854,7 @@
     }
 
     // 快速圖片壓縮器：優先使用 createImageBitmap，並降低傳輸尺寸以提升 Gemini 辨識速度
-    async function compressReceiptImage(file, maxWidth=900, quality=0.62) {
+    async function compressReceiptImage(file, maxWidth=680, quality=0.46) {
       const startedAt = performance.now();
       let bitmap = null;
       try {
@@ -3892,33 +3914,45 @@
     }
 
     function buildGeminiGeneratePayload(image) {
-      const prompt = `你是企業級收據/購物清單 OCR 視覺解析器。請放大閱讀照片中的收據、明細表、手寫/列印文字，照片可能歪斜、很小、部分模糊。
+      const prompt = `你是一位高精度的收據 OCR 拆解器。請仔細閱讀照片中的店名、日期、總額、幣別與商品明細。只輸出一個合法 JSON 物件，不要 markdown，不要說明，不要加上 \`\`\`json。
 
-【最重要輸出規則】
-只能輸出一個合法 JSON 物件，第一個字元必須是 {，最後一個字元必須是 }。不要 markdown、不要說明、不要註解、不要多餘文字、不要單引號、不要尾逗號。
-
-【JSON 欄位】
+請嚴格照以下 JSON 格式輸出；所有 key 與字串 value 必須使用英文雙引號：
 {
-  "storeName": "店名，若看不清填未知店家",
-  "date": "YYYY-MM-DD，若看不清填空字串",
-  "totalAmount": 0,
-  "currency": "JPY|TWD|USD",
-  "category": "餐飲|交通|門票|購物|住宿|伴手禮|其他",
-  "note": "簡短備註，可包含交易單號或辨識信心",
-  "items": [
-    {"name":"繁體中文商品名","originalName":"OCR原文","translatedName":"繁體中文翻譯","language":"ja|en|zh|mixed|unknown","normalizedName":"標準化繁中商品名","qty":1,"unitPrice":0,"subtotal":0,"category":"分類","note":""}
+  "storeName":"店名或未知店家",
+  "date":"YYYY-MM-DD或空字串",
+  "totalAmount":0,
+  "currency":"TWD|JPY|USD",
+  "category":"餐飲|交通|門票|購物|住宿|伴手禮|其他",
+  "note":"簡短備註",
+  "items":[
+    {
+      "name":"繁體中文商品名",
+      "originalName":"OCR原文",
+      "translatedName":"繁體中文",
+      "language":"ja|en|zh|mixed|unknown",
+      "normalizedName":"標準化繁中商品名",
+      "qty":1,
+      "unitPrice":0,
+      "subtotal":0,
+      "category":"商品分類",
+      "note":""
+    }
   ]
 }
 
-【辨識規則】
-1. 逐列讀取商品明細。每列盡量保留：商品名、數量、單價、小計；看不清楚金額用 0，數量看不清用 1。
-2. 若畫面底部有「合計/總計/TOTAL/金額」請把最終金額填入 totalAmount，只填數字，不要逗號。
-3. 若幣別出現 NT$/TWD/台幣，currency=TWD；若出現 ¥/円/JPY，currency=JPY；不確定預設 TWD。
-4. 商品可能是日文、英文、中文或混合語言；請自動判斷 language。
-5. translatedName 必須是繁體中文；品牌/型號/容量/規格保留原文，例如 MSI、Micron、USB3.2、PCIe、SSD、RAM、1TB、64GB、RTX。
-6. normalizedName 用利於搜尋與重複比對的繁中標準名稱，例如 USBメモリ/USB Memory/USB Flash Drive 統一為「USB 隨身碟」，SSD 統一為「固態硬碟」，メモリ/RAM 統一為「記憶體」。
-7. 不要把「合計、稅額、折扣、找零」當商品。若商品旁邊價格為 0，也要保留，note 可寫「贈品/折扣/未計價」。
-8. 若整張單據無法完整辨識，仍請輸出 JSON，items 可為已讀出的部分，note 寫「部分辨識」。`;
+規則：
+1. 優先讀總額：合計/總計/TOTAL/金額旁的最終金額，只填數字，不要逗號與貨幣符號。
+2. 自動判斷幣別：NT$/TWD/新台幣/台幣/台灣元/元=TWD；¥/￥/円/JPY/日圓=JPY；US$/USD/美元=USD。若同時有本幣與刷卡換算，優先採用收據實際付款幣別。
+3. 每個商品保留原文 originalName，translatedName 用繁體中文。品牌、型號、容量、規格保留原文，例如 MSI、Micron、USB3.2、SSD、RAM、DDR5、1TB、64GB。
+4. 絕對不可將合計、總計、稅額、折扣、找零、日期、備註、付款方式、信用卡末四碼、交易序號、點數、應收、實收、未稅、小計、服務費等欄位當成商品品項塞進 items 中。
+5. items 只放真正購買的商品或服務；若某一列只有金額摘要而沒有商品名稱，請排除，不要放進 items。
+6. 日文或英文商品需翻譯為繁體中文，但不要硬翻品牌與型號。例：USBメモリ=USB 隨身碟；Wireless Mouse=無線滑鼠；ノートPC用メモリ=筆記型電腦記憶體。
+7. qty 請讀數量；unitPrice 請讀單價；subtotal 請讀該品項小計。若只有小計，unitPrice 可用 subtotal / qty 推估。
+8. 看不清楚的金額填 0、數量填 1；若店名或日期不清楚可留空，但仍盡量回傳商品明細。
+9. 如果無法辨識商品，請仍然回傳合法 JSON，items 使用空陣列 []，不可改用自然語言說明。
+10. originalName 必須是收據上看到的品名原文；translatedName 必須是繁體中文說明；name 請填 translatedName，方便清單顯示。
+11. 若某列文字含「合計、総計、税込、税抜、消費税、割引、値引、ポイント、現金、クレジット、釣銭、找零、TOTAL、CHANGE、TAX、DISCOUNT、CASH、CARD」且不是明確商品名稱，必須排除在 items 之外。
+12. 輸出必須從 { 開始、以 } 結束；不得包含前言、註解、markdown code fence 或任何 JSON 外文字。`;
       return {
         contents: [{
           parts: [
@@ -3928,7 +3962,7 @@
         }],
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 6144
+          maxOutputTokens: 2048
         }
       };
     }
@@ -4016,11 +4050,25 @@
       // 取最外層 JSON，避免模型在前後加文字。
       const balanced = extractBalancedJson(s);
       if (balanced) s = balanced;
-      // 常見 Gemini 輸出修復：尾逗號、全形冒號、非標準 true/false/null 外字元。
+      // 常見 Gemini 輸出修復：尾逗號、全形冒號、單引號、註解、未加引號 key。
       s = s
         .replace(/：/g, ':')
+        .replace(/\/\/.*$/gm, '')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, (_, v) => '"' + String(v).replace(/"/g, '\\"') + '"')
         .replace(/,\s*([}\]])/g, '$1')
         .replace(/([{,]\s*)([A-Za-z_][\w$-]*)(\s*:)/g, '$1"$2"$3');
+
+      // 修復常見非標準 JSON："currency":JPY、"category":購物、"storeName":SANJIN3C
+      // 僅處理值不在引號內、且不是數字/true/false/null/物件/陣列的情況。
+      s = s.replace(/(:\s*)([^"{\[\n\r][^,}\]\n\r]*?)(\s*)(?=,|}|\])/g, (m, pre, val, gap) => {
+        const raw = String(val || '').trim();
+        if (!raw) return pre + '""' + gap;
+        if (/^-?\d+(?:\.\d+)?$/.test(raw)) return pre + raw + gap;
+        if (/^(true|false|null)$/i.test(raw)) return pre + raw.toLowerCase() + gap;
+        const safe = raw.replace(/^"|"$/g, '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        return pre + '"' + safe + '"' + gap;
+      });
       return s;
     }
 
@@ -4029,7 +4077,7 @@
       const amountMatches = [...raw.matchAll(/(?:合計|總計|TOTAL|total|金額|總額)[^0-9]{0,16}([0-9][0-9,]*)/gi)].map(m => Number(String(m[1]).replace(/,/g, ''))).filter(Boolean);
       const allMoney = [...raw.matchAll(/(?:NT\$|TWD|¥|￥)?\s*([0-9]{2,}(?:,[0-9]{3})*)\s*(?:円|JPY|TWD|NT)?/gi)].map(m => Number(String(m[1]).replace(/,/g, ''))).filter(n => Number.isFinite(n));
       const totalAmount = amountMatches[amountMatches.length - 1] || Math.max(0, ...allMoney, 0);
-      const currency = /NT\$|TWD|台幣/i.test(raw) ? 'TWD' : (/¥|￥|円|JPY/i.test(raw) ? 'JPY' : 'TWD');
+      const currency = /NT\$|NTD|TWD|新台幣|台幣|臺幣|元\b/i.test(raw) ? 'TWD' : (/US\$|USD|美元/i.test(raw) ? 'USD' : (/¥|￥|円|JPY|日圓|日幣/i.test(raw) ? 'JPY' : 'TWD'));
       const lines = raw.split(/\n|\r|；|;/).map(x => x.trim()).filter(Boolean);
       const items = [];
       for (const l0 of lines) {
@@ -4051,7 +4099,13 @@
 
     function parseGeminiJsonText(text) {
       const cleaned = normalizeSmartJsonText(text);
-      const attempts = [cleaned, extractBalancedJson(cleaned), repairLikelyJson(cleaned)].filter(Boolean);
+      const candidatesRaw = [
+        cleaned,
+        extractBalancedJson(cleaned),
+        repairLikelyJson(cleaned),
+        repairLikelyJson(extractBalancedJson(cleaned))
+      ].filter(Boolean);
+      const attempts = [...new Set(candidatesRaw)];
       for (const candidate of attempts) {
         try {
           const parsed = JSON.parse(candidate);
@@ -4062,7 +4116,11 @@
       }
       // 最後備援：不要讓使用者看到「JSON 結構錯誤」直接中斷，至少把總額與文字留下。
       const fallback = fallbackReceiptFromText(cleaned);
-      if (fallback.totalAmount || fallback.items.length) return fallback;
+      if (fallback.totalAmount || fallback.items.length) {
+        fallback.__fallbackParsed = true;
+        fallback.note = '已啟用 OCR 文字備援解析，請核對明細。';
+        return fallback;
+      }
       throw new Error('AI 回傳格式不完整，系統已啟用 JSON 修復但仍無法解析；請重新拍攝較清楚的收據。');
     }
 
@@ -4094,14 +4152,14 @@
 
       const payload = buildGeminiGeneratePayload(image);
       // V14：不在前端阻擋 Key 格式，避免新版 Key 或複製格式被誤判。由 Google API 正式驗證。
-      const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-1.5-flash';
+      const preferredModel = cfg.model || defaultReceiptAiModel || 'gemini-2.5-flash';
       const preferredApiVer = cfg.apiVersion || defaultReceiptAiApiVersion || 'v1beta';
-      const candidates = [
+      // V14.2.6 Auto Model Fallback：先使用已保存模型；若遇到 not found/不支援，立即呼叫 models.list 自動改用此 Key 目前可用的 generateContent 模型。
+      let candidates = [
         { model: preferredModel, apiVer: preferredApiVer },
-        { model: 'gemini-1.5-flash', apiVer: 'v1beta' },
-        { model: 'gemini-1.5-flash-latest', apiVer: 'v1beta' },
-        { model: 'gemini-2.0-flash', apiVer: 'v1beta' },
-        { model: 'gemini-2.5-flash', apiVer: 'v1beta' }
+        { model: 'gemini-2.5-flash', apiVer: 'v1beta' },
+        { model: 'gemini-2.5-flash-lite', apiVer: 'v1beta' },
+        { model: 'gemini-2.0-flash', apiVer: 'v1beta' }
       ].filter((v, i, arr) => v.model && v.apiVer && arr.findIndex(x => x.model === v.model && x.apiVer === v.apiVer) === i);
 
       let lastErrText = '';
@@ -4113,12 +4171,12 @@
         try {
           result = await withTimeoutPromise(
             fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-              maxRetries: 4,
-              baseDelayMs: 8000,
-              timeoutMs: 30000
+              maxRetries: 1,
+              baseDelayMs: 900,
+              timeoutMs: 18000
             }),
-            150000,
-            '本次 Gemini 請求逾時。系統已停止等待，避免畫面卡住。'
+            26000,
+            '快速 OCR 逾時。請重新拍攝較清楚的收據，或稍後再試。'
           );
         } catch (err) {
           lastErrText = err?.message || String(err);
@@ -4132,7 +4190,7 @@
           try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
           const text = body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
           if (!text) throw new Error('Gemini 沒有回傳文字內容，請重新拍攝較清楚的收據。');
-          return coerceReceiptShape(parseGeminiJsonText(text));
+          { const parsedObj = parseGeminiJsonText(text); parsedObj.__aiRawText = text; return coerceReceiptShape(parsedObj); }
         }
 
         const code = body?.error?.status || `HTTP_${res.status}`;
@@ -4140,25 +4198,25 @@
         lastErrText = rawMsg;
 
         if (res.status === 429 || code === 'RESOURCE_EXHAUSTED') {
-          const retryMs = getRetryAfterMsFromResponse(res, 90000);
+          const retryMs = getRetryAfterMsFromResponse(res, 20000);
           setGeminiQuotaCooldown(retryMs);
           setReceiptAiStatus(`⏳ Gemini 目前忙碌/限流，系統已進入安全等待 ${formatWaitSeconds(retryMs)}。請不要重複按拍照，稍後會自動再試一次。`);
-          await new Promise(resolve => setTimeout(resolve, Math.min(retryMs, 90000)));
+          await new Promise(resolve => setTimeout(resolve, Math.min(retryMs, 20000)));
           try {
             const second = await withTimeoutPromise(
               fetchGeminiGenerateContentWithQuotaGuard(endpoint, payload, {
-                maxRetries: 2,
-                baseDelayMs: 12000,
-                timeoutMs: 30000
+                maxRetries: 1,
+                baseDelayMs: 1200,
+                timeoutMs: 18000
               }),
-              110000,
-              'Gemini 限流後重試逾時。請稍後重新拍攝，或改用 Enterprise Proxy 模式。'
+              32000,
+              'Gemini 限流後快速重試仍逾時。請稍後重新拍攝，或改用 Enterprise Proxy 模式。'
             );
             if (second.response && second.response.ok) {
               try { await saveReceiptAiSettings({ key: apiKeyToUse, model, apiVersion: apiVer, apiMode: cfg.apiMode, proxyUrl: cfg.proxyUrl, lastStableCheckAt: new Date().toISOString(), lastStableModel: `${model}/${apiVer}` }); } catch(e) {}
               const text = second.body?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
               if (!text) throw new Error('Gemini 重試成功但沒有回傳文字內容，請重新拍攝較清楚的收據。');
-              return coerceReceiptShape(parseGeminiJsonText(text));
+              { const parsedObj = parseGeminiJsonText(text); parsedObj.__aiRawText = text; return coerceReceiptShape(parsedObj); }
             }
           } catch(e) {
             lastErrText = e?.message || String(e);
@@ -4172,9 +4230,15 @@
           throw new Error('Gemini 權限被拒絕：請確認 API Key 沒有網域/IP 限制，並已啟用 Generative Language API。');
         }
         // 模型不存在/不支援才換下一組；其他錯誤直接回報，避免無意義等待。
-        if (shouldAutoFallbackGemini(res.status, body) && i < candidates.length - 1) {
-          setReceiptAiStatus('🔁 目前模型不可用，正在快速切換下一組穩定模型...');
-          continue;
+        if (shouldAutoFallbackGemini(res.status, body)) {
+          setReceiptAiStatus('🔁 目前模型不可用，正在讀取 Google 可用模型清單並自動切換...');
+          try {
+            const found = await findAvailableGeminiModel(apiKeyToUse, apiVer);
+            if (found && !candidates.some(c => c.model === found.model && c.apiVer === found.apiVer)) {
+              candidates.splice(i + 1, 0, { model: found.model, apiVer: found.apiVer });
+            }
+          } catch(e) {}
+          if (i < candidates.length - 1) continue;
         }
         throw new Error(rawMsg);
       }
@@ -4211,6 +4275,19 @@
       return `${brand}${specs ? specs + ' ' : ''}${suffix}`.replace(/\s+/g, ' ').trim();
     }
 
+    function detectCurrencyFromReceiptData(raw, fallback='TWD') {
+      const text = [
+        raw?.currency, raw?.note, raw?.storeName, raw?.store, raw?.merchant, raw?.__aiRawText,
+        ...(Array.isArray(raw?.items) ? raw.items.flatMap(x => [x?.name, x?.originalName, x?.translatedName, x?.normalizedName, x?.note, x?.currency]) : [])
+      ].filter(Boolean).join(' ');
+      if (/(NT\$|NTD\b|TWD\b|新台幣|台幣|臺幣|元\b)/i.test(text)) return 'TWD';
+      if (/(US\$|USD\b|美元)/i.test(text)) return 'USD';
+      if (/(¥|￥|JPY\b|円|日圓|日幣)/i.test(text)) return 'JPY';
+      const cur = String(raw?.currency || '').toUpperCase().trim();
+      if (['TWD','JPY','USD'].includes(cur)) return cur;
+      return fallback || 'TWD';
+    }
+
     function coerceReceiptShape(raw) {
       const obj = (raw && typeof raw === 'object') ? Object.assign({}, raw) : {};
       const possibleItems = obj.items || obj.lineItems || obj.products || obj.details || [];
@@ -4235,6 +4312,8 @@
           });
         });
       }
+      obj.currency = detectCurrencyFromReceiptData(obj, obj.currency || 'TWD');
+      if (Array.isArray(obj.items)) obj.items = obj.items.map(x => Object.assign({}, x, { currency: x.currency || obj.currency }));
       const itemSum = (obj.items || []).reduce((sum, x) => sum + (Number(x.subtotal) || 0), 0);
       const rawAmount = Number(String(obj.totalAmount ?? obj.amount ?? obj.total ?? 0).replace(/[^0-9.-]/g, '')) || 0;
       if (!rawAmount && itemSum) obj.totalAmount = itemSum;
@@ -4247,8 +4326,8 @@
       let category = String(raw?.category || '其他').trim();
       if(!['餐飲','交通','門票','購物','住宿','伴手禮','其他','other'].includes(category)) category = '其他';
       if(category === 'other') category = '其他';
-      let currency = String(raw?.currency || 'JPY').toUpperCase();
-      if(!['JPY','TWD','USD'].includes(currency)) currency = 'JPY';
+      let currency = detectCurrencyFromReceiptData(raw, 'TWD');
+      if(!['JPY','TWD','USD'].includes(currency)) currency = 'TWD';
       
       let date = String(raw?.date || '').trim();
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)) date = tripDates[currentDay];

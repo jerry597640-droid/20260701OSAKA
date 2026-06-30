@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<!-- V17.5 Enterprise: AI Daily Summary + Today Travel Dashboard + Stable UI/UX -->
+<!-- V18.1 Enterprise: AI Travel Book + Travel Memory GPS Engine + One-click full trip journal export -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com">
 
     /* ===============================
-       V17.6 Enterprise Receipt Viewer
+       V18.1 AI Travel Book + Travel Memory GPS Engine
        逐項條列 + 核對分析 + OCR 收合
        =============================== */
     function getReceiptCategoryIcon(name, category='') {
@@ -115,7 +115,7 @@
   <script src="https://unpkg.com/lucide@latest">
 
     /* ===============================
-       V17.6 Enterprise Receipt Viewer
+       V18.1 AI Travel Book + Travel Memory GPS Engine
        逐項條列 + 核對分析 + OCR 收合
        =============================== */
     function getReceiptCategoryIcon(name, category='') {
@@ -721,7 +721,7 @@
     @media (orientation: landscape) and (min-width:700px){ .v17-focus-grid{grid-template-columns:repeat(4,minmax(0,1fr));} .v17-primary-actions{grid-template-columns:repeat(8,minmax(0,1fr));} }
 
 
-    /* V17.1 Travel Memory Lite：獨立模組，不介入 OCR/API/記帳流程 */
+    /* V18.1 Travel Memory GPS Engine：照片地點來源、GPS、手動修正、地圖導航 */
     .memory-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg,#1e293b,#7c3aed); color:#fff; }
     .memory-actions { display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:8px; }
     .memory-action { border-radius:16px; padding:10px 6px; min-height:58px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:10px; font-weight:900; }
@@ -737,6 +737,13 @@
     .memory-empty { border:1px dashed #cbd5e1; background:#f8fafc; border-radius:18px; padding:18px; text-align:center; color:#64748b; font-size:12px; font-weight:800; }
     .memory-filter { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
     .memory-filter button { flex:0 0 auto; border-radius:999px; padding:6px 10px; font-size:10px; font-weight:900; }
+    .memory-location { margin-top:6px; border-radius:12px; background:#f8fafc; border:1px solid #e2e8f0; padding:7px; font-size:10px; line-height:1.45; color:#475569; }
+    .memory-source-badge { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px 7px; font-size:9px; font-weight:900; margin-top:4px; }
+    .source-gps { background:#dcfce7; color:#15803d; }
+    .source-manual { background:#ffedd5; color:#c2410c; }
+    .source-itinerary { background:#dbeafe; color:#1d4ed8; }
+    .source-none { background:#f1f5f9; color:#64748b; }
+    .memory-gps-line { margin-top:3px; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:9px; color:#64748b; word-break:break-all; }
 
 
 
@@ -797,7 +804,7 @@
 
 
 
-    /* V17.6 Enterprise Receipt Viewer */
+    /* V18.1 AI Travel Book + Travel Memory GPS Engine */
     .receipt-viewer-box { margin-top: 10px; border: 1px solid #dbeafe; background: linear-gradient(180deg,#ffffff,#f8fbff); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px -16px rgba(15,23,42,.25); }
     .receipt-viewer-summary { list-style: none; cursor: pointer; padding: 10px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
     .receipt-viewer-summary::-webkit-details-marker { display:none; }
@@ -835,6 +842,20 @@
     .receipt-ocr-details summary { list-style:none; cursor:pointer; padding:9px 10px; font-size:10.5px; font-weight:950; color:#475569; }
     .receipt-ocr-details summary::-webkit-details-marker{display:none;}
     .receipt-ocr-raw { border-top:1px solid #e2e8f0; padding:9px 10px; font-size:10px; line-height:1.5; color:#475569; white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:auto; }
+
+
+    /* V18 AI Travel Book + Travel Memory GPS Engine */
+    .journal-hero{border-radius:24px;padding:16px;background:linear-gradient(135deg,#111827,#0f766e 52%,#2563eb);color:#fff;box-shadow:0 14px 32px rgba(15,23,42,.14)}
+    .journal-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .journal-action{border-radius:18px;padding:11px 6px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:900;border:1px solid #e2e8f0;background:#fff;color:#0f172a}
+    .journal-card{border-radius:20px;border:1px solid #e2e8f0;background:#fff;padding:12px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .journal-kpi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .journal-kpi>div{border-radius:16px;background:#f8fafc;border:1px solid #e2e8f0;padding:10px}
+    .journal-kpi .k{font-size:10px;color:#64748b;font-weight:900}.journal-kpi .v{margin-top:3px;font-size:15px;color:#0f172a;font-weight:1000}
+    .journal-day{border-radius:18px;border:1px solid #dbeafe;background:linear-gradient(135deg,#eff6ff,#fff);padding:12px;margin-top:10px}
+    .journal-day h4{margin:0;font-size:13px;font-weight:1000;color:#0f172a}.journal-day p{margin:4px 0 0;font-size:11px;line-height:1.55;color:#475569;font-weight:700}
+    .journal-export-sheet{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei',sans-serif;color:#0f172a;background:#fff;max-width:820px;margin:0 auto;padding:26px;line-height:1.55}
+    .journal-export-sheet h1{font-size:26px;margin:0 0 8px}.journal-export-sheet h2{font-size:19px;margin:22px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}.journal-export-sheet h3{font-size:15px;margin:14px 0 6px}.journal-export-sheet .cover{border-radius:18px;background:linear-gradient(135deg,#0f172a,#0f766e,#2563eb);color:#fff;padding:26px;margin-bottom:18px}.journal-export-sheet .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.journal-export-sheet .stat{border:1px solid #e2e8f0;border-radius:12px;padding:10px;background:#f8fafc}.journal-export-sheet .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.journal-export-sheet .photo-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0}.journal-export-sheet table{width:100%;border-collapse:collapse;font-size:12px}.journal-export-sheet th,.journal-export-sheet td{border:1px solid #e2e8f0;padding:6px;text-align:left}.journal-export-sheet th{background:#f8fafc}.journal-export-sheet .muted{color:#64748b;font-size:12px}.journal-export-sheet .page-break{page-break-before:always}
 
   </style>
 </head>
@@ -998,10 +1019,13 @@
 
       <!-- 旅行回憶 (Travel Memory Tab) - V17.1 Stable Lite -->
       <section id="memory-view" class="hidden space-y-4"></section>
+      
+      <!-- AI Travel Book + Travel Memory GPS Engine (Journal Tab) -->
+      <section id="journal-view" class="hidden space-y-4"></section>
     </main>
 
     <!-- 底部導航欄 -->
-    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-9 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
+    <nav id="bottom-nav" class="soft-glass fixed bottom-0 left-1/2 z-40 grid w-full max-w-[480px] -translate-x-1/2 grid-cols-10 border-t border-slate-100 px-1 pt-1.5 tab-safe shadow-[0_-10px_30px_rgba(15,23,42,0.04)]">
       <button onclick="switchMainTab('itinerary')" id="nav-itinerary" class="tap rounded-xl py-1 text-[9px] font-black text-sky-600"><span class="block text-lg"><i data-lucide="calendar" class="w-5 h-5 mx-auto mb-0.5"></i></span>行程</button>
       <button onclick="switchMainTab('packing')" id="nav-packing" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="luggage" class="w-5 h-5 mx-auto mb-0.5"></i></span>打包</button>
       <button onclick="switchMainTab('ticket')" id="nav-ticket" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="ticket" class="w-5 h-5 mx-auto mb-0.5"></i></span>周遊券</button>
@@ -1010,6 +1034,7 @@
       <button onclick="switchMainTab('offline')" id="nav-offline" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="archive" class="w-5 h-5 mx-auto mb-0.5"></i></span>離線</button>
       <button onclick="switchMainTab('emergency')" id="nav-emergency" class="tap rounded-xl py-1 text-[9px] font-black text-rose-500"><span class="block text-lg"><i data-lucide="siren" class="w-5 h-5 mx-auto mb-0.5"></i></span>SOS</button>
       <button onclick="switchMainTab('memory')" id="nav-memory" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="camera" class="w-5 h-5 mx-auto mb-0.5"></i></span>回憶</button>
+      <button onclick="switchMainTab('journal')" id="nav-journal" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="book-open" class="w-5 h-5 mx-auto mb-0.5"></i></span>日誌</button>
       <button onclick="openRouteMap()" id="nav-route" class="tap rounded-xl py-1 text-[9px] font-black text-slate-400"><span class="block text-lg"><i data-lucide="map" class="w-5 h-5 mx-auto mb-0.5"></i></span>動線</button>
     </nav>
   </div>
@@ -2241,7 +2266,7 @@
 
     function switchMainTab(tab, shouldScroll=true) {
       activeMainTab = tab;
-      ['itinerary','packing','ticket','hotel','expense','offline','emergency','memory'].forEach(id => {
+      ['itinerary','packing','ticket','hotel','expense','offline','emergency','memory','journal'].forEach(id => {
         const section = document.getElementById(`${id}-view`);
         if(section) section.classList.toggle('hidden', id !== tab);
         const nav = document.getElementById(`nav-${id}`);
@@ -4857,7 +4882,7 @@
 
 
 
-    /* V17.6 Enterprise Receipt Viewer */
+    /* V18.1 AI Travel Book + Travel Memory GPS Engine */
     .receipt-viewer-box { margin-top: 10px; border: 1px solid #dbeafe; background: linear-gradient(180deg,#ffffff,#f8fbff); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px -16px rgba(15,23,42,.25); }
     .receipt-viewer-summary { list-style: none; cursor: pointer; padding: 10px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
     .receipt-viewer-summary::-webkit-details-marker { display:none; }
@@ -4895,6 +4920,20 @@
     .receipt-ocr-details summary { list-style:none; cursor:pointer; padding:9px 10px; font-size:10.5px; font-weight:950; color:#475569; }
     .receipt-ocr-details summary::-webkit-details-marker{display:none;}
     .receipt-ocr-raw { border-top:1px solid #e2e8f0; padding:9px 10px; font-size:10px; line-height:1.5; color:#475569; white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:auto; }
+
+
+    /* V18 AI Travel Book + Travel Memory GPS Engine */
+    .journal-hero{border-radius:24px;padding:16px;background:linear-gradient(135deg,#111827,#0f766e 52%,#2563eb);color:#fff;box-shadow:0 14px 32px rgba(15,23,42,.14)}
+    .journal-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .journal-action{border-radius:18px;padding:11px 6px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:900;border:1px solid #e2e8f0;background:#fff;color:#0f172a}
+    .journal-card{border-radius:20px;border:1px solid #e2e8f0;background:#fff;padding:12px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .journal-kpi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .journal-kpi>div{border-radius:16px;background:#f8fafc;border:1px solid #e2e8f0;padding:10px}
+    .journal-kpi .k{font-size:10px;color:#64748b;font-weight:900}.journal-kpi .v{margin-top:3px;font-size:15px;color:#0f172a;font-weight:1000}
+    .journal-day{border-radius:18px;border:1px solid #dbeafe;background:linear-gradient(135deg,#eff6ff,#fff);padding:12px;margin-top:10px}
+    .journal-day h4{margin:0;font-size:13px;font-weight:1000;color:#0f172a}.journal-day p{margin:4px 0 0;font-size:11px;line-height:1.55;color:#475569;font-weight:700}
+    .journal-export-sheet{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei',sans-serif;color:#0f172a;background:#fff;max-width:820px;margin:0 auto;padding:26px;line-height:1.55}
+    .journal-export-sheet h1{font-size:26px;margin:0 0 8px}.journal-export-sheet h2{font-size:19px;margin:22px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}.journal-export-sheet h3{font-size:15px;margin:14px 0 6px}.journal-export-sheet .cover{border-radius:18px;background:linear-gradient(135deg,#0f172a,#0f766e,#2563eb);color:#fff;padding:26px;margin-bottom:18px}.journal-export-sheet .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.journal-export-sheet .stat{border:1px solid #e2e8f0;border-radius:12px;padding:10px;background:#f8fafc}.journal-export-sheet .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.journal-export-sheet .photo-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0}.journal-export-sheet table{width:100%;border-collapse:collapse;font-size:12px}.journal-export-sheet th,.journal-export-sheet td{border:1px solid #e2e8f0;padding:6px;text-align:left}.journal-export-sheet th{background:#f8fafc}.journal-export-sheet .muted{color:#64748b;font-size:12px}.journal-export-sheet .page-break{page-break-before:always}
 
   </style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main></body></html>`;
     }
@@ -5516,8 +5555,9 @@ SOS：日本警察110、救護消防119`;
 
 
     // ==========================================
-    // V17.1 Travel Memory Lite：獨立旅行回憶模組
+    // V18.1 Travel Memory GPS Engine：獨立旅行回憶模組
     // 不呼叫 Gemini、不修改 OCR、不影響記帳；照片儲存在本機 LocalStorage。
+    // 地點來源支援：GPS 自動定位、手動輸入、行程推測。
     // ==========================================
     const travelMemoryStorageKey = 'kansai2026_travel_memory_lite_v1';
     let memoryFilterDay = 'all';
@@ -5559,6 +5599,52 @@ SOS：日本警察110、救護消防119`;
         reader.readAsDataURL(file);
       });
     }
+    function getTravelMemoryGps(timeoutMs=6500) {
+      return new Promise(resolve => {
+        if(!navigator.geolocation) return resolve(null);
+        let done = false;
+        const timer = setTimeout(() => { if(!done) { done = true; resolve(null); } }, timeoutMs);
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            if(done) return;
+            done = true; clearTimeout(timer);
+            resolve({
+              lat: Number(pos.coords.latitude),
+              lng: Number(pos.coords.longitude),
+              accuracy: Math.round(Number(pos.coords.accuracy || 0)),
+              capturedAt: new Date().toISOString()
+            });
+          },
+          () => { if(!done) { done = true; clearTimeout(timer); resolve(null); } },
+          { enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 120000 }
+        );
+      });
+    }
+    function getTravelMemorySuggestedPlace(day) {
+      try {
+        const items = travelData?.[day]?.items || [];
+        const now = new Date();
+        const curMin = now.getHours() * 60 + now.getMinutes();
+        let best = items[0];
+        items.forEach(it => {
+          const m = String(it.time || '').match(/(\d{1,2}):(\d{2})/);
+          if(!m) return;
+          const mins = Number(m[1]) * 60 + Number(m[2]);
+          if(mins <= curMin) best = it;
+        });
+        return best?.name || `Day ${day}`;
+      } catch(e) { return `Day ${day}`; }
+    }
+    function getMemorySourceLabel(source) {
+      if(source === 'gps') return ['🟢 GPS 自動定位', 'source-gps'];
+      if(source === 'manual') return ['🟠 手動輸入', 'source-manual'];
+      if(source === 'itinerary') return ['🔵 行程推測', 'source-itinerary'];
+      return ['⚪ 未設定', 'source-none'];
+    }
+    function memoryMapUrl(item) {
+      if(item?.gps?.lat && item?.gps?.lng) return `https://www.google.com/maps/search/?api=1&query=${item.gps.lat},${item.gps.lng}`;
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item?.place || '')}`;
+    }
     async function handleTravelMemoryImage(event) {
       const file = event?.target?.files?.[0];
       if(event?.target) event.target.value = '';
@@ -5567,6 +5653,11 @@ SOS：日本警察110、救護消防119`;
         showToast('旅行照片壓縮保存中…');
         const photo = await compressTravelMemoryImage(file);
         const day = getTravelMemoryDefaultDay();
+        showToast('嘗試取得 GPS 定位…');
+        const gps = await getTravelMemoryGps();
+        const suggested = getTravelMemorySuggestedPlace(day);
+        const placeInput = prompt(gps ? 'GPS 已取得。請輸入拍照地點名稱（可留空使用行程推測）：' : 'GPS 未取得。請輸入拍照地點名稱（可留空使用行程推測）：', suggested) || '';
+        const manualPlace = placeInput.trim();
         const note = prompt('這張照片的簡短備註（可留空）：', '') || '';
         const memories = getTravelMemories();
         memories.unshift({
@@ -5576,13 +5667,16 @@ SOS：日本警察110、救護消防119`;
           note: note.trim(),
           favorite: false,
           createdAt: new Date().toISOString(),
-          place: (travelData?.[day]?.items?.[0]?.name || `Day ${day}`)
+          place: manualPlace || suggested,
+          locationSource: manualPlace ? 'manual' : (gps ? 'gps' : 'itinerary'),
+          gps: gps || null,
+          confidence: manualPlace ? 100 : (gps ? 100 : 80)
         });
         saveTravelMemories(memories);
         memoryFilterDay = day;
         switchMainTab('memory', false);
         renderTravelMemoryPanel();
-        showToast('旅行回憶已保存');
+        showToast(gps ? '旅行回憶已保存：含 GPS' : '旅行回憶已保存：可稍後補地點');
       } catch(e) {
         showCustomAlert('照片保存失敗', e.message || '請重新拍攝或改用較小圖片。');
       }
@@ -5614,12 +5708,40 @@ SOS：日本警察110、救護消防119`;
       saveTravelMemories(list);
       renderTravelMemoryPanel();
     }
+    async function updateTravelMemoryPlace(id) {
+      const list = getTravelMemories();
+      const item = list.find(x => Number(x.id) === Number(id));
+      if(!item) return;
+      const next = prompt('修改拍照地點：', item.place || '') || '';
+      if(next.trim()) {
+        item.place = next.trim();
+        item.locationSource = 'manual';
+        item.confidence = 100;
+        saveTravelMemories(list);
+        renderTravelMemoryPanel();
+        showToast('拍照地點已更新');
+      }
+    }
+    async function refreshTravelMemoryGps(id) {
+      const list = getTravelMemories();
+      const item = list.find(x => Number(x.id) === Number(id));
+      if(!item) return;
+      showToast('重新取得 GPS 中…');
+      const gps = await getTravelMemoryGps();
+      if(!gps) { showCustomAlert('GPS 未取得', '請確認瀏覽器定位權限已開啟，或改用手動輸入地點。'); return; }
+      item.gps = gps;
+      item.locationSource = item.place ? 'manual' : 'gps';
+      item.confidence = 100;
+      saveTravelMemories(list);
+      renderTravelMemoryPanel();
+      showToast('GPS 已更新');
+    }
     function exportTravelMemoryText() {
       const list = getTravelMemories();
       if(!list.length) { showCustomAlert('尚無資料', '目前還沒有旅行回憶。'); return; }
       const text = list.slice().reverse().map((m, idx) => {
         const date = new Date(m.createdAt).toLocaleString('zh-TW');
-        return `${idx+1}. D${m.day}｜${date}\n地點：${m.place || ''}\n備註：${m.note || ''}${m.favorite ? '\n⭐ 收藏' : ''}`;
+        return `${idx+1}. D${m.day}｜${date}\n地點：${m.place || ''}\n來源：${getMemorySourceLabel(m.locationSource)[0]}${m.gps ? `\nGPS：${m.gps.lat}, ${m.gps.lng}` : ''}\n備註：${m.note || ''}${m.favorite ? '\n⭐ 收藏' : ''}`;
       }).join('\n\n');
       copyText('📸 2026 京阪奈旅行回憶\n\n' + text, '旅行回憶文字已複製');
     }
@@ -5639,10 +5761,20 @@ SOS：日本警察110、救護消防119`;
             <div class="memory-body">
               <div class="memory-title">${m.favorite ? '⭐ ' : ''}D${escapeHtml(m.day)}｜${escapeHtml(m.place || '旅行照片')}</div>
               <div class="memory-meta">${escapeHtml(time)}</div>
+              <div class="memory-location">
+                <div>📍 ${escapeHtml(m.place || '未設定地點')}</div>
+                <span class="memory-source-badge ${getMemorySourceLabel(m.locationSource)[1]}">${getMemorySourceLabel(m.locationSource)[0]}｜${Number(m.confidence || 0) || '-'}%</span>
+                ${m.gps?.lat && m.gps?.lng ? `<div class="memory-gps-line">GPS ${Number(m.gps.lat).toFixed(6)}, ${Number(m.gps.lng).toFixed(6)}</div>` : `<div class="memory-gps-line">GPS 尚未記錄，可按「GPS」補抓定位</div>`}
+              </div>
               ${m.note ? `<div class="memory-note">${escapeHtml(m.note)}</div>` : `<div class="memory-note text-slate-400">尚未填寫備註</div>`}
               <div class="memory-toolbar">
                 <button onclick="toggleTravelMemoryFavorite(${Number(m.id)})" class="bg-amber-50 text-amber-700">${m.favorite ? '取消⭐' : '收藏⭐'}</button>
+                <button onclick="updateTravelMemoryPlace(${Number(m.id)})" class="bg-emerald-50 text-emerald-700">地點</button>
                 <button onclick="updateTravelMemoryNote(${Number(m.id)})" class="bg-sky-50 text-sky-700">備註</button>
+              </div>
+              <div class="memory-toolbar">
+                <button onclick="refreshTravelMemoryGps(${Number(m.id)})" class="bg-violet-50 text-violet-700">GPS</button>
+                <button onclick="window.open('${memoryMapUrl(m)}','_blank','noopener,noreferrer')" class="bg-slate-100 text-slate-700">地圖</button>
                 <button onclick="deleteTravelMemory(${Number(m.id)})" class="bg-rose-50 text-rose-700">刪除</button>
               </div>
             </div>
@@ -5650,9 +5782,9 @@ SOS：日本警察110、救護消防119`;
       }).join('');
       wrap.innerHTML = `
         <div class="memory-hero card-shadow">
-          <p class="text-[9px] font-black tracking-[0.18em] text-violet-200">TRAVEL MEMORY LITE</p>
+          <p class="text-[9px] font-black tracking-[0.18em] text-violet-200">TRAVEL MEMORY GPS ENGINE</p>
           <h2 class="mt-1 text-base font-black">📸 旅行回憶</h2>
-          <p class="mt-1 text-[11px] leading-relaxed text-violet-100">獨立照片模組，只保存旅行照片、日期、Day 與備註，不會動到 OCR、API Key、記帳與天氣功能。</p>
+          <p class="mt-1 text-[11px] leading-relaxed text-violet-100">獨立照片模組，支援 GPS 自動定位、手動輸入地點、行程推測與 Google Maps 導航；不會動到 OCR、API Key、記帳與天氣功能。</p>
         </div>
         <div class="memory-actions">
           <button onclick="triggerTravelMemoryCamera()" class="tap memory-action bg-violet-600 text-white"><i data-lucide="camera" class="w-4 h-4"></i>拍照<br>留存</button>
@@ -5660,11 +5792,172 @@ SOS：日本警察110、救護消防119`;
           <button onclick="setTravelMemoryFilter(getTravelMemoryDefaultDay())" class="tap memory-action bg-white text-slate-700 border border-slate-200"><i data-lucide="calendar-days" class="w-4 h-4"></i>今日<br>照片</button>
         </div>
         <div class="memory-filter no-scrollbar">${filterButtons}</div>
-        ${filtered.length ? `<div class="memory-grid">${cards}</div>` : `<div class="memory-empty">尚無旅行回憶。按「拍照留存」即可把照片依 Day 保存，不會影響其他功能。</div>`}
+        ${filtered.length ? `<div class="memory-grid">${cards}</div>` : `<div class="memory-empty">尚無旅行回憶。按「拍照留存」即可把照片依 Day 保存，不會影響其他功能；地點可由 GPS、手動輸入或行程推測建立。</div>`}
       `;
       if(window.lucide) lucide.createIcons();
     }
 
+
+
+
+
+    // ==========================================
+    // V18.1 AI Travel Book + Travel Memory GPS Engine：一鍵匯出完整旅行日誌
+    // 以本機資料整合行程、Travel Memory、收據與預算，不依賴 Gemini，避免出國時卡 API。
+    // ==========================================
+    function v18FormatMoney(amount, currency='TWD') {
+      const n = Math.round(Number(amount || 0));
+      if(currency === 'JPY') return '¥' + n.toLocaleString('zh-TW');
+      if(currency === 'USD') return 'US$' + n.toLocaleString('zh-TW');
+      return 'NT$' + n.toLocaleString('zh-TW');
+    }
+    function v18ToTwd(record) {
+      const amt = Number(record?.amount || 0);
+      const cur = String(record?.currency || 'TWD').toUpperCase();
+      const rate = Number(document.getElementById('currency-rate')?.value || 0.21) || 0.21;
+      if(cur === 'JPY') return amt * rate;
+      if(cur === 'USD') return amt * 32;
+      return amt;
+    }
+    function v18GroupExpensesByDay() {
+      const rows = getExpenseRecords ? getExpenseRecords() : [];
+      const result = {};
+      Object.keys(travelData || {}).forEach(day => result[day] = []);
+      rows.forEach(r => {
+        const day = String(r.day || getTripDayByDate((r.createdAt||'').slice(0,10)) || currentDay || '1');
+        result[day] = result[day] || [];
+        result[day].push(r);
+      });
+      return result;
+    }
+    function v18TripStats() {
+      const memories = (typeof getTravelMemories === 'function') ? getTravelMemories() : [];
+      const expenses = getExpenseRecords ? getExpenseRecords() : [];
+      const twd = expenses.reduce((s,r)=>s+v18ToTwd(r),0);
+      const spots = Object.values(travelData||{}).reduce((s,d)=>s+(d.items?.length||0),0);
+      return { memories, expenses, twd, spots };
+    }
+    function v18BuildDayNarrative(day) {
+      const data = travelData?.[day];
+      const memories = (typeof getTravelMemories === 'function') ? getTravelMemories().filter(x=>String(x.day)===String(day)) : [];
+      const expenses = (v18GroupExpensesByDay()[day] || []);
+      const spend = expenses.reduce((s,r)=>s+v18ToTwd(r),0);
+      const route = (data?.items || []).map(x=>x.name).slice(0,5).join('、');
+      const photoText = memories.length ? `當天已留下 ${memories.length} 張旅行照片` : '當天尚未加入旅行照片';
+      const spendText = expenses.length ? `並記錄 ${expenses.length} 筆支出，折合約 ${v18FormatMoney(spend,'TWD')}` : '尚無支出紀錄';
+      return `今天的主軸是 ${route || '自由探索'}。${photoText}，${spendText}。可在回國後補上心得，讓這一天變成完整的旅行章節。`;
+    }
+    function v18BuildJournalHtml(forExport=false) {
+      const stats = v18TripStats();
+      const groupedExpenses = v18GroupExpensesByDay();
+      const allDays = Object.keys(travelData || {});
+      const budget = Number(localStorage.getItem('kansai2026_total_budget_twd') || 80000);
+      const remaining = budget - stats.twd;
+      const cover = `
+        <section class="cover">
+          <div style="font-size:12px;font-weight:900;letter-spacing:.18em;opacity:.8">AI TRAVEL BOOK｜KANSAI 2026</div>
+          <h1>2026 京阪奈盛夏自由行</h1>
+          <div>大阪・京都・奈良｜2026/07/01–2026/07/06</div>
+          <div class="muted" style="color:rgba(255,255,255,.78);margin-top:8px">由 AI Travel Companion 匯整行程、照片、收據、預算與旅行回憶。</div>
+        </section>`;
+      const statsHtml = `
+        <section>
+          <h2>旅程總覽</h2>
+          <div class="stats">
+            <div class="stat"><b>照片</b><br>${stats.memories.length} 張</div>
+            <div class="stat"><b>收據</b><br>${stats.expenses.length} 筆</div>
+            <div class="stat"><b>景點</b><br>${stats.spots} 站</div>
+            <div class="stat"><b>花費</b><br>${v18FormatMoney(stats.twd,'TWD')}</div>
+          </div>
+          <p>總預算 ${v18FormatMoney(budget,'TWD')}；目前剩餘 ${v18FormatMoney(remaining,'TWD')}。</p>
+        </section>`;
+      const dayHtml = allDays.map(day => {
+        const data = travelData[day];
+        const memories = stats.memories.filter(x=>String(x.day)===String(day));
+        const expenses = groupedExpenses[day] || [];
+        const daySpend = expenses.reduce((s,r)=>s+v18ToTwd(r),0);
+        const routeRows = (data.items||[]).map(i=>`<tr><td>${escapeHtml(i.time)}</td><td>${escapeHtml(i.name)}</td><td>${escapeHtml(i.note||'')}</td></tr>`).join('');
+        const expenseRows = expenses.slice(0,12).map(r=>`<tr><td>${escapeHtml(r.category||'')}</td><td>${escapeHtml(r.item||'')}</td><td>${escapeHtml(formatMoney ? formatMoney(r.amount,r.currency) : v18FormatMoney(r.amount,r.currency))}</td></tr>`).join('');
+        const photos = memories.slice(0,12).map(m=>`<img src="${m.photo}" alt="D${day} photo">`).join('');
+        return `
+          <section class="${forExport ? 'page-break' : 'journal-day'}">
+            <h2>Day ${day}｜${escapeHtml(tripDateLabels[day] || '')}</h2>
+            <p><b>${escapeHtml(data.title || '')}</b></p>
+            <h3>AI 每日回顧</h3>
+            <p>${escapeHtml(v18BuildDayNarrative(day))}</p>
+            <h3>行程時間軸</h3>
+            <table><thead><tr><th>時間</th><th>地點</th><th>備註</th></tr></thead><tbody>${routeRows}</tbody></table>
+            <h3>旅行照片 ${memories.length ? `（${memories.length}張）` : ''}</h3>
+            ${photos ? `<div class="photo-grid">${photos}</div>` : '<p class="muted">尚無照片，可於 Travel Memory 補充。</p>'}
+            <h3>今日支出</h3>
+            <p>今日折合約 <b>${v18FormatMoney(daySpend,'TWD')}</b>，共 ${expenses.length} 筆。</p>
+            ${expenseRows ? `<table><thead><tr><th>分類</th><th>項目</th><th>金額</th></tr></thead><tbody>${expenseRows}</tbody></table>` : '<p class="muted">尚無收據紀錄。</p>'}
+          </section>`;
+      }).join('');
+      const ending = `
+        <section class="page-break">
+          <h2>AI 旅程總結</h2>
+          <p>本次關西旅程涵蓋大阪、京都與奈良，行程以交通順暢、盛夏舒適與周遊券效率為核心。系統已彙整旅行照片、支出紀錄與每日時間軸，回國後可再補充文字心得，形成完整旅行書。</p>
+          <p class="muted">提示：若要永久保存，建議按「另存 PDF」或「匯出 HTML」，並另外備份照片與收據資料。</p>
+        </section>`;
+      return `<div class="journal-export-sheet">${cover}${statsHtml}${dayHtml}${ending}</div>`;
+    }
+    function renderTravelJournalPanel() {
+      const wrap = document.getElementById('journal-view');
+      if(!wrap) return;
+      const stats = v18TripStats();
+      const budget = Number(localStorage.getItem('kansai2026_total_budget_twd') || 80000);
+      wrap.innerHTML = `
+        <div class="journal-hero">
+          <p class="text-[9px] font-black tracking-[0.18em] text-emerald-100">V18.1 AI TRAVEL BOOK</p>
+          <h2 class="mt-1 text-base font-black">📕 一鍵匯出完整旅行日誌</h2>
+          <p class="mt-1 text-[11px] leading-relaxed text-emerald-50">整合行程、Travel Memory、收據、預算與 AI 每日回顧；不依賴 Gemini，旅途中也能先產生本機旅行書。</p>
+        </div>
+        <div class="journal-actions">
+          <button onclick="previewTravelJournal()" class="tap journal-action"><i data-lucide="book-open" class="w-4 h-4"></i>預覽<br>旅行書</button>
+          <button onclick="printTravelJournal()" class="tap journal-action"><i data-lucide="printer" class="w-4 h-4"></i>另存<br>PDF</button>
+          <button onclick="exportTravelJournalHtml()" class="tap journal-action"><i data-lucide="download" class="w-4 h-4"></i>匯出<br>HTML</button>
+        </div>
+        <section class="journal-card">
+          <h3 class="text-sm font-black text-slate-950 mb-2">旅程資料摘要</h3>
+          <div class="journal-kpi">
+            <div><div class="k">照片</div><div class="v">${stats.memories.length} 張</div></div>
+            <div><div class="k">收據</div><div class="v">${stats.expenses.length} 筆</div></div>
+            <div><div class="k">總花費</div><div class="v">${v18FormatMoney(stats.twd,'TWD')}</div></div>
+            <div><div class="k">總預算</div><div class="v">${v18FormatMoney(budget,'TWD')}</div></div>
+          </div>
+        </section>
+        ${Object.keys(travelData||{}).map(day=>`<div class="journal-day"><h4>Day ${day}｜${escapeHtml(tripDateLabels[day]||'')}</h4><p>${escapeHtml(v18BuildDayNarrative(day))}</p></div>`).join('')}
+      `;
+      if(window.lucide) lucide.createIcons();
+    }
+    function previewTravelJournal() {
+      const html = v18BuildJournalHtml(false);
+      let panel = document.getElementById('journal-preview-panel');
+      if(!panel) {
+        panel = document.createElement('div');
+        panel.id = 'journal-preview-panel';
+        panel.className = 'fixed inset-0 z-[95] overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-md';
+        document.body.appendChild(panel);
+      }
+      panel.innerHTML = `<div class="mx-auto max-w-3xl pb-10"><div class="sticky top-3 z-10 mb-3 grid grid-cols-3 gap-2 rounded-2xl bg-slate-950/90 p-3"><button onclick="printTravelJournal()" class="tap rounded-xl bg-sky-600 py-2 text-xs font-black text-white">另存PDF</button><button onclick="exportTravelJournalHtml()" class="tap rounded-xl bg-emerald-600 py-2 text-xs font-black text-white">匯出HTML</button><button onclick="closeTravelJournalPreview()" class="tap rounded-xl bg-white py-2 text-xs font-black text-slate-700">關閉</button></div>${html}</div>`;
+      document.body.style.overflow = 'hidden';
+    }
+    function closeTravelJournalPreview(){ const p=document.getElementById('journal-preview-panel'); if(p) p.remove(); document.body.style.overflow=''; }
+    function printTravelJournal() {
+      document.getElementById('print-area').innerHTML = v18BuildJournalHtml(true);
+      setTimeout(()=>window.print(), 80);
+    }
+    function exportTravelJournalHtml() {
+      const html = `<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026 京阪奈旅行日誌</title><style>body{margin:0;background:#f8fafc}.journal-export-sheet{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei',sans-serif;color:#0f172a;background:#fff;max-width:900px;margin:0 auto;padding:28px;line-height:1.55}.cover{border-radius:18px;background:linear-gradient(135deg,#0f172a,#0f766e,#2563eb);color:#fff;padding:26px;margin-bottom:18px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.stat{border:1px solid #e2e8f0;border-radius:12px;padding:10px;background:#f8fafc}h1{font-size:28px}h2{font-size:20px;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-top:24px}.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.photo-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #e2e8f0;padding:6px;text-align:left}th{background:#f8fafc}.muted{color:#64748b;font-size:12px}@media print{body{background:#fff}.page-break{page-break-before:always}}</style></head><body>${v18BuildJournalHtml(true)}</body></html>`;
+      const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = '2026_京阪奈_AI旅行日誌.html';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('旅行日誌 HTML 已匯出');
+    }
 
 
     // V17.2：旅行模式 - 放大重點資訊並保存狀態
@@ -5779,7 +6072,7 @@ SOS：日本警察110、救護消防119`;
   
 
     /* ===============================
-       V17.6 Enterprise Receipt Viewer
+       V18.1 AI Travel Book + Travel Memory GPS Engine
        逐項條列 + 核對分析 + OCR 收合
        =============================== */
     function getReceiptCategoryIcon(name, category='') {
@@ -5881,6 +6174,255 @@ SOS：日本警察110、救護消防119`;
       });
     }
 
+
+    // ==========================================
+    // V18.1.1 Travel Memory Hotfix
+    // 修正：地點 / 備註按鈕在部分手機瀏覽器無反應
+    // 作法：將核心操作函式明確掛到 window，並加入事件委派備援。
+    // ==========================================
+    (function(){
+      function tmFind(id){
+        const list = (typeof getTravelMemories === 'function') ? getTravelMemories() : [];
+        const item = list.find(x => Number(x.id) === Number(id));
+        return { list, item };
+      }
+      function tmSave(list){
+        if(typeof saveTravelMemories === 'function') saveTravelMemories(list);
+        if(typeof renderTravelMemoryPanel === 'function') renderTravelMemoryPanel();
+        if(window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+      }
+      function tmPrompt(title, message, defaultValue, callback){
+        // 使用原生 prompt 作為最穩定手機瀏覽器備援，避免 modal / z-index / overlay 阻擋。
+        const value = window.prompt(message || title || '請輸入', defaultValue || '');
+        if(value === null) return;
+        callback(String(value));
+      }
+
+      window.updateTravelMemoryNote = function(id){
+        const found = tmFind(id);
+        if(!found.item) { if(typeof showToast==='function') showToast('找不到這張照片'); return; }
+        tmPrompt('修改備註', '修改照片備註：', found.item.note || '', function(next){
+          found.item.note = next.trim();
+          tmSave(found.list);
+          if(typeof showToast==='function') showToast('備註已更新');
+        });
+      };
+
+      window.updateTravelMemoryPlace = function(id){
+        const found = tmFind(id);
+        if(!found.item) { if(typeof showToast==='function') showToast('找不到這張照片'); return; }
+        tmPrompt('修改地點', '修改拍照地點：', found.item.place || '', function(next){
+          const value = next.trim();
+          if(!value) { if(typeof showToast==='function') showToast('地點未變更'); return; }
+          found.item.place = value;
+          found.item.locationSource = 'manual';
+          found.item.confidence = 100;
+          tmSave(found.list);
+          if(typeof showToast==='function') showToast('拍照地點已更新');
+        });
+      };
+
+      window.refreshTravelMemoryGps = async function(id){
+        const found = tmFind(id);
+        if(!found.item) { if(typeof showToast==='function') showToast('找不到這張照片'); return; }
+        if(typeof showToast==='function') showToast('重新取得 GPS 中…');
+        const gps = (typeof getTravelMemoryGps === 'function') ? await getTravelMemoryGps() : null;
+        if(!gps) {
+          if(typeof showCustomAlert === 'function') showCustomAlert('GPS 未取得', '請確認瀏覽器定位權限已開啟，或改用手動輸入地點。');
+          else alert('GPS 未取得，請確認定位權限已開啟。');
+          return;
+        }
+        found.item.gps = gps;
+        found.item.locationSource = found.item.place ? 'manual' : 'gps';
+        found.item.confidence = 100;
+        tmSave(found.list);
+        if(typeof showToast==='function') showToast('GPS 已更新');
+      };
+
+      window.openTravelMemoryMap = function(id){
+        const found = tmFind(id);
+        if(!found.item) { if(typeof showToast==='function') showToast('找不到這張照片'); return; }
+        let url = '';
+        if(found.item.gps && found.item.gps.lat && found.item.gps.lng) {
+          url = `https://www.google.com/maps/search/?api=1&query=${found.item.gps.lat},${found.item.gps.lng}`;
+        } else if(found.item.place) {
+          url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(found.item.place)}`;
+        } else {
+          if(typeof showCustomConfirm === 'function') {
+            showCustomConfirm('尚未設定地點', '這張照片還沒有地點。是否先輸入地點？', () => window.updateTravelMemoryPlace(id));
+          } else if(confirm('尚未設定地點，是否先輸入？')) window.updateTravelMemoryPlace(id);
+          return;
+        }
+        window.open(url, '_blank', 'noopener,noreferrer');
+      };
+
+      // 事件委派備援：就算 inline onclick 被某些瀏覽器/外層容器吃掉，仍可運作。
+      document.addEventListener('click', function(e){
+        const btn = e.target.closest && e.target.closest('[data-memory-action]');
+        if(!btn) return;
+        const id = btn.getAttribute('data-memory-id');
+        const action = btn.getAttribute('data-memory-action');
+        if(!id || !action) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if(action === 'place') window.updateTravelMemoryPlace(id);
+        if(action === 'note') window.updateTravelMemoryNote(id);
+        if(action === 'gps') window.refreshTravelMemoryGps(id);
+        if(action === 'map') window.openTravelMemoryMap(id);
+      }, true);
+
+      // 補強既有 render：將按鈕加上 type/data 屬性，讓事件委派可抓到。
+      if(typeof renderTravelMemoryPanel === 'function') {
+        const originalRenderTravelMemoryPanel = renderTravelMemoryPanel;
+        window.renderTravelMemoryPanel = function(){
+          originalRenderTravelMemoryPanel();
+          const wrap = document.getElementById('memory-view');
+          if(!wrap) return;
+          wrap.querySelectorAll('.memory-card').forEach(card => {
+            const onclickButtons = card.querySelectorAll('button[onclick]');
+            onclickButtons.forEach(btn => {
+              btn.setAttribute('type','button');
+              const oc = btn.getAttribute('onclick') || '';
+              const m = oc.match(/(updateTravelMemoryPlace|updateTravelMemoryNote|refreshTravelMemoryGps|deleteTravelMemory|toggleTravelMemoryFavorite)\((\d+)\)/);
+              if(m) {
+                const map = {
+                  updateTravelMemoryPlace: 'place',
+                  updateTravelMemoryNote: 'note',
+                  refreshTravelMemoryGps: 'gps'
+                };
+                if(map[m[1]]) {
+                  btn.setAttribute('data-memory-action', map[m[1]]);
+                  btn.setAttribute('data-memory-id', m[2]);
+                }
+              }
+              if(oc.includes('memoryMapUrl')) {
+                // 原版地圖按鈕改由 openTravelMemoryMap 控制，避免沒有地點時無提示。
+                const cardIdMatch = Array.from(card.querySelectorAll('button[onclick]')).map(b=>b.getAttribute('onclick')||'').join(' ').match(/updateTravelMemoryPlace\((\d+)\)/);
+                if(cardIdMatch) {
+                  btn.removeAttribute('onclick');
+                  btn.setAttribute('data-memory-action','map');
+                  btn.setAttribute('data-memory-id',cardIdMatch[1]);
+                }
+              }
+            });
+          });
+        };
+        // 若使用者已在回憶分頁，立即重繪一次。
+        setTimeout(() => {
+          if(document.getElementById('memory-view') && !document.getElementById('memory-view').classList.contains('hidden')) {
+            window.renderTravelMemoryPanel();
+          }
+        }, 300);
+      }
+    })();
+
   </script>
+
+
+<script>
+/* V18.1.3 Travel Memory Debug Fixed */
+(function(){
+  const TM_KEY = 'kansai2026_travel_memory_lite_v1';
+  function safeEscape(v){ if(typeof escapeHtml === 'function') return escapeHtml(v); return String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+  function readList(){ try { return JSON.parse(localStorage.getItem(TM_KEY) || '[]') || []; } catch(e){ return []; } }
+  function writeList(list){ try { localStorage.setItem(TM_KEY, JSON.stringify(list || [])); } catch(e){ if(typeof showToast === 'function') showToast('照片儲存空間不足，請刪除部分回憶'); } }
+  function findItem(id){ const list = (typeof getTravelMemories === 'function') ? getTravelMemories() : readList(); const item = list.find(x => String(x.id) === String(id)); return {list, item}; }
+  function sourceLabel(source){ if(typeof getMemorySourceLabel === 'function') return getMemorySourceLabel(source); if(source === 'gps') return ['🟢 GPS 自動定位', 'source-gps']; if(source === 'manual') return ['🟠 手動輸入', 'source-manual']; if(source === 'itinerary') return ['🔵 行程推測', 'source-itinerary']; return ['⚪ 未設定', 'source-none']; }
+  function makeMapUrl(item){ if(item && item.gps && item.gps.lat && item.gps.lng) return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.gps.lat + ',' + item.gps.lng); if(item && item.place) return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.place); return ''; }
+  function saveAndRefresh(list, msg){ if(typeof saveTravelMemories === 'function') saveTravelMemories(list); else writeList(list); window.renderTravelMemoryPanel && window.renderTravelMemoryPanel(); window.renderTravelJournalPanel && window.renderTravelJournalPanel(); if(window.lucide) lucide.createIcons(); if(msg && typeof showToast === 'function') showToast(msg); }
+
+  window.updateTravelMemoryNote = function(id){ const found = findItem(id); if(!found.item){ if(typeof showToast==='function') showToast('找不到這張照片'); return; } const next = prompt('修改照片備註：', found.item.note || ''); if(next === null) return; found.item.note = String(next).trim(); saveAndRefresh(found.list, '備註已更新'); };
+  window.updateTravelMemoryPlace = function(id){ const found = findItem(id); if(!found.item){ if(typeof showToast==='function') showToast('找不到這張照片'); return; } const next = prompt('修改拍照地點：', found.item.place || ''); if(next === null) return; const value = String(next).trim(); if(!value){ if(typeof showToast==='function') showToast('地點未變更'); return; } found.item.place = value; found.item.locationSource = 'manual'; found.item.confidence = 100; saveAndRefresh(found.list, '拍照地點已更新'); };
+  window.refreshTravelMemoryGps = async function(id){ const found = findItem(id); if(!found.item){ if(typeof showToast==='function') showToast('找不到這張照片'); return; } if(typeof showToast==='function') showToast('重新取得 GPS 中…'); const gps = (typeof getTravelMemoryGps === 'function') ? await getTravelMemoryGps() : null; if(!gps){ if(typeof showCustomAlert === 'function') showCustomAlert('GPS 未取得', '請確認瀏覽器定位權限已開啟，或改用「地點」手動輸入。'); else alert('GPS 未取得，請確認定位權限已開啟。'); return; } found.item.gps = gps; if(!found.item.place || found.item.locationSource !== 'manual') found.item.locationSource = 'gps'; found.item.confidence = 100; saveAndRefresh(found.list, 'GPS 已更新'); };
+  window.openTravelMemoryMap = function(id){ const found = findItem(id); if(!found.item){ if(typeof showToast==='function') showToast('找不到這張照片'); return; } const url = makeMapUrl(found.item); if(!url){ if(typeof showCustomConfirm === 'function') showCustomConfirm('尚未設定地點', '這張照片還沒有地點。是否先輸入地點？', function(){ window.updateTravelMemoryPlace(id); }); else if(confirm('尚未設定地點，是否先輸入？')) window.updateTravelMemoryPlace(id); return; } window.open(url, '_blank', 'noopener,noreferrer'); };
+  window.toggleTravelMemoryFavorite = function(id){ const found = findItem(id); if(!found.item) return; found.item.favorite = !found.item.favorite; saveAndRefresh(found.list, found.item.favorite ? '已加入收藏' : '已取消收藏'); };
+  window.deleteTravelMemory = function(id){ const doDelete = function(){ saveAndRefresh(readList().filter(x => String(x.id) !== String(id)), '已刪除旅行回憶'); }; if(typeof showCustomConfirm === 'function') showCustomConfirm('刪除旅行照片', '確定要刪除這張旅行回憶嗎？', doDelete); else if(confirm('確定要刪除這張旅行回憶嗎？')) doDelete(); };
+  window.setTravelMemoryFilter = function(day){ window.memoryFilterDay = String(day || 'all'); try { memoryFilterDay = window.memoryFilterDay; } catch(e) {} window.renderTravelMemoryPanel && window.renderTravelMemoryPanel(); };
+
+  window.renderTravelMemoryPanel = function(){
+    const wrap = document.getElementById('memory-view'); if(!wrap) return;
+    const list = (typeof getTravelMemories === 'function') ? getTravelMemories() : readList();
+    const filter = String(window.memoryFilterDay || (typeof memoryFilterDay !== 'undefined' ? memoryFilterDay : 'all') || 'all');
+    const td = (typeof travelData !== 'undefined' ? travelData : {1:{},2:{},3:{},4:{},5:{},6:{}});
+    const days = Object.keys(td);
+    const filtered = filter === 'all' ? list : list.filter(x => String(x.day) === String(filter));
+    const filterButtons = ['<button type="button" data-memory-filter="all" class="tap '+(filter==='all'?'bg-violet-600 text-white':'bg-slate-100 text-slate-600')+'">全部 '+list.length+'</button>'].concat(days.map(function(day){ const count = list.filter(x => String(x.day) === String(day)).length; return '<button type="button" data-memory-filter="'+safeEscape(day)+'" class="tap '+(filter===String(day)?'bg-violet-600 text-white':'bg-slate-100 text-slate-600')+'">D'+safeEscape(day)+' '+count+'</button>'; })).join('');
+    const cards = filtered.map(function(m){
+      const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'}) : '';
+      const label = sourceLabel(m.locationSource);
+      const gpsLine = (m.gps && m.gps.lat && m.gps.lng) ? '<div class="memory-gps-line">GPS '+Number(m.gps.lat).toFixed(6)+', '+Number(m.gps.lng).toFixed(6)+'</div>' : '<div class="memory-gps-line">GPS 尚未記錄，可按「GPS」補抓定位</div>';
+      return '<article class="memory-card" data-memory-card="'+Number(m.id)+'">'
+        + '<img class="memory-thumb" src="'+m.photo+'" alt="旅行回憶照片">'
+        + '<div class="memory-body">'
+        + '<div class="memory-title">'+(m.favorite ? '⭐ ' : '')+'D'+safeEscape(m.day)+'｜'+safeEscape(m.place || '旅行照片')+'</div>'
+        + '<div class="memory-meta">'+safeEscape(time)+'</div>'
+        + '<button type="button" class="memory-location text-left w-full" data-memory-action="place" data-memory-id="'+Number(m.id)+'"><div>📍 '+safeEscape(m.place || '未設定地點')+'</div><span class="memory-source-badge '+safeEscape(label[1])+'">'+safeEscape(label[0])+'｜'+(Number(m.confidence || 0) || '-')+'%</span>'+gpsLine+'</button>'
+        + '<button type="button" class="memory-note '+(m.note ? '' : 'text-slate-400')+' text-left w-full" data-memory-action="note" data-memory-id="'+Number(m.id)+'">'+safeEscape(m.note || '尚未填寫備註')+'</button>'
+        + '<div class="memory-toolbar"><button type="button" data-memory-action="favorite" data-memory-id="'+Number(m.id)+'" class="bg-amber-50 text-amber-700">'+(m.favorite ? '取消⭐' : '收藏⭐')+'</button><button type="button" data-memory-action="place" data-memory-id="'+Number(m.id)+'" class="bg-emerald-50 text-emerald-700">地點</button><button type="button" data-memory-action="note" data-memory-id="'+Number(m.id)+'" class="bg-sky-50 text-sky-700">備註</button></div>'
+        + '<div class="memory-toolbar"><button type="button" data-memory-action="gps" data-memory-id="'+Number(m.id)+'" class="bg-violet-50 text-violet-700">GPS</button><button type="button" data-memory-action="map" data-memory-id="'+Number(m.id)+'" class="bg-slate-100 text-slate-700">地圖</button><button type="button" data-memory-action="delete" data-memory-id="'+Number(m.id)+'" class="bg-rose-50 text-rose-700">刪除</button></div>'
+        + '</div></article>';
+    }).join('');
+    const today = (typeof getTravelMemoryDefaultDay === 'function') ? getTravelMemoryDefaultDay() : '1';
+    wrap.innerHTML = '<div class="memory-hero card-shadow"><p class="text-[9px] font-black tracking-[0.18em] text-violet-200">TRAVEL MEMORY GPS ENGINE｜DEBUG FIXED</p><h2 class="mt-1 text-base font-black">📸 旅行回憶</h2><p class="mt-1 text-[11px] leading-relaxed text-violet-100">地點與備註已改為事件委派模式，點按文字或按鈕都可編輯；進入日誌分頁時也會同步讀取照片。</p></div>'
+      + '<div class="memory-actions"><button type="button" onclick="triggerTravelMemoryCamera()" class="tap memory-action bg-violet-600 text-white"><i data-lucide="camera" class="w-4 h-4"></i>拍照<br>留存</button><button type="button" onclick="exportTravelMemoryText()" class="tap memory-action bg-slate-900 text-white"><i data-lucide="clipboard-list" class="w-4 h-4"></i>複製<br>索引</button><button type="button" data-memory-filter="'+safeEscape(today)+'" class="tap memory-action bg-white text-slate-700 border border-slate-200"><i data-lucide="calendar-days" class="w-4 h-4"></i>今日<br>照片</button></div>'
+      + '<div class="memory-filter no-scrollbar">'+filterButtons+'</div>'
+      + (filtered.length ? '<div class="memory-grid">'+cards+'</div>' : '<div class="memory-empty">尚無旅行回憶。按「拍照留存」即可把照片依 Day 保存；地點可按「地點」手動輸入，或按 GPS 補定位。</div>');
+    if(window.lucide) lucide.createIcons();
+  };
+
+  window.renderTravelJournalPanel = function(){
+    const wrap = document.getElementById('journal-view'); if(!wrap) return;
+    if(typeof v18TripStats !== 'function' || typeof v18BuildDayNarrative !== 'function') { wrap.innerHTML = '<div class="journal-card">旅行日誌模組尚未載入。</div>'; return; }
+    const stats = v18TripStats();
+    const budget = Number(localStorage.getItem('kansai2026_total_budget_twd') || 80000);
+    const td = (typeof travelData !== 'undefined' ? travelData : {1:{},2:{},3:{},4:{},5:{},6:{}});
+    const labels = (typeof tripDateLabels !== 'undefined' ? tripDateLabels : {});
+    const memList = (typeof getTravelMemories === 'function') ? getTravelMemories() : readList();
+    const days = Object.keys(td);
+    const moneyTotal = (typeof v18FormatMoney === 'function') ? v18FormatMoney(stats.twd,'TWD') : 'NT$'+Math.round(stats.twd).toLocaleString('zh-TW');
+    const moneyBudget = (typeof v18FormatMoney === 'function') ? v18FormatMoney(budget,'TWD') : 'NT$'+budget.toLocaleString('zh-TW');
+    const dayCards = days.map(function(day){
+      const memories = memList.filter(x => String(x.day) === String(day));
+      const thumbs = memories.slice(0,4).map(m => '<img src="'+m.photo+'" alt="D'+safeEscape(day)+' photo" style="width:48px;height:48px;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0">').join('');
+      return '<div class="journal-day"><h4>Day '+safeEscape(day)+'｜'+safeEscape(labels[day] || '')+'</h4><p>'+safeEscape(v18BuildDayNarrative(day))+'</p>'+(thumbs ? '<div style="display:flex;gap:6px;margin-top:8px;overflow-x:auto">'+thumbs+'</div>' : '')+'</div>';
+    }).join('');
+    wrap.innerHTML = '<div class="journal-hero"><p class="text-[9px] font-black tracking-[0.18em] text-emerald-100">V18.1.3 AI TRAVEL BOOK</p><h2 class="mt-1 text-base font-black">📕 一鍵匯出完整旅行日誌</h2><p class="mt-1 text-[11px] leading-relaxed text-emerald-50">已修復日誌分頁照片讀取；會同步顯示 Travel Memory 縮圖。</p></div>'
+      + '<div class="journal-actions"><button type="button" onclick="previewTravelJournal()" class="tap journal-action"><i data-lucide="book-open" class="w-4 h-4"></i>預覽<br>旅行書</button><button type="button" onclick="printTravelJournal()" class="tap journal-action"><i data-lucide="printer" class="w-4 h-4"></i>另存<br>PDF</button><button type="button" onclick="exportTravelJournalHtml()" class="tap journal-action"><i data-lucide="download" class="w-4 h-4"></i>匯出<br>HTML</button></div>'
+      + '<section class="journal-card"><h3 class="text-sm font-black text-slate-950 mb-2">旅程資料摘要</h3><div class="journal-kpi"><div><div class="k">照片</div><div class="v">'+stats.memories.length+' 張</div></div><div><div class="k">收據</div><div class="v">'+stats.expenses.length+' 筆</div></div><div><div class="k">總花費</div><div class="v">'+moneyTotal+'</div></div><div><div class="k">總預算</div><div class="v">'+moneyBudget+'</div></div></div></section>' + dayCards;
+    if(window.lucide) lucide.createIcons();
+  };
+
+  document.addEventListener('click', function(e){
+    const filterBtn = e.target.closest && e.target.closest('[data-memory-filter]');
+    if(filterBtn){ e.preventDefault(); e.stopPropagation(); window.setTravelMemoryFilter(filterBtn.getAttribute('data-memory-filter')); return; }
+    const btn = e.target.closest && e.target.closest('[data-memory-action]');
+    if(!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    const id = btn.getAttribute('data-memory-id'); const action = btn.getAttribute('data-memory-action');
+    if(action === 'place') return window.updateTravelMemoryPlace(id);
+    if(action === 'note') return window.updateTravelMemoryNote(id);
+    if(action === 'gps') return window.refreshTravelMemoryGps(id);
+    if(action === 'map') return window.openTravelMemoryMap(id);
+    if(action === 'favorite') return window.toggleTravelMemoryFavorite(id);
+    if(action === 'delete') return window.deleteTravelMemory(id);
+  }, true);
+
+  if(typeof window.switchMainTab === 'function' && !window.__v1813SwitchWrapped){
+    const originalSwitch = window.switchMainTab;
+    window.switchMainTab = function(tab, shouldScroll){
+      originalSwitch(tab, shouldScroll === undefined ? true : shouldScroll);
+      if(tab === 'memory') setTimeout(function(){ window.renderTravelMemoryPanel && window.renderTravelMemoryPanel(); }, 0);
+      if(tab === 'journal') setTimeout(function(){ window.renderTravelJournalPanel && window.renderTravelJournalPanel(); }, 0);
+    };
+    window.__v1813SwitchWrapped = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if(document.getElementById('memory-view') && !document.getElementById('memory-view').classList.contains('hidden')) window.renderTravelMemoryPanel();
+    if(document.getElementById('journal-view') && !document.getElementById('journal-view').classList.contains('hidden')) window.renderTravelJournalPanel();
+  });
+})();
+</script>
+
 </body>
 </html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<!-- V17 Enterprise UI/UX: Compact Dashboard + Progressive Disclosure + Background AI Queue Ready -->
+<!-- V17.2 Enterprise Stable: Compact Dashboard + Stable Travel Memory + Background AI Queue Ready + Travel Mode -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>2026 京阪奈盛夏自由行手冊｜V17 Enterprise UI/UX</title>
+  <title>2026 京阪奈盛夏自由行手冊｜V17.2 Enterprise Stable</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- 導入高質感 Lucide 向量圖標 -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -528,6 +528,30 @@
     .memory-filter { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
     .memory-filter button { flex:0 0 auto; border-radius:999px; padding:6px 10px; font-size:10px; font-weight:900; }
 
+
+
+    /* V17.2 Enterprise Stable：旅行模式與穩定版提示 */
+    .v172-release-card {
+      border-radius: 18px;
+      border: 1px solid #bfdbfe;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 12px;
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.08);
+    }
+    .v172-release-title { font-size: 12px; font-weight: 900; color: #0f172a; }
+    .v172-release-sub { margin-top: 3px; font-size: 10.5px; line-height: 1.55; color: #475569; font-weight: 700; }
+    .v172-mode-toggle {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      margin-top: 10px; border-radius: 14px; background: #0f172a; color: #fff; padding: 10px;
+    }
+    .v172-mode-toggle span { font-size: 11px; font-weight: 900; }
+    .v172-mode-toggle button { border: 0; border-radius: 999px; padding: 6px 10px; font-size: 10.5px; font-weight: 900; background: #ffffff; color: #0f172a; }
+    body.travel-mode .app-shell { font-size: 105%; }
+    body.travel-mode .v17-focus-card .k { font-size: 11px !important; }
+    body.travel-mode .v17-focus-card .v { font-size: 13px !important; }
+    body.travel-mode #bottom-nav button { font-size: 10px !important; }
+    body.travel-mode .v17-details:not([open]) summary { padding-top: 14px; padding-bottom: 14px; }
+
     @media print {
       @page { size: A4; margin: 12mm; }
       body { background: white !important; color: #000000 !important; }
@@ -602,6 +626,21 @@
 
         <!-- V13.5 Ultimate AI 旅行儀表板 -->
         <div id="v135-dashboard" class="space-y-3"></div>
+
+        <!-- V17.2 Enterprise Stable：出國正式版提示與旅行模式 -->
+        <div class="v172-release-card">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="v172-release-title">🏆 V17.2 Enterprise Stable｜2026 關西自由行正式版</div>
+              <div class="v172-release-sub">採穩定優先策略：首頁減量、Travel Memory 獨立模組、收據 AI 佇列提示、預算與 SOS 保持快速入口。旅行期間建議只修 Bug，不再新增大型功能。</div>
+            </div>
+            <span class="pill bg-emerald-50 text-emerald-700">Stable</span>
+          </div>
+          <div class="v172-mode-toggle">
+            <span>🛫 旅行模式：放大重點資訊、減少干擾</span>
+            <button type="button" onclick="toggleTravelMode()" id="travel-mode-toggle">OFF</button>
+          </div>
+        </div>
         
         <!-- 今日快速面板 -->
         <div class="flex items-center justify-between">
@@ -4885,9 +4924,9 @@
         <section class="v17-compact-hero">
           <div class="v17-topbar">
             <div>
-              <div class="v17-eyebrow">AI TRAVEL DASHBOARD｜V17 UI/UX</div>
+              <div class="v17-eyebrow">AI TRAVEL DASHBOARD｜V17.2 ENTERPRISE STABLE</div>
               <div class="v17-title">今天 D${day}｜${tripDateLabels[day]}</div>
-              <div class="v17-sub">只保留旅途中最常用的資訊：天氣、下一站、今日花費、快速拍收據與 SOS。</div>
+              <div class="v17-sub">出國正式版：天氣、下一站、今日花費、快速拍收據、AI 佇列與 SOS 優先顯示。</div>
             </div>
             <span class="v17-mode">${night ? '🌙 夜間' : '🟢 白天'}</span>
           </div>
@@ -5180,6 +5219,26 @@ SOS：日本警察110、救護消防119`;
         ${filtered.length ? `<div class="memory-grid">${cards}</div>` : `<div class="memory-empty">尚無旅行回憶。按「拍照留存」即可把照片依 Day 保存，不會影響其他功能。</div>`}
       `;
       if(window.lucide) lucide.createIcons();
+    }
+
+
+
+    // V17.2：旅行模式 - 放大重點資訊並保存狀態
+    const travelModeStorageKey = 'kansai2026_v172_travel_mode';
+    function applyTravelModeState() {
+      const enabled = localStorage.getItem(travelModeStorageKey) === 'true';
+      document.body.classList.toggle('travel-mode', enabled);
+      const btn = document.getElementById('travel-mode-toggle');
+      if(btn) {
+        btn.textContent = enabled ? 'ON' : 'OFF';
+        btn.className = enabled ? 'bg-emerald-400 text-slate-950' : '';
+      }
+    }
+    function toggleTravelMode() {
+      const enabled = !(localStorage.getItem(travelModeStorageKey) === 'true');
+      localStorage.setItem(travelModeStorageKey, String(enabled));
+      applyTravelModeState();
+      showToast(enabled ? '旅行模式已開啟' : '旅行模式已關閉');
     }
 
     // UI 通用綁定與事件監聽

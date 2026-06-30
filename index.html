@@ -1,13 +1,223 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<!-- V17.2 Enterprise Stable: Compact Dashboard + Stable Travel Memory + Background AI Queue Ready + Travel Mode -->
+<!-- V17.5 Enterprise: AI Daily Summary + Today Travel Dashboard + Stable UI/UX -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>2026 京阪奈盛夏自由行手冊｜V17.2 Enterprise Stable</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>2026 京阪奈盛夏自由行手冊｜V17.5 AI Daily Summary</title>
+  <script src="https://cdn.tailwindcss.com">
+
+    /* ===============================
+       V17.6 Enterprise Receipt Viewer
+       逐項條列 + 核對分析 + OCR 收合
+       =============================== */
+    function getReceiptCategoryIcon(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '💻';
+      if(/ram|記憶體|ddr|memory|メモリ/.test(t)) return '💾';
+      if(/ssd|固態|nvme|pcie/.test(t)) return '💽';
+      if(/usb|隨身碟|flash/.test(t)) return '🔌';
+      if(/mouse|滑鼠|マウス/.test(t)) return '🖱️';
+      if(/keyboard|鍵盤/.test(t)) return '⌨️';
+      if(/clean|清潔|クリーナー/.test(t)) return '🧼';
+      if(/discount|折扣|値引|割引/.test(t)) return '🏷️';
+      return '📦';
+    }
+    function classifyReceiptItem(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '主商品';
+      if(/ram|記憶體|ssd|hdd|nvme|pcie|memory|メモリ/.test(t)) return '電腦零組件';
+      if(/usb|mouse|滑鼠|keyboard|鍵盤|clean|清潔|耳機|headset|cable|線/.test(t)) return '配件';
+      if(/discount|折扣|値引|割引/.test(t)) return '折扣';
+      if(/贈|gift|free|0元/.test(t)) return '贈品';
+      return category || '未分類';
+    }
+    function buildReceiptRawText(record, lines) {
+      const fromLines = lines.map((x, i) => `${i+1}. ${x.originalName || x.name} / ${x.translatedName || ''} / qty=${x.qty} / unit=${x.unitPrice} / subtotal=${x.subtotal}`).join('\n');
+      return String(record.ocrText || record.rawText || record.rawOcrText || record.note || fromLines || '').trim();
+    }
+    function buildReceiptItemsHtml(record) {
+      const lines = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY');
+      if(!lines.length) return '';
+      const itemCount = getReceiptItemCount(record);
+      const subtotal = Math.round(lines.reduce((sum, x) => sum + Number(x.subtotal || 0), 0) * 100) / 100;
+      const receiptTotal = Number(record.amount || 0);
+      const diff = Math.round((receiptTotal - subtotal) * 100) / 100;
+      const diffAbs = Math.abs(diff);
+      const currency = record.currency || lines[0]?.currency || 'JPY';
+      const cats = [...new Set(lines.map(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)))];
+      const chips = cats.map(c => `<span class="receipt-chip">${escapeHtml(c)}｜${lines.filter(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)===c).length}</span>`).join('');
+      const rows = lines.map((x, idx) => {
+        const translated = x.translatedName || x.name || x.normalizedName || x.originalName;
+        const original = x.originalName && x.originalName !== translated ? x.originalName : '';
+        const cat = classifyReceiptItem(translated || original, x.category);
+        const icon = getReceiptCategoryIcon(translated || original, cat);
+        const langLabel = ({ja:'日文', en:'英文', zh:'中文', mixed:'混合', unknown:'未判定'})[x.language] || x.language || '未判定';
+        const confidence = Number(x.confidence || x.confidenceScore || 0) || (original ? 92 : 88);
+        return `
+          <details class="receipt-product-card" data-receipt-item="${escapeHtml((translated+' '+original+' '+cat).toLowerCase())}">
+            <summary>
+              <div>
+                <div class="receipt-product-name">${idx+1}. ${icon} ${escapeHtml(translated || original || '未命名商品')}</div>
+                <div class="receipt-product-meta">數量：${escapeHtml(x.qty)}｜單價：${formatMoney(x.unitPrice, currency)}｜<span class="receipt-cat-tag">${escapeHtml(cat)}</span> <span class="receipt-confidence">AI ${Math.round(confidence)}%</span></div>
+              </div>
+              <div class="receipt-product-amount">${formatMoney(x.subtotal, currency)}</div>
+            </summary>
+            <div class="receipt-product-detail">
+              <div class="receipt-detail-row"><b>OCR原文</b><span>${escapeHtml(original || x.originalName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>繁中名稱</b><span>${escapeHtml(translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>標準化</b><span>${escapeHtml(x.normalizedName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>分類</b><span>${escapeHtml(cat)}｜語言：${escapeHtml(langLabel)}</span></div>
+              <div class="receipt-detail-row"><b>金額</b><span>數量 ${escapeHtml(x.qty)} × ${formatMoney(x.unitPrice, currency)} = ${formatMoney(x.subtotal, currency)}</span></div>
+              ${x.note ? `<div class="receipt-detail-row"><b>備註</b><span>${escapeHtml(x.note)}</span></div>` : ''}
+            </div>
+          </details>`;
+      }).join('');
+      const raw = buildReceiptRawText(record, lines);
+      const reconcileText = diffAbs <= 0.5 ? '商品加總與收據總額相符。' : '差額可能來自稅額、折扣、四捨五入、手寫加價或 AI/OCR 誤差，建議核對黃色提示項。';
+      return `
+        <details class="receipt-viewer-box" open>
+          <summary class="receipt-viewer-summary">
+            <span class="receipt-viewer-title">🧾 Enterprise Receipt Viewer <span class="receipt-translation-badge">${lines.length} 項 / ${itemCount} 件</span></span>
+            <span class="receipt-viewer-total">${formatMoney(receiptTotal, currency)}</span>
+          </summary>
+          <div class="receipt-viewer-body">
+            <div class="receipt-metric-grid">
+              <div class="receipt-metric"><div class="k">收據總額</div><div class="v">${formatMoney(receiptTotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">商品合計</div><div class="v">${formatMoney(subtotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">差額</div><div class="v ${diffAbs <= 0.5 ? 'receipt-check-ok':'receipt-check-warn'}">${formatMoney(diff, currency)}</div></div>
+            </div>
+            <div class="receipt-chip-row no-scrollbar">${chips}</div>
+            <div class="receipt-toolbar"><input placeholder="搜尋此收據商品，例如 SSD、RAM、USB" oninput="filterReceiptViewerItems(this)"></div>
+            <div class="receipt-product-list">${rows}</div>
+            <div class="receipt-reconcile">
+              <div class="receipt-reconcile-title"><span>${diffAbs <= 0.5 ? '✅ 核對通過':'⚠️ 核對分析'}</span><span>${formatMoney(diff, currency)}</span></div>
+              <p>${escapeHtml(reconcileText)}</p>
+            </div>
+            <details class="receipt-ocr-details">
+              <summary>👁 查看 OCR 原文 / AI 文字備援資料</summary>
+              <div class="receipt-ocr-raw">${escapeHtml(raw || '目前沒有 OCR 原文。')}</div>
+            </details>
+          </div>
+        </details>`;
+    }
+    function filterReceiptViewerItems(input) {
+      const box = input.closest('.receipt-viewer-body');
+      if(!box) return;
+      const q = String(input.value || '').toLowerCase().trim();
+      box.querySelectorAll('[data-receipt-item]').forEach(el => {
+        el.style.display = (!q || el.getAttribute('data-receipt-item').includes(q)) ? '' : 'none';
+      });
+    }
+
+  </script>
   <!-- 導入高質感 Lucide 向量圖標 -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest">
+
+    /* ===============================
+       V17.6 Enterprise Receipt Viewer
+       逐項條列 + 核對分析 + OCR 收合
+       =============================== */
+    function getReceiptCategoryIcon(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '💻';
+      if(/ram|記憶體|ddr|memory|メモリ/.test(t)) return '💾';
+      if(/ssd|固態|nvme|pcie/.test(t)) return '💽';
+      if(/usb|隨身碟|flash/.test(t)) return '🔌';
+      if(/mouse|滑鼠|マウス/.test(t)) return '🖱️';
+      if(/keyboard|鍵盤/.test(t)) return '⌨️';
+      if(/clean|清潔|クリーナー/.test(t)) return '🧼';
+      if(/discount|折扣|値引|割引/.test(t)) return '🏷️';
+      return '📦';
+    }
+    function classifyReceiptItem(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '主商品';
+      if(/ram|記憶體|ssd|hdd|nvme|pcie|memory|メモリ/.test(t)) return '電腦零組件';
+      if(/usb|mouse|滑鼠|keyboard|鍵盤|clean|清潔|耳機|headset|cable|線/.test(t)) return '配件';
+      if(/discount|折扣|値引|割引/.test(t)) return '折扣';
+      if(/贈|gift|free|0元/.test(t)) return '贈品';
+      return category || '未分類';
+    }
+    function buildReceiptRawText(record, lines) {
+      const fromLines = lines.map((x, i) => `${i+1}. ${x.originalName || x.name} / ${x.translatedName || ''} / qty=${x.qty} / unit=${x.unitPrice} / subtotal=${x.subtotal}`).join('\n');
+      return String(record.ocrText || record.rawText || record.rawOcrText || record.note || fromLines || '').trim();
+    }
+    function buildReceiptItemsHtml(record) {
+      const lines = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY');
+      if(!lines.length) return '';
+      const itemCount = getReceiptItemCount(record);
+      const subtotal = Math.round(lines.reduce((sum, x) => sum + Number(x.subtotal || 0), 0) * 100) / 100;
+      const receiptTotal = Number(record.amount || 0);
+      const diff = Math.round((receiptTotal - subtotal) * 100) / 100;
+      const diffAbs = Math.abs(diff);
+      const currency = record.currency || lines[0]?.currency || 'JPY';
+      const cats = [...new Set(lines.map(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)))];
+      const chips = cats.map(c => `<span class="receipt-chip">${escapeHtml(c)}｜${lines.filter(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)===c).length}</span>`).join('');
+      const rows = lines.map((x, idx) => {
+        const translated = x.translatedName || x.name || x.normalizedName || x.originalName;
+        const original = x.originalName && x.originalName !== translated ? x.originalName : '';
+        const cat = classifyReceiptItem(translated || original, x.category);
+        const icon = getReceiptCategoryIcon(translated || original, cat);
+        const langLabel = ({ja:'日文', en:'英文', zh:'中文', mixed:'混合', unknown:'未判定'})[x.language] || x.language || '未判定';
+        const confidence = Number(x.confidence || x.confidenceScore || 0) || (original ? 92 : 88);
+        return `
+          <details class="receipt-product-card" data-receipt-item="${escapeHtml((translated+' '+original+' '+cat).toLowerCase())}">
+            <summary>
+              <div>
+                <div class="receipt-product-name">${idx+1}. ${icon} ${escapeHtml(translated || original || '未命名商品')}</div>
+                <div class="receipt-product-meta">數量：${escapeHtml(x.qty)}｜單價：${formatMoney(x.unitPrice, currency)}｜<span class="receipt-cat-tag">${escapeHtml(cat)}</span> <span class="receipt-confidence">AI ${Math.round(confidence)}%</span></div>
+              </div>
+              <div class="receipt-product-amount">${formatMoney(x.subtotal, currency)}</div>
+            </summary>
+            <div class="receipt-product-detail">
+              <div class="receipt-detail-row"><b>OCR原文</b><span>${escapeHtml(original || x.originalName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>繁中名稱</b><span>${escapeHtml(translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>標準化</b><span>${escapeHtml(x.normalizedName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>分類</b><span>${escapeHtml(cat)}｜語言：${escapeHtml(langLabel)}</span></div>
+              <div class="receipt-detail-row"><b>金額</b><span>數量 ${escapeHtml(x.qty)} × ${formatMoney(x.unitPrice, currency)} = ${formatMoney(x.subtotal, currency)}</span></div>
+              ${x.note ? `<div class="receipt-detail-row"><b>備註</b><span>${escapeHtml(x.note)}</span></div>` : ''}
+            </div>
+          </details>`;
+      }).join('');
+      const raw = buildReceiptRawText(record, lines);
+      const reconcileText = diffAbs <= 0.5 ? '商品加總與收據總額相符。' : '差額可能來自稅額、折扣、四捨五入、手寫加價或 AI/OCR 誤差，建議核對黃色提示項。';
+      return `
+        <details class="receipt-viewer-box" open>
+          <summary class="receipt-viewer-summary">
+            <span class="receipt-viewer-title">🧾 Enterprise Receipt Viewer <span class="receipt-translation-badge">${lines.length} 項 / ${itemCount} 件</span></span>
+            <span class="receipt-viewer-total">${formatMoney(receiptTotal, currency)}</span>
+          </summary>
+          <div class="receipt-viewer-body">
+            <div class="receipt-metric-grid">
+              <div class="receipt-metric"><div class="k">收據總額</div><div class="v">${formatMoney(receiptTotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">商品合計</div><div class="v">${formatMoney(subtotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">差額</div><div class="v ${diffAbs <= 0.5 ? 'receipt-check-ok':'receipt-check-warn'}">${formatMoney(diff, currency)}</div></div>
+            </div>
+            <div class="receipt-chip-row no-scrollbar">${chips}</div>
+            <div class="receipt-toolbar"><input placeholder="搜尋此收據商品，例如 SSD、RAM、USB" oninput="filterReceiptViewerItems(this)"></div>
+            <div class="receipt-product-list">${rows}</div>
+            <div class="receipt-reconcile">
+              <div class="receipt-reconcile-title"><span>${diffAbs <= 0.5 ? '✅ 核對通過':'⚠️ 核對分析'}</span><span>${formatMoney(diff, currency)}</span></div>
+              <p>${escapeHtml(reconcileText)}</p>
+            </div>
+            <details class="receipt-ocr-details">
+              <summary>👁 查看 OCR 原文 / AI 文字備援資料</summary>
+              <div class="receipt-ocr-raw">${escapeHtml(raw || '目前沒有 OCR 原文。')}</div>
+            </details>
+          </div>
+        </details>`;
+    }
+    function filterReceiptViewerItems(input) {
+      const box = input.closest('.receipt-viewer-body');
+      if(!box) return;
+      const q = String(input.value || '').toLowerCase().trim();
+      box.querySelectorAll('[data-receipt-item]').forEach(el => {
+        el.style.display = (!q || el.getAttribute('data-receipt-item').includes(q)) ? '' : 'none';
+      });
+    }
+
+  </script>
   <style>
     :root {
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -530,7 +740,7 @@
 
 
 
-    /* V17.2 Enterprise Stable：旅行模式與穩定版提示 */
+    /* V17.5 AI Daily Summary：旅行模式與穩定版提示 */
     .v172-release-card {
       border-radius: 18px;
       border: 1px solid #bfdbfe;
@@ -558,6 +768,74 @@
       body > *:not(#print-area) { display: none !important; }
       #print-area { display: block !important; }
     }
+  
+    /* V17.5 AI 每日摘要 + 今日旅行儀表板 */
+    .v175-command-card{
+      border-radius:22px;
+      background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#0f766e 100%);
+      color:#fff;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 40px rgba(15,23,42,.16);
+    }
+    .v175-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+    .v175-command-head .k{font-size:9px;font-weight:950;letter-spacing:.18em;color:#bfdbfe;}
+    .v175-command-head .v{margin-top:2px;font-size:14px;font-weight:950;line-height:1.35;color:#fff;}
+    .v175-score{flex:0 0 auto;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18);padding:5px 9px;font-size:11px;font-weight:950;color:#fff;}
+    .v175-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+    .v175-mini{border-radius:15px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);padding:8px;text-align:center;min-height:54px;}
+    .v175-mini .k{font-size:9px;font-weight:900;color:#bae6fd;}
+    .v175-mini .v{margin-top:3px;font-size:11px;font-weight:950;color:#fff;line-height:1.25;}
+    .v175-ai-tip{margin-top:10px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);padding:10px;font-size:11.5px;line-height:1.55;font-weight:800;color:#e0f2fe;}
+    .v175-summary-card{border-radius:18px;border:1px solid #dbeafe;background:linear-gradient(135deg,#eff6ff,#ffffff);padding:12px;}
+    .v175-summary-title{font-size:12px;font-weight:950;color:#0f172a;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .v175-summary-title span:last-child{font-size:10px;font-weight:950;color:#0369a1;border-radius:999px;background:#dbeafe;padding:3px 8px;}
+    .v175-summary-text{margin-top:8px;font-size:11.5px;line-height:1.65;color:#334155;font-weight:750;white-space:pre-line;}
+    .v175-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px;}
+    .v175-actions button{border:0;border-radius:13px;padding:8px 4px;font-size:10.5px;font-weight:950;}
+    @media(max-width:380px){.v175-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+
+
+    /* V17.6 Enterprise Receipt Viewer */
+    .receipt-viewer-box { margin-top: 10px; border: 1px solid #dbeafe; background: linear-gradient(180deg,#ffffff,#f8fbff); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px -16px rgba(15,23,42,.25); }
+    .receipt-viewer-summary { list-style: none; cursor: pointer; padding: 10px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .receipt-viewer-summary::-webkit-details-marker { display:none; }
+    .receipt-viewer-summary:after { content:'展開'; color:#0284c7; font-size:10px; font-weight:950; }
+    .receipt-viewer-box[open] .receipt-viewer-summary:after { content:'收合'; }
+    .receipt-viewer-title { font-size:11.5px; font-weight:950; color:#0f172a; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .receipt-viewer-total { text-align:right; font-size:11.5px; font-weight:950; color:#047857; font-family:ui-monospace,monospace; white-space:nowrap; }
+    .receipt-viewer-body { border-top:1px solid #e2e8f0; padding:10px; background:#fff; }
+    .receipt-metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:9px; }
+    .receipt-metric { border-radius:14px; background:#f8fafc; border:1px solid #e2e8f0; padding:8px; text-align:center; }
+    .receipt-metric .k { font-size:9px; font-weight:900; color:#64748b; }
+    .receipt-metric .v { margin-top:2px; font-size:11.5px; font-weight:950; color:#0f172a; }
+    .receipt-check-ok { color:#047857 !important; }
+    .receipt-check-warn { color:#b45309 !important; }
+    .receipt-toolbar { display:flex; gap:6px; align-items:center; margin-bottom:8px; }
+    .receipt-toolbar input { flex:1; border:1px solid #cbd5e1; border-radius:12px; padding:8px 10px; font-size:11px; font-weight:800; outline:none; }
+    .receipt-chip-row { display:flex; gap:5px; overflow-x:auto; padding-bottom:3px; margin-bottom:8px; }
+    .receipt-chip { flex:0 0 auto; border:1px solid #dbeafe; background:#eff6ff; color:#1d4ed8; border-radius:999px; padding:4px 8px; font-size:9.5px; font-weight:950; }
+    .receipt-product-card { border:1px solid #e2e8f0; border-radius:16px; overflow:hidden; background:#fff; margin-bottom:8px; }
+    .receipt-product-card summary { list-style:none; cursor:pointer; padding:10px; display:grid; grid-template-columns:1fr auto; gap:8px; align-items:start; }
+    .receipt-product-card summary::-webkit-details-marker{display:none;}
+    .receipt-product-name { font-size:11.5px; line-height:1.35; font-weight:950; color:#0f172a; }
+    .receipt-product-meta { margin-top:3px; font-size:9.5px; line-height:1.35; color:#64748b; font-weight:850; }
+    .receipt-product-amount { text-align:right; font-size:11.5px; font-weight:950; color:#047857; font-family:ui-monospace,monospace; white-space:nowrap; }
+    .receipt-product-detail { border-top:1px solid #f1f5f9; background:#f8fafc; padding:9px 10px; display:grid; gap:6px; }
+    .receipt-detail-row { display:grid; grid-template-columns:72px 1fr; gap:8px; font-size:10.5px; line-height:1.45; }
+    .receipt-detail-row b { color:#64748b; font-weight:950; }
+    .receipt-detail-row span { color:#0f172a; font-weight:850; }
+    .receipt-cat-tag { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px 6px; background:#f1f5f9; color:#334155; font-size:8.5px; font-weight:950; }
+    .receipt-confidence { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px 6px; background:#dcfce7; color:#15803d; font-size:8.5px; font-weight:950; }
+    .receipt-reconcile { border-radius:14px; border:1px solid #fde68a; background:#fffbeb; padding:9px; margin-top:8px; }
+    .receipt-reconcile-title { font-size:10.5px; font-weight:950; color:#92400e; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .receipt-reconcile p { margin:4px 0 0; font-size:10px; line-height:1.45; color:#92400e; font-weight:800; }
+    .receipt-ocr-details { margin-top:8px; border-radius:14px; border:1px solid #e2e8f0; background:#f8fafc; overflow:hidden; }
+    .receipt-ocr-details summary { list-style:none; cursor:pointer; padding:9px 10px; font-size:10.5px; font-weight:950; color:#475569; }
+    .receipt-ocr-details summary::-webkit-details-marker{display:none;}
+    .receipt-ocr-raw { border-top:1px solid #e2e8f0; padding:9px 10px; font-size:10px; line-height:1.5; color:#475569; white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:auto; }
+
   </style>
 </head>
 <body>
@@ -627,11 +905,11 @@
         <!-- V13.5 Ultimate AI 旅行儀表板 -->
         <div id="v135-dashboard" class="space-y-3"></div>
 
-        <!-- V17.2 Enterprise Stable：出國正式版提示與旅行模式 -->
+        <!-- V17.5 AI Daily Summary：出國正式版提示與旅行模式 -->
         <div class="v172-release-card">
           <div class="flex items-start justify-between gap-2">
             <div>
-              <div class="v172-release-title">🏆 V17.2 Enterprise Stable｜2026 關西自由行正式版</div>
+              <div class="v172-release-title">🏆 V17.5 AI Daily Summary｜2026 關西自由行正式版</div>
               <div class="v172-release-sub">採穩定優先策略：首頁減量、Travel Memory 獨立模組、收據 AI 佇列提示、預算與 SOS 保持快速入口。旅行期間建議只修 Bug，不再新增大型功能。</div>
             </div>
             <span class="pill bg-emerald-50 text-emerald-700">Stable</span>
@@ -4550,7 +4828,75 @@
       const records = getExpenseRecords().filter(r => String(r.day) === String(day));
       const itemRows = data.items.map((item, idx) => `<article><h3>${idx+1}. ${escapeHtml(item.time)}｜${escapeHtml(item.name)}</h3><p>${escapeHtml(item.note)}</p><p><b>地址：</b>${escapeHtml(item.addr)}</p><p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.addr)}">Google Map</a></p></article>`).join('');
       const receiptRows = records.length ? records.map(r => `<li>${escapeHtml(r.item)}｜${formatMoney(r.amount, r.currency)}｜${escapeHtml(r.category)}</li>`).join('') : '<li>尚無今日收據。</li>';
-      return `<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D${day} 離線備援包</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.6}.wrap{max-width:760px;margin:auto;padding:18px}h1{font-size:22px}h2{font-size:17px;margin-top:22px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}article{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}a{color:#0369a1;font-weight:800}.sos{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px}.big{font-size:22px;font-weight:900;color:#7f1d1d}@media print{body{background:white}.wrap{max-width:none}}</style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main></body></html>`;
+      return `<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D${day} 離線備援包</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.6}.wrap{max-width:760px;margin:auto;padding:18px}h1{font-size:22px}h2{font-size:17px;margin-top:22px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}article{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}a{color:#0369a1;font-weight:800}.sos{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px}.big{font-size:22px;font-weight:900;color:#7f1d1d}@media print{body{background:white}.wrap{max-width:none}}
+    /* V17.5 AI 每日摘要 + 今日旅行儀表板 */
+    .v175-command-card{
+      border-radius:22px;
+      background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#0f766e 100%);
+      color:#fff;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 40px rgba(15,23,42,.16);
+    }
+    .v175-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+    .v175-command-head .k{font-size:9px;font-weight:950;letter-spacing:.18em;color:#bfdbfe;}
+    .v175-command-head .v{margin-top:2px;font-size:14px;font-weight:950;line-height:1.35;color:#fff;}
+    .v175-score{flex:0 0 auto;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18);padding:5px 9px;font-size:11px;font-weight:950;color:#fff;}
+    .v175-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+    .v175-mini{border-radius:15px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);padding:8px;text-align:center;min-height:54px;}
+    .v175-mini .k{font-size:9px;font-weight:900;color:#bae6fd;}
+    .v175-mini .v{margin-top:3px;font-size:11px;font-weight:950;color:#fff;line-height:1.25;}
+    .v175-ai-tip{margin-top:10px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);padding:10px;font-size:11.5px;line-height:1.55;font-weight:800;color:#e0f2fe;}
+    .v175-summary-card{border-radius:18px;border:1px solid #dbeafe;background:linear-gradient(135deg,#eff6ff,#ffffff);padding:12px;}
+    .v175-summary-title{font-size:12px;font-weight:950;color:#0f172a;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .v175-summary-title span:last-child{font-size:10px;font-weight:950;color:#0369a1;border-radius:999px;background:#dbeafe;padding:3px 8px;}
+    .v175-summary-text{margin-top:8px;font-size:11.5px;line-height:1.65;color:#334155;font-weight:750;white-space:pre-line;}
+    .v175-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px;}
+    .v175-actions button{border:0;border-radius:13px;padding:8px 4px;font-size:10.5px;font-weight:950;}
+    @media(max-width:380px){.v175-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+
+
+    /* V17.6 Enterprise Receipt Viewer */
+    .receipt-viewer-box { margin-top: 10px; border: 1px solid #dbeafe; background: linear-gradient(180deg,#ffffff,#f8fbff); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px -16px rgba(15,23,42,.25); }
+    .receipt-viewer-summary { list-style: none; cursor: pointer; padding: 10px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .receipt-viewer-summary::-webkit-details-marker { display:none; }
+    .receipt-viewer-summary:after { content:'展開'; color:#0284c7; font-size:10px; font-weight:950; }
+    .receipt-viewer-box[open] .receipt-viewer-summary:after { content:'收合'; }
+    .receipt-viewer-title { font-size:11.5px; font-weight:950; color:#0f172a; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .receipt-viewer-total { text-align:right; font-size:11.5px; font-weight:950; color:#047857; font-family:ui-monospace,monospace; white-space:nowrap; }
+    .receipt-viewer-body { border-top:1px solid #e2e8f0; padding:10px; background:#fff; }
+    .receipt-metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:9px; }
+    .receipt-metric { border-radius:14px; background:#f8fafc; border:1px solid #e2e8f0; padding:8px; text-align:center; }
+    .receipt-metric .k { font-size:9px; font-weight:900; color:#64748b; }
+    .receipt-metric .v { margin-top:2px; font-size:11.5px; font-weight:950; color:#0f172a; }
+    .receipt-check-ok { color:#047857 !important; }
+    .receipt-check-warn { color:#b45309 !important; }
+    .receipt-toolbar { display:flex; gap:6px; align-items:center; margin-bottom:8px; }
+    .receipt-toolbar input { flex:1; border:1px solid #cbd5e1; border-radius:12px; padding:8px 10px; font-size:11px; font-weight:800; outline:none; }
+    .receipt-chip-row { display:flex; gap:5px; overflow-x:auto; padding-bottom:3px; margin-bottom:8px; }
+    .receipt-chip { flex:0 0 auto; border:1px solid #dbeafe; background:#eff6ff; color:#1d4ed8; border-radius:999px; padding:4px 8px; font-size:9.5px; font-weight:950; }
+    .receipt-product-card { border:1px solid #e2e8f0; border-radius:16px; overflow:hidden; background:#fff; margin-bottom:8px; }
+    .receipt-product-card summary { list-style:none; cursor:pointer; padding:10px; display:grid; grid-template-columns:1fr auto; gap:8px; align-items:start; }
+    .receipt-product-card summary::-webkit-details-marker{display:none;}
+    .receipt-product-name { font-size:11.5px; line-height:1.35; font-weight:950; color:#0f172a; }
+    .receipt-product-meta { margin-top:3px; font-size:9.5px; line-height:1.35; color:#64748b; font-weight:850; }
+    .receipt-product-amount { text-align:right; font-size:11.5px; font-weight:950; color:#047857; font-family:ui-monospace,monospace; white-space:nowrap; }
+    .receipt-product-detail { border-top:1px solid #f1f5f9; background:#f8fafc; padding:9px 10px; display:grid; gap:6px; }
+    .receipt-detail-row { display:grid; grid-template-columns:72px 1fr; gap:8px; font-size:10.5px; line-height:1.45; }
+    .receipt-detail-row b { color:#64748b; font-weight:950; }
+    .receipt-detail-row span { color:#0f172a; font-weight:850; }
+    .receipt-cat-tag { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px 6px; background:#f1f5f9; color:#334155; font-size:8.5px; font-weight:950; }
+    .receipt-confidence { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px 6px; background:#dcfce7; color:#15803d; font-size:8.5px; font-weight:950; }
+    .receipt-reconcile { border-radius:14px; border:1px solid #fde68a; background:#fffbeb; padding:9px; margin-top:8px; }
+    .receipt-reconcile-title { font-size:10.5px; font-weight:950; color:#92400e; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .receipt-reconcile p { margin:4px 0 0; font-size:10px; line-height:1.45; color:#92400e; font-weight:800; }
+    .receipt-ocr-details { margin-top:8px; border-radius:14px; border:1px solid #e2e8f0; background:#f8fafc; overflow:hidden; }
+    .receipt-ocr-details summary { list-style:none; cursor:pointer; padding:9px 10px; font-size:10.5px; font-weight:950; color:#475569; }
+    .receipt-ocr-details summary::-webkit-details-marker{display:none;}
+    .receipt-ocr-raw { border-top:1px solid #e2e8f0; padding:9px 10px; font-size:10px; line-height:1.5; color:#475569; white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:auto; }
+
+  </style></head><body><main class="wrap"><h1>2026 京阪奈自由行｜D${day} 離線備援包</h1><p><b>${escapeHtml(tripDateLabels[day] || '')}</b>｜${escapeHtml(data.title)}</p><section><h2>住宿</h2><article><b>JS暁宅・靜谷</b><br>〒557-0031 大阪府大阪市西成区鶴見橋1-15-21<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_COORDS)}">住宿 Google Map</a></article></section><section><h2>今日行程</h2>${itemRows}</section><section><h2>緊急模式</h2><div class="sos"><div class="big">助けてください。</div>請幫助我。<br><br><div class="big">ホテルまでお願いします。</div>請載我回飯店。<br><br><div class="big">病院へ連れて行ってください。</div>請帶我去醫院。<br><br>警察 110｜消防/救護 119</div></section><section><h2>今日收據摘要</h2><ul>${receiptRows}</ul></section></main></body></html>`;
     }
 
     function downloadBlob(filename, content, type='text/plain;charset=utf-8') {
@@ -4907,6 +5253,101 @@
       const hhmm = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
       return data.items.find(i => i.time >= hhmm) || data.items[data.items.length - 1];
     }
+
+    // =============================
+    // V17.6：Enterprise Receipt Viewer
+    // =============================
+    function v175TodayMemoryCount(day=currentDay){
+      try {
+        if (typeof getTravelMemories !== 'function') return 0;
+        return getTravelMemories().filter(m => String(m.day) === String(day)).length;
+      } catch(e){ return 0; }
+    }
+    function v175VisitedCount(day=currentDay){
+      try {
+        const total = travelData?.[day]?.items?.length || 0;
+        const state = getVisitedState?.()[`D${day}`] || {};
+        let count = 0;
+        for(let i=0;i<total;i++){ if(state[i]) count++; }
+        return {count,total};
+      } catch(e){ return {count:0,total:0}; }
+    }
+    function v175TravelScore(day=currentDay, exp=v135ExpenseSummary(day), w=getTripWeatherSnapshot(day)){
+      const v = v175VisitedCount(day);
+      const progress = v.total ? (v.count/v.total) : 0;
+      let score = 75;
+      score += Math.round(progress * 15);
+      if((w?.rain||0) >= 60) score -= 4;
+      if((exp.dayRecords?.length||0) > 0) score += 4;
+      if(v175TodayMemoryCount(day) > 0) score += 3;
+      return Math.max(60, Math.min(99, score));
+    }
+    function v175AiTip(day=currentDay, exp=v135ExpenseSummary(day), w=getTripWeatherSnapshot(day), next=v135NextStop(day)){
+      const tips=[];
+      if(w){
+        if(Number(w.rain||0) >= 60) tips.push(`☔ ${w.city.name} 今日降雨率 ${w.rain}%，建議把戶外停留壓短，雨具放在隨手可拿位置。`);
+        else if(Number(w.rain||0) >= 30) tips.push(`🌂 ${w.city.name} 今日有短暫陣雨可能，晴雨兩用傘請放包包外層。`);
+        else tips.push(`🌤 ${w.city.name} 天氣相對穩定，重點是防曬與補水。`);
+      } else tips.push('🌤 天氣資料讀取後，系統會自動更新今日提醒。');
+      if(next) tips.push(`📍 下一站是 ${next.time}｜${next.name}，建議先確認導航與票券 QR。`);
+      if((exp.dayRecords?.length||0)===0) tips.push('🧾 今日尚無收據，購物或用餐後可用快速拍收據先入帳。');
+      else tips.push(`💰 今日已記錄 ${exp.dayRecords.length} 張收據，合計 ${v135MoneyJpy(exp.dayJpy)}。`);
+      const hour = new Date().getHours();
+      if(hour >= 21) tips.push('🛡 已進入夜間返程時段，請走主要道路，必要時直接叫車回民宿。');
+      return tips.join('\n');
+    }
+    function v175DailySummaryText(day=currentDay){
+      const exp = v135ExpenseSummary(day);
+      const mem = v175TodayMemoryCount(day);
+      const v = v175VisitedCount(day);
+      const w = getTripWeatherSnapshot(day);
+      const data = travelData?.[day] || travelData?.[1];
+      const next = v135NextStop(day);
+      const profile = getDayTripProfile(day);
+      return `📌 D${day} 每日摘要｜${tripDateLabels[day] || ''}
+行程主軸：${profile.theme}
+足跡完成：${v.count}/${v.total} 站
+今日收據：${exp.dayRecords.length} 張
+今日花費：${v135MoneyJpy(exp.dayJpy)}（約 ${v135MoneyTwdFromJpy(exp.dayJpy)}）
+旅行照片：${mem} 張
+天氣：${w ? `${w.city.name} ${w.text} ${w.min}-${w.max}°C｜降雨 ${w.rain}%` : '讀取後更新'}
+下一站：${next ? `${next.time}｜${next.name}` : '今日行程已接近尾聲'}
+AI 提醒：${v175AiTip(day, exp, w, next).replace(/\n/g,' ')}`;
+    }
+    function v175CommandCenterHtml(day=currentDay, exp=v135ExpenseSummary(day), w=getTripWeatherSnapshot(day), next=v135NextStop(day), queueCount=0){
+      const mem = v175TodayMemoryCount(day);
+      const v = v175VisitedCount(day);
+      const score = v175TravelScore(day, exp, w);
+      const tip = v175AiTip(day, exp, w, next);
+      return `
+        <section class="v175-command-card">
+          <div class="v175-command-head">
+            <div><div class="k">TODAY TRAVEL COMMAND CENTER</div><div class="v">D${day} 今日旅行儀表板</div></div>
+            <div class="v175-score">AI ${score}分</div>
+          </div>
+          <div class="v175-mini-grid">
+            <div class="v175-mini"><div class="k">足跡</div><div class="v">${v.count}/${v.total}站</div></div>
+            <div class="v175-mini"><div class="k">收據</div><div class="v">${exp.dayRecords.length}張</div></div>
+            <div class="v175-mini"><div class="k">照片</div><div class="v">${mem}張</div></div>
+            <div class="v175-mini"><div class="k">AI佇列</div><div class="v">${queueCount ? `${queueCount}筆待補` : '正常'}</div></div>
+          </div>
+          <div class="v175-ai-tip">${escapeHtml(tip)}</div>
+        </section>`;
+    }
+    function v175SummaryCardHtml(day=currentDay){
+      const text = v175DailySummaryText(day);
+      return `
+        <section class="v175-summary-card">
+          <div class="v175-summary-title"><strong>🤖 AI 每日摘要</strong><span>D${day}</span></div>
+          <div class="v175-summary-text">${escapeHtml(text)}</div>
+          <div class="v175-actions">
+            <button onclick="copyText(v175DailySummaryText(currentDay), 'AI 每日摘要已複製')" class="tap bg-slate-900 text-white">複製摘要</button>
+            <button onclick="generateV135DailyJournal()" class="tap bg-sky-600 text-white">產生日誌</button>
+            <button onclick="switchMainTab('memory')" class="tap bg-white border border-slate-200 text-slate-700">看回憶</button>
+          </div>
+        </section>`;
+    }
+
     function renderV135Dashboard() {
       const el = document.getElementById('v135-dashboard');
       if(!el) return;
@@ -4924,9 +5365,9 @@
         <section class="v17-compact-hero">
           <div class="v17-topbar">
             <div>
-              <div class="v17-eyebrow">AI TRAVEL DASHBOARD｜V17.2 ENTERPRISE STABLE</div>
+              <div class="v17-eyebrow">AI TRAVEL DASHBOARD｜V17.5 DAILY SUMMARY</div>
               <div class="v17-title">今天 D${day}｜${tripDateLabels[day]}</div>
-              <div class="v17-sub">出國正式版：天氣、下一站、今日花費、快速拍收據、AI 佇列與 SOS 優先顯示。</div>
+              <div class="v17-sub">V17.5：今日旅行儀表板、AI 每日摘要、天氣、下一站、花費、收據、回憶與 SOS 集中顯示。</div>
             </div>
             <span class="v17-mode">${night ? '🌙 夜間' : '🟢 白天'}</span>
           </div>
@@ -4945,6 +5386,9 @@
             <button onclick="switchMainTab('emergency')" class="tap danger">🆘<span>SOS</span></button>
           </div>
         </section>
+
+        ${v175CommandCenterHtml(day, exp, w, next, queueCount)}
+        ${v175SummaryCardHtml(day)}
 
         <div class="v17-stack">
           <details class="v17-details">
@@ -5332,6 +5776,111 @@ SOS：日本警察110、救護消防119`;
         el.classList.add('opacity-0'); el.classList.remove('opacity-100');
       }, 2500);
     }
+  
+
+    /* ===============================
+       V17.6 Enterprise Receipt Viewer
+       逐項條列 + 核對分析 + OCR 收合
+       =============================== */
+    function getReceiptCategoryIcon(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '💻';
+      if(/ram|記憶體|ddr|memory|メモリ/.test(t)) return '💾';
+      if(/ssd|固態|nvme|pcie/.test(t)) return '💽';
+      if(/usb|隨身碟|flash/.test(t)) return '🔌';
+      if(/mouse|滑鼠|マウス/.test(t)) return '🖱️';
+      if(/keyboard|鍵盤/.test(t)) return '⌨️';
+      if(/clean|清潔|クリーナー/.test(t)) return '🧼';
+      if(/discount|折扣|値引|割引/.test(t)) return '🏷️';
+      return '📦';
+    }
+    function classifyReceiptItem(name, category='') {
+      const t = String((category || '') + ' ' + (name || '')).toLowerCase();
+      if(/notebook|laptop|筆電|筆記型|cyborg|電腦|pc/.test(t)) return '主商品';
+      if(/ram|記憶體|ssd|hdd|nvme|pcie|memory|メモリ/.test(t)) return '電腦零組件';
+      if(/usb|mouse|滑鼠|keyboard|鍵盤|clean|清潔|耳機|headset|cable|線/.test(t)) return '配件';
+      if(/discount|折扣|値引|割引/.test(t)) return '折扣';
+      if(/贈|gift|free|0元/.test(t)) return '贈品';
+      return category || '未分類';
+    }
+    function buildReceiptRawText(record, lines) {
+      const fromLines = lines.map((x, i) => `${i+1}. ${x.originalName || x.name} / ${x.translatedName || ''} / qty=${x.qty} / unit=${x.unitPrice} / subtotal=${x.subtotal}`).join('\n');
+      return String(record.ocrText || record.rawText || record.rawOcrText || record.note || fromLines || '').trim();
+    }
+    function buildReceiptItemsHtml(record) {
+      const lines = normalizeReceiptItemLines(record?.itemLines || [], record?.currency || 'JPY');
+      if(!lines.length) return '';
+      const itemCount = getReceiptItemCount(record);
+      const subtotal = Math.round(lines.reduce((sum, x) => sum + Number(x.subtotal || 0), 0) * 100) / 100;
+      const receiptTotal = Number(record.amount || 0);
+      const diff = Math.round((receiptTotal - subtotal) * 100) / 100;
+      const diffAbs = Math.abs(diff);
+      const currency = record.currency || lines[0]?.currency || 'JPY';
+      const cats = [...new Set(lines.map(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)))];
+      const chips = cats.map(c => `<span class="receipt-chip">${escapeHtml(c)}｜${lines.filter(x => classifyReceiptItem(x.translatedName || x.name || x.originalName, x.category)===c).length}</span>`).join('');
+      const rows = lines.map((x, idx) => {
+        const translated = x.translatedName || x.name || x.normalizedName || x.originalName;
+        const original = x.originalName && x.originalName !== translated ? x.originalName : '';
+        const cat = classifyReceiptItem(translated || original, x.category);
+        const icon = getReceiptCategoryIcon(translated || original, cat);
+        const langLabel = ({ja:'日文', en:'英文', zh:'中文', mixed:'混合', unknown:'未判定'})[x.language] || x.language || '未判定';
+        const confidence = Number(x.confidence || x.confidenceScore || 0) || (original ? 92 : 88);
+        return `
+          <details class="receipt-product-card" data-receipt-item="${escapeHtml((translated+' '+original+' '+cat).toLowerCase())}">
+            <summary>
+              <div>
+                <div class="receipt-product-name">${idx+1}. ${icon} ${escapeHtml(translated || original || '未命名商品')}</div>
+                <div class="receipt-product-meta">數量：${escapeHtml(x.qty)}｜單價：${formatMoney(x.unitPrice, currency)}｜<span class="receipt-cat-tag">${escapeHtml(cat)}</span> <span class="receipt-confidence">AI ${Math.round(confidence)}%</span></div>
+              </div>
+              <div class="receipt-product-amount">${formatMoney(x.subtotal, currency)}</div>
+            </summary>
+            <div class="receipt-product-detail">
+              <div class="receipt-detail-row"><b>OCR原文</b><span>${escapeHtml(original || x.originalName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>繁中名稱</b><span>${escapeHtml(translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>標準化</b><span>${escapeHtml(x.normalizedName || translated || '')}</span></div>
+              <div class="receipt-detail-row"><b>分類</b><span>${escapeHtml(cat)}｜語言：${escapeHtml(langLabel)}</span></div>
+              <div class="receipt-detail-row"><b>金額</b><span>數量 ${escapeHtml(x.qty)} × ${formatMoney(x.unitPrice, currency)} = ${formatMoney(x.subtotal, currency)}</span></div>
+              ${x.note ? `<div class="receipt-detail-row"><b>備註</b><span>${escapeHtml(x.note)}</span></div>` : ''}
+            </div>
+          </details>`;
+      }).join('');
+      const raw = buildReceiptRawText(record, lines);
+      const reconcileText = diffAbs <= 0.5 ? '商品加總與收據總額相符。' : '差額可能來自稅額、折扣、四捨五入、手寫加價或 AI/OCR 誤差，建議核對黃色提示項。';
+      return `
+        <details class="receipt-viewer-box" open>
+          <summary class="receipt-viewer-summary">
+            <span class="receipt-viewer-title">🧾 Enterprise Receipt Viewer <span class="receipt-translation-badge">${lines.length} 項 / ${itemCount} 件</span></span>
+            <span class="receipt-viewer-total">${formatMoney(receiptTotal, currency)}</span>
+          </summary>
+          <div class="receipt-viewer-body">
+            <div class="receipt-metric-grid">
+              <div class="receipt-metric"><div class="k">收據總額</div><div class="v">${formatMoney(receiptTotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">商品合計</div><div class="v">${formatMoney(subtotal, currency)}</div></div>
+              <div class="receipt-metric"><div class="k">差額</div><div class="v ${diffAbs <= 0.5 ? 'receipt-check-ok':'receipt-check-warn'}">${formatMoney(diff, currency)}</div></div>
+            </div>
+            <div class="receipt-chip-row no-scrollbar">${chips}</div>
+            <div class="receipt-toolbar"><input placeholder="搜尋此收據商品，例如 SSD、RAM、USB" oninput="filterReceiptViewerItems(this)"></div>
+            <div class="receipt-product-list">${rows}</div>
+            <div class="receipt-reconcile">
+              <div class="receipt-reconcile-title"><span>${diffAbs <= 0.5 ? '✅ 核對通過':'⚠️ 核對分析'}</span><span>${formatMoney(diff, currency)}</span></div>
+              <p>${escapeHtml(reconcileText)}</p>
+            </div>
+            <details class="receipt-ocr-details">
+              <summary>👁 查看 OCR 原文 / AI 文字備援資料</summary>
+              <div class="receipt-ocr-raw">${escapeHtml(raw || '目前沒有 OCR 原文。')}</div>
+            </details>
+          </div>
+        </details>`;
+    }
+    function filterReceiptViewerItems(input) {
+      const box = input.closest('.receipt-viewer-body');
+      if(!box) return;
+      const q = String(input.value || '').toLowerCase().trim();
+      box.querySelectorAll('[data-receipt-item]').forEach(el => {
+        el.style.display = (!q || el.getAttribute('data-receipt-item').includes(q)) ? '' : 'none';
+      });
+    }
+
   </script>
 </body>
 </html>

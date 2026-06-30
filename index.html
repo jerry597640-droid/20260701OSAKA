@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<!-- V16 Enterprise AI Travel Companion: Dashboard + OCR + Budget + SOS Safety Center + Travel Companion -->
+<!-- V17 Enterprise UI/UX: Compact Dashboard + Progressive Disclosure + Background AI Queue Ready -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>2026 京阪奈盛夏自由行手冊｜V16 Enterprise AI Travel Companion</title>
+  <title>2026 京阪奈盛夏自由行手冊｜V17 Enterprise UI/UX</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- 導入高質感 Lucide 向量圖標 -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -480,6 +480,36 @@
     .v135-qa { border-radius:16px; border:1px solid #e2e8f0; background:#f8fafc; padding:10px; font-size:11.5px; line-height:1.55; color:#334155; font-weight:800; }
     @media (orientation: landscape) and (min-width:700px){ .v135-grid{grid-template-columns:repeat(4,minmax(0,1fr));} .v135-action-grid{grid-template-columns:repeat(8,minmax(0,1fr));} }
 
+
+
+    /* V17 Enterprise UI/UX：首頁減量與漸進式展開 */
+    .v17-compact-hero { border-radius: 22px; padding: 14px; background: linear-gradient(135deg,#0f172a,#0369a1 58%,#0f766e); color:#fff; box-shadow:0 16px 34px rgba(15,23,42,.16); }
+    .v17-topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .v17-eyebrow { font-size:9px; font-weight:950; letter-spacing:.18em; color:#bae6fd; }
+    .v17-title { margin-top:2px; font-size:16px; line-height:1.25; font-weight:950; }
+    .v17-sub { margin-top:4px; font-size:10.5px; line-height:1.5; color:#e0f2fe; font-weight:750; }
+    .v17-mode { flex:0 0 auto; border-radius:999px; padding:5px 9px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.18); font-size:10px; font-weight:950; }
+    .v17-focus-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
+    .v17-focus-card { border-radius:16px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.14); padding:10px; min-height:64px; }
+    .v17-focus-card .k { font-size:9.5px; color:#bae6fd; font-weight:950; letter-spacing:.08em; }
+    .v17-focus-card .v { margin-top:4px; font-size:12px; line-height:1.35; color:#fff; font-weight:950; }
+    .v17-primary-actions { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:12px; }
+    .v17-primary-actions button, .v17-primary-actions a { border:0; border-radius:15px; background:rgba(255,255,255,.94); color:#0f172a; padding:9px 4px; text-align:center; font-size:10px; font-weight:950; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:52px; }
+    .v17-primary-actions .danger { background:#fb7185; color:#fff; }
+    .v17-primary-actions .dark { background:#0f172a; color:#fff; border:1px solid rgba(255,255,255,.18); }
+    .v17-stack { display:grid; gap:10px; }
+    .v17-details { border-radius:18px; border:1px solid #e2e8f0; background:#fff; overflow:hidden; box-shadow:0 8px 18px rgba(15,23,42,.035); }
+    .v17-details > summary { list-style:none; cursor:pointer; padding:12px 13px; display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:12px; font-weight:950; color:#0f172a; }
+    .v17-details > summary::-webkit-details-marker { display:none; }
+    .v17-details > summary::after { content:'展開'; flex:0 0 auto; border-radius:999px; background:#f1f5f9; color:#0284c7; padding:3px 8px; font-size:10px; font-weight:950; }
+    .v17-details[open] > summary::after { content:'收合'; }
+    .v17-details-body { padding:0 12px 12px; }
+    .v17-chip-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+    .v17-chip-grid button, .v17-chip-grid a { border-radius:14px; border:1px solid #e2e8f0; background:#f8fafc; padding:9px 4px; text-align:center; font-size:10.5px; font-weight:950; color:#334155; }
+    .v17-mini-note { border-radius:14px; background:#f0f9ff; border:1px solid #bae6fd; color:#075985; padding:10px; font-size:11px; line-height:1.55; font-weight:800; }
+    .v17-queue-badge { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:999px; background:#2563eb; color:#fff; font-size:10px; font-weight:950; }
+    @media (orientation: landscape) and (min-width:700px){ .v17-focus-grid{grid-template-columns:repeat(4,minmax(0,1fr));} .v17-primary-actions{grid-template-columns:repeat(8,minmax(0,1fr));} }
+
     @media print {
       @page { size: A4; margin: 12mm; }
       body { background: white !important; color: #000000 !important; }
@@ -558,7 +588,7 @@
         <!-- 今日快速面板 -->
         <div class="flex items-center justify-between">
           <div class="section-title">
-            <h3>快捷導航</h3>
+            <h3>快捷導航（完整功能）</h3>
           </div>
           <span id="day-mini-info" class="pill bg-sky-50 text-sky-700 font-black">D1</span>
         </div>
@@ -594,11 +624,14 @@
           </div>
         </div>
 
-        <!-- 每日頭部氣象決策建議 -->
-        <div id="day-hero" class="rounded-2xl p-4 card-shadow"></div>
-        
-        <!-- 旅遊達人引導區 -->
-        <div id="traveler-guide" class="traveler-guide"></div>
+        <!-- V17：低頻資訊改為收合，避免首頁過載 -->
+        <details class="v17-details">
+          <summary>🌦 氣象決策與達人指南</summary>
+          <div class="v17-details-body space-y-3">
+            <div id="day-hero" class="rounded-2xl p-4 card-shadow"></div>
+            <div id="traveler-guide" class="traveler-guide"></div>
+          </div>
+        </details>
         
         <!-- 時間軸結構 -->
         <div class="flex items-center justify-between pt-2">
@@ -4822,48 +4855,77 @@
       const cityKey = primaryWeatherCityByDay[day] || 'osaka';
       const cityName = (localWeatherLinks[cityKey] || localWeatherLinks.osaka).label;
       const night = new Date().getHours() >= 21;
+      const queueCount = (getExpenseRecords ? getExpenseRecords().filter(r => ['pending_ai','ai_pending','ai_retry','ai_processing'].includes(String(r.aiStatus||''))).length : 0);
       el.innerHTML = `
-        <section class="v135-hero">
-          <div class="v135-dashboard-label">
-            <div class="title">AI TRAVEL DASHBOARD</div>
-            <div class="sub">V16 Enterprise AI Travel Companion</div>
-          </div>
-          <div class="v135-topline">
+        <section class="v17-compact-hero">
+          <div class="v17-topbar">
             <div>
-              <div class="text-[9px] font-black tracking-[0.16em] text-cyan-100">AI TRAVEL OS</div>
-              <h2 class="mt-1 text-base font-black leading-snug">AI 旅遊總管：D${day} ${tripDateLabels[day]}</h2>
-              <p class="mt-1 text-[11px] text-slate-100 leading-relaxed">${escapeHtml(data.title)}</p>
+              <div class="v17-eyebrow">AI TRAVEL DASHBOARD｜V17 UI/UX</div>
+              <div class="v17-title">今天 D${day}｜${tripDateLabels[day]}</div>
+              <div class="v17-sub">只保留旅途中最常用的資訊：天氣、下一站、今日花費、快速拍收據與 SOS。</div>
             </div>
-            <span class="v135-badge">${night ? '🌙 夜間模式' : '🟢 白天模式'}</span>
+            <span class="v17-mode">${night ? '🌙 夜間' : '🟢 白天'}</span>
           </div>
-          <div class="v135-grid">
-            <div class="v135-stat"><div class="k">今日天氣</div><div class="v">${cityName}<br>${w ? `${w.min}-${w.max}°C｜雨${rain}%` : '可點天氣'}</div></div>
-            <div class="v135-stat"><div class="k">下一行程</div><div class="v">${next ? `${next.time}<br>${escapeHtml(next.name)}` : '尚無'}</div></div>
-            <div class="v135-stat"><div class="k">今日花費</div><div class="v">${v135MoneyJpy(exp.dayJpy)}<br>${v135MoneyTwdFromJpy(exp.dayJpy)}</div></div>
-            ${v151BudgetCardHtml(exp)}
+
+          <div class="v17-focus-grid">
+            <div class="v17-focus-card"><div class="k">🌤 今日天氣</div><div class="v">${cityName}<br>${w ? `${w.min}-${w.max}°C｜雨${rain}%` : '讀取後顯示'}</div></div>
+            <div class="v17-focus-card"><div class="k">📍 下一站</div><div class="v">${next ? `${next.time}<br>${escapeHtml(next.name)}` : '尚無行程'}</div></div>
+            <div class="v17-focus-card"><div class="k">💰 今日花費</div><div class="v">${v135MoneyJpy(exp.dayJpy)}<br>${v135MoneyTwdFromJpy(exp.dayJpy)}</div></div>
+            <div class="v17-focus-card"><div class="k">🧾 AI 佇列</div><div class="v">${queueCount ? `待補 ${queueCount} 筆` : '無待補'}<br>${queueCount ? '<span class="v17-queue-badge">背景處理</span>' : '狀態正常'}</div></div>
           </div>
-          <div class="v135-action-grid">
-            <button onclick="openPrimaryLocalWeather()" class="tap v135-action">🌤<span>今日天氣</span></button>
-            <button onclick="openTenkiRadar()" class="tap v135-action">☔<span>雨雲雷達</span></button>
-            <button onclick="switchMainTab('hotel')" class="tap v135-action">🏠<span>回民宿</span></button>
-            <button onclick="switchMainTab('emergency')" class="tap v135-action">🆘<span>安全中心</span></button>
-            <button onclick="openV135FlightCenter()" class="tap v135-action">✈️<span>航班</span></button>
-            <button onclick="openV135TaxCenter()" class="tap v135-action">💴<span>匯率退稅</span></button>
-            <button onclick="generateV135DailyJournal()" class="tap v135-action">📖<span>旅遊日誌</span></button>
-            <button onclick="copyV135FamilyShare()" class="tap v135-action">👨‍👩‍👧‍👦<span>家庭共享</span></button>
+
+          <div class="v17-primary-actions">
+            <button onclick="triggerEmbeddedReceiptCamera()" class="tap">📸<span>拍收據</span></button>
+            <button onclick="openPrimaryLocalWeather()" class="tap">🌤<span>天氣</span></button>
+            <button onclick="openRouteMap()" class="tap">🗺<span>導航</span></button>
+            <button onclick="switchMainTab('emergency')" class="tap danger">🆘<span>SOS</span></button>
           </div>
         </section>
-        <section class="v135-panel">
-          <div class="v135-panel-title"><h4>🌤 日本氣象協會 tenki.jp</h4><span class="pill bg-sky-50 text-sky-700">官方連結</span></div>
-          <div class="v135-chip-row no-scrollbar">
-            <button onclick="openTenkiCity('osaka')" class="v135-chip">大阪</button>
-            <button onclick="openTenkiCity('kyoto')" class="v135-chip">京都</button>
-            <button onclick="openTenkiCity('nara')" class="v135-chip">奈良</button>
-            <button onclick="openTenkiRadar()" class="v135-chip">雨雲雷達</button>
-            <button onclick="openTenkiTyphoon()" class="v135-chip">颱風</button>
-          </div>
-          ${night ? `<div class="v135-warning mt-2">🌙 夜間返程提醒：建議走大馬路、不要戴耳機、不邊走邊滑手機。若超過 22:30 或帶長輩/行李，建議直接搭 Uber 或計程車回民宿。</div>` : ``}
-        </section>`;
+
+        <div class="v17-stack">
+          <details class="v17-details">
+            <summary>⚡ 快速功能</summary>
+            <div class="v17-details-body">
+              <div class="v17-chip-grid">
+                <button onclick="showPdfPage()" class="tap">顯示 PDF</button>
+                <button onclick="shareTextItinerary()" class="tap">LINE 複製</button>
+                <button onclick="switchMainTab('expense')" class="tap">記帳中心</button>
+                <button onclick="switchMainTab('hotel')" class="tap">回民宿</button>
+                <button onclick="switchMainTab('offline')" class="tap">離線包</button>
+                <button onclick="copyV135FamilyShare()" class="tap">家庭共享</button>
+              </div>
+            </div>
+          </details>
+
+          <details class="v17-details">
+            <summary>🌤 日本氣象協會 tenki.jp</summary>
+            <div class="v17-details-body">
+              <div class="v17-chip-grid">
+                <button onclick="openTenkiCity('osaka')" class="tap">大阪</button>
+                <button onclick="openTenkiCity('kyoto')" class="tap">京都</button>
+                <button onclick="openTenkiCity('nara')" class="tap">奈良</button>
+                <button onclick="openTenkiRadar()" class="tap">雨雲雷達</button>
+                <button onclick="openTenkiTyphoon()" class="tap">颱風</button>
+                <button onclick="refreshWeather(true)" class="tap">重刷天氣</button>
+              </div>
+            </div>
+          </details>
+
+          <details class="v17-details">
+            <summary>🤖 AI 與報表</summary>
+            <div class="v17-details-body">
+              <div class="v17-chip-grid">
+                <button onclick="handleV135AiClick(event)" class="tap">AI 助理</button>
+                <button onclick="generateV135DailyJournal()" class="tap">旅遊日誌</button>
+                <button onclick="openV135TaxCenter()" class="tap">匯率退稅</button>
+                <button onclick="openV135FlightCenter()" class="tap">航班中心</button>
+                <button onclick="copyExpenseSummary()" class="tap">支出總表</button>
+                <button onclick="exportExpenseSummaryCSV()" class="tap">匯出 CSV</button>
+              </div>
+              ${night ? `<div class="v17-mini-note mt-2">🌙 夜間返程提醒：建議走大馬路、不要戴耳機、不邊走邊滑手機。若超過 22:30 或帶長輩/行李，建議直接搭 Uber 或計程車回民宿。</div>` : ``}
+            </div>
+          </details>
+        </div>`;
       if(window.lucide) lucide.createIcons();
     }
 
